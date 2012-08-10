@@ -1,0 +1,136 @@
+<html>
+<head>
+<meta http-equiv="Content-Language" content="en">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<title>Uniform random number generators</title>
+<style><!--
+body{font-family:verdana,arial,sans-serif;background-color:#CCFFCC;color:#000000;}
+a,p{font-family:verdana,arial,sans-serif}
+a:link{color:#0000CC; text-decoration:underline}
+a:visited{color:#990099; text-decoration:underline}
+a:active,a:hover{color:#6666FF; text-decoration:underline}
+h1{text-align:Center;font-size:150%;font-weight:700;}
+h2{text-align:Left;font-size:130%;font-weight:600;padding-top:1em}
+pre  {font-family: 'courier new',courier; color:#000000; background-color:#FFFFCC; 
+      border: 1px solid black; padding:0.5em }
+dt   {font-weight:bold;}
+dd   {font-weight:normal; padding-bottom:1em}
+li   {padding-bottom:1em}
+@media print {body{font-family:arial,sans-serif;background-color:#FFFFFF;color:#000000}}
+@media print {a,a:link,a:visited {text-decoration:none}}
+--></style>
+</head>
+
+<body>
+
+<h1>Uniform random number generators</h1>
+
+<p align="center">by Agner Fog, 2001 - 2007</p>
+<p><a href="randomc.zip">randomc.zip</a> contains a C++ class library of uniform random number generators of good
+quality.</p>
+<p>The random number generators found in standard libraries are often of a poor
+quality, insufficient for large Monte Carlo calculations. This C++
+implementation provides
+random number generators of a much better quality: Better randomness, higher
+resolution, and longer cycle lengths.</p>
+<p>The same random number generators are available as libraries coded in assembly language
+for higher speed. These libraries can be linked into projects coded in other
+programming languages under Windows, Linux, BSD, etc. The library files are
+available in the
+archive <a href="asmlib.zip">asmlib.zip</a>.</p>
+<p>Non-uniform random number generators are provided in <a href="stocc.zip">stocc.zip</a>.</p>
+<h2>File list</h2>
+<p>The archive <a href="randomc.zip">randomc.zip</a> contains the following
+files:</p>
+<dl>
+  <dt>randomc.htm</dt>
+  <dd>This file. Instructions.</dd>
+  <dt>licence.htm</dt>
+  <dd>Licence conditions.</dd>
+  <dt>randomc.h</dt>
+  <dd>C++ header file containing class definitions.<br>
+    You must <code>#include</code> this in all C++ files that use this library.</dd>
+  <dt>mersenne.cpp</dt>
+  <dd>Random number generator of type Mersenne twister.</dd>
+  <dt>mother.cpp</dt>
+  <dd>Random number generator of type Mother-of-all (multiply with carry).</dd>
+  <dt>rancombi.cpp</dt>
+  <dd>Template class for combining any two of these random number generators.</dd>
+  <dt>userintf.cpp</dt>
+  <dd>System-dependent user interface functions, used by test programs.</dd>
+  <dt>ex-ran.cpp</dt>
+  <dd>Example showing how to use these random number generators.</dd>
+</dl>
+<h2>Quality of randomness</h2>
+<p>All these random number generators provide excellent randomness and extremely
+long cycle lengths.</p>
+<p>For all but the most demanding applications it doesn't matter
+which of the random number generators you use. The Mersenne twister is the one
+that is best understood theoretically. For this reason it is recommended by
+leading experts. The Mother-of-all generator has the highest
+bifurcation of these generators.</p>
+<p>For the most demanding scientific applications you may combine these two
+generators, using rancombi.cpp.</p>
+
+<h2>Instructions</h2>
+
+<p>Choose which one of the random number generators mentioned above you want to
+use.</p>
+
+<p>Write&nbsp; <code>#include &quot;randomc.h&quot;</code>&nbsp; in any C++ file
+that uses one of these random number generators.</p>
+<p>Add the appropriate cpp file to your project, either as an <code>#include</code>
+or as a separate module.</p>
+<p>Make an instance (object) of the appropriate class. It needs an integer seed
+as initializer.</p>
+<p>The seed can be any integer, positive, negative or zero. Repeating the
+calculations with the same seed will produce the same sequence of random
+numbers. A different seed will give different random numbers. You may use the
+time in seconds or milliseconds as seed.</p>
+<p>The random number generators that are implemented as C++ classes (CRandomMersenne,
+CRandomMother, CRandomMersenneA, CRandomMotherA) are thread-safe if you have one
+instance of the class for each thread that needs random numbers. Make sure each
+instance has a different seed. You may, for example, add 1 to the seed for each new instance.
+The versions that are not wrapped in classes are not thread-safe and should not
+be used in multithreaded programs.</p>
+<p>The file ex-ran.cpp contains an example of how to use the random number
+generators. Try it!</p>
+
+<h2>Portability</h2>
+<p>The C++ class library is supposed to work with all C++ compilers and all
+operating systems. It has been tested on several different systems.</p>
+<p>There are, however, a few system differences that you need to be aware of:</p>
+<ol>
+  <li>Floating point representation. Most systems store floating point
+    numbers according to the IEEE-754 standard with 64 bits for double precision. The fast conversion to floating point relies on this standard
+    format. A slightly less efficient method is used when floating point numbers
+    are not stored in a recognized format.</li>
+  <li>Integer word size. The C++ language syntax does not define a portable way
+    of defining integers with a specific number of bits. Therefore it is
+    necessary to use #if directives in randomc.h for platform-specific type
+    definitions. You may have to make additional type definitions for any
+    platform not covered by this file.</li>
+</ol>
+<h2>Theory</h2>
+<p>The theory of the Mersenne twister is given in the article:<br>
+M. Matsumoto &amp; T. Nishimura: <i>&quot;Mersenne Twister: A 623-Dimensionally
+Equidistributed Uniform Pseudo-Random Number Generator&quot;.</i> ACM
+Transactions on Modeling and Computer Simulation, vol. 8, no. 1, 1998, pp. 3-30.
+See also <A href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/eindex.html">http://www.math.sci.hiroshima-u.ac.jp/~m-mat/eindex.html</A>.</p>
+<p>The theory of Mother-of-All generators is given in George Marsaglia's DIEHARD
+package, see <a href="http://stat.fsu.edu/~geo/diehard.html">stat.fsu.edu/~geo/diehard.html</a>
+or <a href="http://www.cs.hku.hk/internet/randomCD.html">www.cs.hku.hk/internet/randomCD.html</a>.</p>
+
+<h2>Copyright and licence</h2>
+<P>© 2002-2007 by Agner Fog.
+<a href="licence.htm">General public license statement</a>.
+</P>
+
+<p>&nbsp;</p>
+<p align="center"><a href="http://www.agner.org/random/">Random number
+generators website by Agner Fog</a>.</p>
+
+</body>
+
+</html>

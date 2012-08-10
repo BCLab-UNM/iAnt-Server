@@ -1,0 +1,182 @@
+<html>
+<head>
+<meta http-equiv="Content-Language" content="en">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Simulation of biological evolution</title>
+<style><!--
+body{font-family:verdana,arial,sans-serif;background-color:#CCFFCC;color:#000000;}
+a,p{font-family:verdana,arial,sans-serif}
+a:link{color:#0000CC; text-decoration:underline}
+a:visited{color:#990099; text-decoration:underline}
+a:active,a:hover{color:#6666FF; text-decoration:underline}
+h1{text-align:Center;font-size:150%;font-weight:700;}
+h2{text-align:Left;font-size:130%;font-weight:600;padding-top:1em}
+pre  {font-family: 'courier new',courier; color:#000000; background-color:#FFFFCC; 
+      border: 1px solid black; padding:0.5em }
+dt   {font-weight:bold;}
+dd   {font-weight:normal; padding-bottom:1em}
+li   {padding-bottom:1em}
+@media print {body{font-family:arial,sans-serif;background-color:#FFFFFF;color:#000000}}
+@media print {a,a:link,a:visited {text-decoration:none}}
+--></style>
+</head>
+
+<body>
+
+<h1>Simulation of biological evolution</h1>
+
+<p align="center">by Agner Fog</p>
+<p><a href="stocc.zip">stocc.zip</a> contains two simple C++ programs showing
+examples of how to simulate biological evolution using a library of non-uniform
+random number generators.&nbsp;</p>
+<h2>File list</h2>
+<p>The archive <a href="stocc.zip">stocc.zip</a> contains several files, of
+which the following are relevant to simulation of evolution:</p>
+<dl>
+  <dt>evolc.htm</dt>
+  <dd>This file. Instructions</dd>
+  <dt>randomc.htm</dt>
+  <dd>Description of C++ class library of uniform random number generators used
+    by the programs.</dd>
+  <dt>stocc.htm</dt>
+  <dd>Description of C++ class library of non-uniform random number generators
+    used by the programs.</dd>
+  <dt>ex-evol1.cpp</dt>
+  <dd>Simulation program where selection is based on competition for a limited
+    resource or differential predation.</dd>
+  <dt>ex-evol2.cpp</dt>
+  <dd>Simulation program where selection is based on differential fertility.</dd>
+  <dt>ex-stoc.cpp</dt>
+  <dd>Example showing how to use the non-uniform random number generators.</dd>
+  <dt>mersenne.cpp</dt>
+  <dd>A random number generators to use.</dd>
+  <dt>stoc1.cpp stoc3.cpp</dt>
+  <dd>Generators of non-uniform random variates with various distributions.</dd>
+  <dt>wnchyppr.cpp</dt>
+  <dd>Definition of Wallenius' noncentral hypergeometric distribution</dd>
+  <dt>fnchyppr.cpp</dt>
+  <dd>Definition of Fisher's noncentral hypergeometric distribution</dd>
+  <DT>userintf.cpp</DT>
+  <DD>Platform-dependent user interface functions</DD>
+  <dt>randomc.h stocc.h</dt>
+  <dd>C++ header files containing function prototypes and class definitions.</dd>
+</dl>
+<h2>Instructions</h2>
+<p>Unpack the files randomc.zip and stocc.zip into a new directory. Make
+sure all the source files are in the same directory.</p>
+<p>Compile the file ex-evol1.cpp or ex-evol2.cpp in console mode using a C++
+compiler.</p>
+<p>Run the program.</p>
+<p>Change the parameters as you like by editing the file ex-evol1.cpp or
+ex-evol2.cpp at the place marked&nbsp; <code>// define parameters</code>,&nbsp;
+and try again.</p>
+<p>Additional description of the uniform and non-uniform random number
+generators used by these programs can be found in <a href="randomc.htm">randomc.htm</a>
+and <a href="stocc.htm">stocc.htm</a>, respectively. Theoretical description of
+Wallenius' noncentral hypergeometric probability distribution, used for simulating
+Darwinian selection, is given at <a href="http://www.agner.org/random/theory">www.agner.org/random/theory</a>.</p>
+
+<h2>Portability</h2>
+<p>These programs should work with all modern C++ compilers in all operating
+systems.</p>
+<p>See <a href="randomc.htm">randomc.htm</a> and <a href="stocc.htm">stocc.htm</a>
+for more portability issues.</p>
+<h2>Theory</h2>
+<p>These programs show examples of how to make Monte Carlo simulation of
+biological evolution.</p>
+<p>The algorithm works on gene pools rather than on individuals. It does not
+follow the fate of each individual. Instead, it calculates the probability
+distribution of possible outcomes and then uses a function which returns a
+random variable with the desired distribution. This simulation method is much
+faster than the traditional simulation method based on individuals.</p>
+<p>The program assumes discrete non-overlapping generations in a panmictic
+(perfectly mixing) population. Inheritance is Mendelian. Selection is considered
+at only one locus, which can hold the genes a or b.</p>
+<p>Two different models with different selection mechanisms are provided here. The first
+model assumes that selection is based on competition for a limited resource or
+selective predation. The
+second model involves selection in the form of differential breeding success.</p>
+<p>The simulation of model 1 goes through the following steps for each
+generation:</p>
+<ol>
+  <li>Mutation. The number of genes of each type that mutate in one
+    generation follows the binomial distribution:<br>
+    mutations of gene x = binomial (number of x, mutation rate).<br>
+    It is assumed that the mutation rate is the same in both directions.</li>
+  <li>Breeding. The total number of offspring follows a poisson or normal
+    distribution.<br>
+    The number of genes of each type in the gene pool of the child generation
+    follows a binomial distribution, where the probability of each gene is the
+    frequency of this gene in the parent generation.</li>
+  <li>Split into genotypes. Each individual has two genes at the locus in
+    question. This makes three possible genotypes: (a,a), (a,b) and (b,b). The
+    number of individuals with each genotype is calculated for a random
+    combination of all the a and b genes in the child gene pool. This process
+    requires two calls to the hypergeometric generator, one for each allele.</li>
+  <li>Limitation. If the carrying capacity of the habitat is exceeded then some
+    individuals must die. The carrying capacity may fluctuate with a normal
+    distribution. Similar fluctuations in the population size may be caused by
+    predation.<br>
+    The number of deaths of each genotype follows a multivariate Wallenius' noncentral hypergeometric distribution, where the
+    odds parameter is the reciprocal of the relative fitness of the genotypes.</li>
+  <li>Generation shift. The child generation becomes the parent generation of
+    the next iteration.</li>
+</ol>
+<p>Model 2 has the following steps:</p>
+<ol>
+  <li>Mutation. Same as above.</li>
+  <li>Split into genotypes. Same as above, but applied to parent generation.</li>
+  <li>Split into males and females. The number of individuals of each genotype
+    is split into males and females. This is a binomial distribution with the
+    sex-ratio as probability parameter.</li>
+  <li>Breeding potential. The maximum number of children that the parent
+    generation can produce follows a poisson or normal distribution. If this
+    number exceeds the carrying capacity of the habitat then it is reduced to the
+    carrying capacity.&nbsp;The carrying capacity may fluctuate with a normal
+    distribution.</li>
+  <li>Differential fertility. The probability of each child genotype is
+    calculated as follows:<br>
+    For all possible combinations of male genotype i and female genotype j, the
+    probability of an i x j mating is calculated from the product of the number
+    of i males and the number of j females. For each of these i x j combinations, the
+    probability of each child genotype is calculated according to Mendel's laws.
+    These probabilities are multiplied by the probability of an i x j mating and
+    by the fitness of the pair, and summated for all combinations of i and j.
+    The fitness of the pair can be either the sum or the product of the fitness
+    contribution of each parent. The number of children of each genotype actually generated is
+    calculated as a multivariate binomial distribution with these probabilities
+    as parameters.</li>
+  <li>Generation shift. Same as above.</li>
+</ol>
+<p>These programs may form the basis of your own simulation experiments. A lot
+of refinements and extensions to the models are possible, and the library of
+non-uniform random number generators is at your disposition for the
+modeling of different selection mechanisms.</p>
+<p>A more advanced simulation program, called Altruist, allows structured or
+viscous populations, group selection, epistatis, punctuated equilibria, etc. You
+can download it from the link below.</p>
+<h2>References</h2>
+<p>More details about the genetics of evolution can be found in a textbook on
+population genetics.</p>
+<p>The theory of probability distributions such as the poisson, binomial,
+hypergeometric and normal distributions can be found in a textbook on statistics.
+The Wallenius' noncentral hypergeometric distribution is defined at <a href="http://www.agner.org/random/theory">www.agner.org/random/theory</a>.</p>
+<p>Further information on the uniform and non-uniform random number generators used here
+can be found on
+<a href="http://www.agner.org/random/">www.agner.org/random/</a>.</p>
+<p>A more advanced simulation program using these methods is the Altruist
+program, available from
+<a href="http://www.agner.org/evolution">www.agner.org/evolution</a>. This
+program can simulate models with structured or viscous populations with group
+selection, epistasis, punctuated equilibria, etc.</p>
+
+<h2>Copyright and licence</h2>
+<P>© 2002-2007 by Agner Fog.
+<a href="licence.htm">General public license statement</a>.
+</P>
+
+</body>
+
+</html>
