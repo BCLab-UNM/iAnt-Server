@@ -2,6 +2,7 @@
 
 @class ABSServer;
 @class ABSRobotDisplayView;
+@class ABSToolController;
 
 @interface ABSServerController : NSViewController {
     NSString* workingDirectory;
@@ -21,9 +22,11 @@
     NSTextField* notesTextField;
     NSButton* startButton;
     ABSRobotDisplayView* robotDisplayView;
+    ABSToolController* toolController;
 }
 
 -(IBAction) start:(id)sender;
+-(void) log:(NSString*)message;
 
 @property (nonatomic,retain) NSString* workingDirectory;
 @property (nonatomic,retain) NSMutableDictionary* pendingPheromones;
@@ -39,5 +42,6 @@
 @property (nonatomic,retain) IBOutlet NSTextField* notesTextField;
 @property (nonatomic,retain) IBOutlet NSButton* startButton;
 @property (nonatomic,retain) IBOutlet ABSRobotDisplayView* robotDisplayView;
+@property (nonatomic,retain) IBOutlet ABSToolController* toolController;
 
 @end

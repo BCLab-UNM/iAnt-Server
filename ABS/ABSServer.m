@@ -20,7 +20,7 @@
 	//Create the socket.  The constants here indicate that it's a TCP socket (vs. UDP).
 	listenSocket = CFSocketCreate(kCFAllocatorDefault, PF_INET, SOCK_STREAM, IPPROTO_TCP, kCFSocketAcceptCallBack, (CFSocketCallBack)&socketAcceptCallBack, &context);
 	if(!listenSocket) {
-		NSLog(@"Couldn't create socket.");
+        [self log:@"[SRV] Couldn't create socket."];
 		return NO;
 	}
 	
@@ -33,7 +33,7 @@
 	int reuse = true;
 	int fileDescriptor = CFSocketGetNative(listenSocket);
 	if(setsockopt(fileDescriptor, SOL_SOCKET, SO_REUSEADDR, (void*)&reuse, sizeof(int)) != 0) {
-		NSLog(@"Couldn't set socket options.");
+		[self log:@"[SRV] Couldn't set socket options."];
 		return NO;
 	}
     
@@ -52,7 +52,7 @@
 	if(CFSocketSetAddress(listenSocket, addressData) != kCFSocketSuccess)
     {
         CFRelease(addressData);
-		NSLog(@"Couldn't bind socket.");
+		[self log:@"[SRV] Couldn't bind socket."];
 		return NO;
 	}
     CFRelease(addressData);
@@ -61,7 +61,7 @@
     CFRunLoopAddSource(CFRunLoopGetCurrent(), source, kCFRunLoopDefaultMode);
     CFRelease(source);
     
-    NSLog(@"Listening on port %d", port);
+    [self log:[NSString stringWithFormat:@"[SRV] Listening on port %d", port]];
     
     connections = [[NSMutableArray alloc] init];
     
@@ -74,7 +74,7 @@
 
 
 -(void) netService:(NSNetService *)sender didNotPublish:(NSDictionary *)errorDict {
-    NSLog(@"Error publishing Bonjour.");
+    [self log:@"[SRV] Error publishing Bonjour."];
 }
 
 
@@ -93,8 +93,6 @@ static void socketAcceptCallBack(CFSocketRef socket, CFSocketCallBackType type, 
      */
     ABSServer* self = (__bridge ABSServer*) info;
     
-    NSLog(@"New Client.");
-    
     //There are several different socket events we can receive.  The only interesting one for our purposes is receiving a connection.
     if(type == kCFSocketAcceptCallBack) {
         
@@ -111,9 +109,10 @@ static void socketAcceptCallBack(CFSocketRef socket, CFSocketCallBackType type, 
             const uint8* ipInt = (const uint8*)&addr_in->sin_addr.s_addr;
             ip = [NSString stringWithFormat:@"%u.%u.%u.%u",(unsigned)ipInt[0],(unsigned)ipInt[1],(unsigned)ipInt[2],(unsigned)ipInt[3]];
             port = ntohs(addr_in->sin_port);
+            [self log:[NSString stringWithFormat:@"[SRV] New client: %@:%d",ip,port]];
         }
         else {
-            NSLog(@"Can't get IP/Port from client.");
+            [self log:@"[SRV] Can't get IP/Port from client."];
         }
         
         //Create higher-level streams used to send/receive data.
@@ -144,7 +143,7 @@ static void socketAcceptCallBack(CFSocketRef socket, CFSocketCallBackType type, 
             [self->connections addObject:connection];
         }
         else {
-            NSLog(@"Error creating input and output streams.");
+            [self log:@"[SRV] Error creating input and output streams."];
         }
     }
 }
@@ -154,7 +153,7 @@ static void socketAcceptCallBack(CFSocketRef socket, CFSocketCallBackType type, 
  * Sends a string to a specific outputStream.
  */
 -(void) send:(NSString*)message toStream:(NSOutputStream*)stream {
-    NSLog(@"Sending %@",message);
+    [self log:[NSString stringWithFormat:@"[SRV] Sending %@",message]];
     NSData* data = [[NSData alloc] initWithData:[message dataUsingEncoding:NSASCIIStringEncoding]];
     [stream write:[data bytes] maxLength:[data length]];
 }
@@ -215,7 +214,7 @@ static void socketAcceptCallBack(CFSocketRef socket, CFSocketCallBackType type, 
             break;
             
 		case NSStreamEventErrorOccurred:
-			NSLog(@"Can not connect to the host!");
+			[self log:@"[SRV] Can not connect to the host!"];
 			break;
             
         //If remote host closes the connection, close stream on this end and remove from runloop.
@@ -225,7 +224,13 @@ static void socketAcceptCallBack(CFSocketRef socket, CFSocketCallBackType type, 
 			break;
             
 		default:
-			NSLog(@"No event");
+            break;
+    }
+}
+
+-(void) log:(NSString*)message {
+    if([[self delegate] respondsToSelector:@selector(didLogMessage:)]) {
+        [[self delegate] didLogMessage:message];
     }
 }
 

@@ -85,9 +85,14 @@
     for(Pheromone* pheromone in [[ABSPheromoneController getInstance] getAllPheromones]) {
         NSBezierPath* pheromoneLine = [[NSBezierPath alloc] init];
         [pheromoneLine moveToPoint:NSMakePoint(0,0)];
-        [pheromoneLine lineToPoint:NSMakePoint([pheromone.x doubleValue],[pheromone.y doubleValue])];
+        double pixelsInMeter;
+        if([[self boundsRadius] doubleValue]>0){pixelsInMeter = 400.0/([[self boundsRadius] doubleValue]*2);}
+        else{pixelsInMeter = 0.0;}
+        double x = ([pheromone.x doubleValue]/100.0)*pixelsInMeter;
+        double y = ([pheromone.y doubleValue]/100.0)*pixelsInMeter;
+        [pheromoneLine lineToPoint:NSMakePoint(x,y)];
         [[[NSColor greenColor] colorWithAlphaComponent:.5+([pheromone.n doubleValue]/2.0)] set];
-        [pheromoneLine setLineWidth:2.f+(2*[pheromone.n doubleValue])];
+        [pheromoneLine setLineWidth:(4*[pheromone.n doubleValue])];
         [pheromoneLine stroke];
     }
     
@@ -102,7 +107,7 @@
         NSBezierPath* trailPath = [[robots objectForKey:key] objectAtIndex:3];
         int n = trailPath.elementCount;
         int i;
-        int trailLength = 35;
+        int trailLength = 25;
         for(i=(n-1); i>=MAX(n-(trailLength+1),1); i--) {
             NSPoint point[1];
             NSBezierPath* tempPath = [[NSBezierPath alloc] init];
@@ -153,6 +158,7 @@
         NSRect rect = NSMakeRect(x-8,y-8,16,16);
         NSBezierPath* path = [NSBezierPath bezierPathWithOvalInRect:rect];
         
+        color=[[robots objectForKey:key] objectAtIndex:2];
         [color set];
         [path fill];
         [[NSColor whiteColor] set];

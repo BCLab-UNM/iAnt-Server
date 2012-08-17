@@ -24,6 +24,7 @@
 		404CA6E915C9FD5400944FD1 /* ABSGAController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 404CA6E815C9FD5400944FD1 /* ABSGAController.mm */; };
 		404CA6F115C9FD7D00944FD1 /* GA.mm in Sources */ = {isa = PBXBuildFile; fileRef = 404CA6EE15C9FD7D00944FD1 /* GA.mm */; };
 		4069718815CC18760005AA73 /* stocc in Resources */ = {isa = PBXBuildFile; fileRef = 4069718715CC18760005AA73 /* stocc */; };
+		407D36D115D57160004D29B9 /* ABSToolController.m in Sources */ = {isa = PBXBuildFile; fileRef = 407D36D015D57160004D29B9 /* ABSToolController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,8 @@
 		404CA6EF15C9FD7D00944FD1 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		404CA6F315C9FDAC00944FD1 /* GA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GA.h; sourceTree = "<group>"; };
 		4069718715CC18760005AA73 /* stocc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = stocc; sourceTree = "<group>"; };
+		407D36CF15D57160004D29B9 /* ABSToolController.h */ = {isa = PBXFileReference; fileEncoding = 4; path = ABSToolController.h; sourceTree = "<group>"; };
+		407D36D015D57160004D29B9 /* ABSToolController.m */ = {isa = PBXFileReference; fileEncoding = 4; path = ABSToolController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,8 @@
 			children = (
 				404CA6EB15C9FD6800944FD1 /* GA */,
 				401C6007158BD32C00058D4C /* MainMenu.xib */,
+				407D36CF15D57160004D29B9 /* ABSToolController.h */,
+				407D36D015D57160004D29B9 /* ABSToolController.m */,
 				401C5FF6158BD0BC00058D4C /* ABSAppDelegate.h */,
 				401C5FF7158BD0BC00058D4C /* ABSAppDelegate.mm */,
 				401C6009158BD5A100058D4C /* ABSServer.h */,
@@ -245,6 +250,7 @@
 				4008003215AF51300028A766 /* ABSRobotDetails.m in Sources */,
 				404CA6E915C9FD5400944FD1 /* ABSGAController.mm in Sources */,
 				404CA6F115C9FD7D00944FD1 /* GA.mm in Sources */,
+				407D36D115D57160004D29B9 /* ABSToolController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

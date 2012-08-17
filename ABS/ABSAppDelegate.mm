@@ -3,7 +3,7 @@
 
 @implementation ABSAppDelegate
 
-@synthesize serverWindow, robotDisplayWindow, serverController, robotDisplayController;
+@synthesize serverWindow, robotDisplayWindow, serverController, robotDisplayController, toolController;
 
 -(void) applicationDidFinishLaunching:(NSNotification *)aNotification {
 	/*

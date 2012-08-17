@@ -5,6 +5,7 @@
 
 @interface NSObject(ABSServerNotifications)
 -(void)didReceiveMessage:(NSString*)message onStream:(NSInputStream*)theStream;
+-(void)didLogMessage:(NSString*)message;
 @end
 
 @interface ABSServer : NSObject <NSStreamDelegate,NSNetServiceDelegate> {
@@ -17,6 +18,7 @@
 -(BOOL) listenOnPort:(int)port;
 -(void) send:(NSString*)message toStream:(NSOutputStream*)stream;
 -(void) stream:(NSStream *)theStream handleEvent:(NSStreamEvent)eventCode;
+-(void) log:(NSString*)message;
 -(void) stop;
 
 @property (nonatomic,retain) NSObject* delegate;

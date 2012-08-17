@@ -6,10 +6,11 @@
 #import "ABSRobotDetails.h"
 #import "ABSConnection.h"
 #import "ABSGAController.h"
+#import "ABSToolController.h"
 
 @implementation ABSServerController
 
-@synthesize portTextField, fusionTypePopUp, tagDistributionPopUp, tagRadiusTextField, tagCountTextField, boundsRadiusTextField, trialTypePopUp, environmentTypePopUp, validRunButton, notesTextField, startButton, robotDisplayView, pendingPheromones, workingDirectory;
+@synthesize portTextField, fusionTypePopUp, tagDistributionPopUp, tagRadiusTextField, tagCountTextField, boundsRadiusTextField, trialTypePopUp, environmentTypePopUp, validRunButton, notesTextField, startButton, robotDisplayView, pendingPheromones, workingDirectory, toolController;
 
 /*
  * Called when the view loads.  Essentially our initialize function.
@@ -83,7 +84,7 @@
     ABSWriter* writer = [ABSWriter getInstance];
     if(![writer isOpen:filename]) {
         if(![writer openFilename:filename]) {
-            NSLog(@"Error creating the xml file.  Check permissions, paths, etc.");
+            [self log:@"[CTR] Error creating the xml file.  Check permissions, paths, etc."];
         }
     }
     
@@ -153,6 +154,11 @@
     [startButton setTitle:@"Restart"];
 }
 
+-(void) log:(NSString*)message {
+    NSLog(@"%@",message);
+    //[toolController log:message];
+}
+
 -(void) didReceiveMessage:(NSString*)message onStream:(NSInputStream*)theStream {
     
     /*
@@ -171,8 +177,9 @@
     NSArray* messageExploded = [message componentsSeparatedByString:@","];
     
     if([messageExploded count] == 1){
-        NSNumber* tagId = [NSNumber numberWithInt:[[messageExploded objectAtIndex:0] intValue]];
-        NSString* reply = ([[tagFound objectForKey:tagId] boolValue]==YES) ? @"1" : @"0";
+        NSNumber* tagId = [NSNumber numberWithInt:[message intValue]];
+        NSString* reply = ([[tagFound objectForKey:tagId] boolValue]==YES) ? @"old" : @"new";
+        NSLog(@"Received tag query for tag %@.  Replied with %@",tagId,reply);
         for(ABSConnection* connection in [server connections]) {
             if([connection inputStream] == theStream) {
                 [server send:reply toStream:[connection outputStream]];
@@ -193,8 +200,8 @@
     
     //If the robot found a tag, add its position to the pending pheromones list.
     if([event isEqualToString:@"tag"]) {
-        NSNumber* x = [NSNumber numberWithDouble:[[messageExploded objectAtIndex:2] doubleValue]];
-        NSNumber* y = [NSNumber numberWithDouble:[[messageExploded objectAtIndex:3] doubleValue]];
+        NSNumber* x = [NSNumber numberWithInt:[[messageExploded objectAtIndex:2] intValue]];
+        NSNumber* y = [NSNumber numberWithInt:[[messageExploded objectAtIndex:3] intValue]];
         NSNumber* tagId = [NSNumber numberWithInt:[[messageExploded objectAtIndex:5] intValue]];
         NSNumber* n = [NSNumber numberWithInt:[[messageExploded objectAtIndex:6] intValue]]; //neighboring tag count.
         
@@ -231,15 +238,15 @@
          */
         for(ABSConnection* connection in [server connections]) {
             if([connection inputStream] == theStream) {
-                [server send:[NSString stringWithFormat:@"%@,%@\n", [pheromonePosition objectAtIndex:0], [pheromonePosition objectAtIndex:1]] toStream:[connection outputStream]];
+                [server send:[NSString stringWithFormat:@"%d,%d\n", [[pheromonePosition objectAtIndex:0] intValue], [[pheromonePosition objectAtIndex:1] intValue]] toStream:[connection outputStream]];
                 break;
             }
         }
     }
     
     //Update the GUI with the new robot position (need colors here?)
-    NSNumber* x = [NSNumber numberWithDouble:[[messageExploded objectAtIndex:2] doubleValue]];
-    NSNumber* y = [NSNumber numberWithDouble:[[messageExploded objectAtIndex:3] doubleValue]];
+    NSNumber* x = [NSNumber numberWithDouble:[[messageExploded objectAtIndex:2] intValue]];
+    NSNumber* y = [NSNumber numberWithDouble:[[messageExploded objectAtIndex:3] intValue]];
     
     [robotDisplayView setX:x andY:y andColor:[ABSRobotDetails colorFromName:robotName] forRobot:robotName];
     
@@ -250,13 +257,17 @@
     
     if(![writer isOpen:filename]) {
         if(![writer openFilename:filename]) {
-            NSLog(@"Error opening %@ for writing.",filename);
+            [self log:[NSString stringWithFormat:@"[CTR] Error opening %@ for writing.",filename]];
         }
     }
     
     [writer writeString:[NSString stringWithFormat:@"%@\n",message] toFile:filename];
     
-    NSLog(@"Received: %@",message);
+    [self log:[NSString stringWithFormat:@"[CTR] Received: %@",message]];
+}
+
+-(void) didLogMessage:(NSString*)message {
+    [self log:message];
 }
 
 -(void) didFinishGA:(NSArray*)returnValues {
