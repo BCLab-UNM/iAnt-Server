@@ -65,9 +65,9 @@
     
     connections = [[NSMutableArray alloc] init];
     
-    netService = [[NSNetService alloc] initWithDomain:@"" type:@"_abs._tcp." name:@"ABS" port:2223];
+    /*netService = [[NSNetService alloc] initWithDomain:@"" type:@"_abs._tcp." name:@"ABS" port:2223];
     [netService setDelegate:self];
-    [netService publish];
+    [netService publish];*/
     
 	return YES;
 }

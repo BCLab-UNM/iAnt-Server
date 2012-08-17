@@ -155,8 +155,8 @@
 }
 
 -(void) log:(NSString*)message {
-    NSLog(@"%@",message);
-    //[toolController log:message];
+    //NSLog(@"%@",message);
+    [toolController log:message];
 }
 
 -(void) didReceiveMessage:(NSString*)message onStream:(NSInputStream*)theStream {
@@ -208,7 +208,7 @@
         [tagFound setObject:[NSNumber numberWithBool:YES] forKey:tagId];
         
         //Only leave a pheromone if there are other tags nearby.
-        if(n > 0) {
+        if(n > [NSNumber numberWithInt:1]) {
             NSArray* pheromoneData = [NSArray arrayWithObjects:x, y, tagId, nil];
             [pendingPheromones setObject:pheromoneData forKey:robotName];
         }

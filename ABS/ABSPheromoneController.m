@@ -52,7 +52,8 @@
     for(i=0; i<[pheromoneList count]; i++) {
         Pheromone* pheromone = [pheromoneList objectAtIndex:i];
         double delta = currentTime - [[pheromone t] doubleValue];
-        double newN = [[pheromone n] doubleValue] * pow(.995, (4 * delta));
+        //Default is .995, using 1. for now.
+        double newN = [[pheromone n] doubleValue] * pow(1., (4 * delta));
         
         if(newN>=.001){
             [pheromone setN:[NSNumber numberWithDouble:newN]];
