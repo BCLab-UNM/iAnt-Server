@@ -15,7 +15,19 @@
     return self;
 }
 
--(void) loadView {
+-(void) initialize {
+    dataValues = [[NSMutableArray alloc] initWithObjects:
+                  [NSNumber numberWithInt:0],
+                  [NSNumber numberWithFloat:0.f],
+                  [NSNumber numberWithInt:0],
+                  [NSNumber numberWithInt:0],
+                  [NSNumber numberWithFloat:0.f],
+                  nil];
+}
+
+-(void) setTagCount:(NSNumber*)tagCount {
+    [dataValues replaceObjectAtIndex:0 withObject:tagCount];
+    [stats reloadData];
 }
 
 -(NSInteger) numberOfRowsInTableView:(NSTableView *)tableView {
@@ -56,7 +68,12 @@
         [result setString:label];
     }
     else {
-        [result setString:@"Some Value"];
+        if(dataValues == nil) {
+            [result setString:@""];
+        }
+        else {
+            [result setString:[dataValues objectAtIndex:row]];
+        }
     }
     [result setEditable:NO];
     
@@ -77,7 +94,14 @@
 -(void) log:(NSString*)message {
     [console setString:[NSString stringWithFormat:@"%@%@\n",[console string],message]];
     
-    [console scrollRangeToVisible:NSMakeRange([[console string] length],0)];
+    //NSScrollView* scrollView = (NSScrollView*)[console superview];
+    /*if(self.console.frame.size.height > scrollView.frame.size.height) {
+        if([scrollView hasVerticalScroller]) {
+            if([[scrollView verticalScroller] floatValue] != 1.) {
+                [console scrollRangeToVisible:NSMakeRange([[console string] length],0)];
+            }
+        }
+    }*/
 }
 
 @end

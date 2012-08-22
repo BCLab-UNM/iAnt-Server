@@ -3,7 +3,7 @@
 
 @implementation ABSAppDelegate
 
-@synthesize serverWindow, robotDisplayWindow, serverController, robotDisplayController, toolController;
+@synthesize serverWindow, robotDisplayWindow, toolWindow, serverController, robotDisplayController, toolController;
 
 -(void) applicationDidFinishLaunching:(NSNotification *)aNotification {
 	/*
@@ -15,6 +15,7 @@
 	 * which is the entry point for everything else.
 	 */
     [[serverWindow contentView] addSubview:[serverController view]];
+    [toolController initialize];
 }
 
 @end

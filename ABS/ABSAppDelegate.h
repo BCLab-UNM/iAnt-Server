@@ -7,6 +7,7 @@
 @interface ABSAppDelegate : NSObject <NSApplicationDelegate> {
     NSWindow* serverWindow;
     NSWindow* robotDisplayWindow;
+    NSWindow* toolWindow;
     ABSRobotDisplayController* robotDisplayController;
     ABSServerController* serverController;
     ABSToolController* toolController;
@@ -14,6 +15,7 @@
 
 @property (nonatomic,retain) IBOutlet NSWindow* serverWindow;
 @property (nonatomic,retain) IBOutlet NSWindow* robotDisplayWindow;
+@property (nonatomic,retain) IBOutlet NSWindow* toolWindow;
 @property (nonatomic,retain) IBOutlet ABSRobotDisplayController* robotDisplayController;
 @property (nonatomic,retain) IBOutlet ABSServerController* serverController;
 @property (nonatomic,retain) IBOutlet ABSToolController* toolController;

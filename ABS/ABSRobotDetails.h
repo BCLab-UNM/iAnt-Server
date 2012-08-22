@@ -4,6 +4,8 @@
     
 }
 
++(void) initializeWithWorkingDirectory:(NSString*)workingDirectory;
+
 +(NSColor*) colorFromName:(NSString*)robotName;
 +(NSString*) nameFromMacAddress:(NSString*)macAddress;
 

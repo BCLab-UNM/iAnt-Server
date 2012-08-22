@@ -10,7 +10,7 @@
 
 @implementation ABSServerController
 
-@synthesize portTextField, fusionTypePopUp, tagDistributionPopUp, tagRadiusTextField, tagCountTextField, boundsRadiusTextField, trialTypePopUp, environmentTypePopUp, validRunButton, notesTextField, startButton, robotDisplayView, pendingPheromones, workingDirectory, toolController;
+@synthesize portTextField, fusionTypePopUp, tagDistributionPopUp, tagRadiusTextField, tagCountTextField, boundsRadiusTextField, trialTypePopUp, environmentTypePopUp, validRunButton, notesTextField, startButton, workingDirectoryTextField, robotDisplayView, pendingPheromones, workingDirectory, toolController;
 
 /*
  * Called when the view loads.  Essentially our initialize function.
@@ -37,6 +37,21 @@
     [environmentTypePopUp addItemWithTitle:@"Sand"];
     [environmentTypePopUp addItemWithTitle:@"Tile"];
     [environmentTypePopUp addItemWithTitle:@"Other"];
+    
+    //Load the working directory from the settings.plist file located in the User's library.
+    NSString* settingsPath = [NSHomeDirectory() stringByAppendingString:@"/Library/Application Support/ABS/settings.plist"];
+    settingsPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:settingsPath];
+    
+    //If the plist file doesn't exist, load a default settings thingy.
+    if(settingsPlist == nil) {
+        settingsPlist = [[NSMutableDictionary alloc] initWithCapacity:1];
+        
+        NSString* defaultWorkingDirectory = [NSHomeDirectory() stringByAppendingString:@"/Dropbox/AntBot/Data"];
+        [settingsPlist setObject:defaultWorkingDirectory forKey:@"Working Directory"];
+    }
+    
+    //Set the working directory text field's string to whatever the settings file says it should be.
+    [workingDirectoryTextField setStringValue:[settingsPlist objectForKey:@"Working Directory"]];
 }
 
 /*
@@ -57,14 +72,17 @@
     NSString* environmentType = [[environmentTypePopUp selectedItem] title];
     BOOL validRun = ([validRunButton state]==NSOnState ? YES : NO);
     NSString* notes = [notesTextField stringValue];
+    workingDirectory = [workingDirectoryTextField stringValue];
+    
+    //Write the desired workingDirectory to a plist file.
+    [settingsPlist setObject:workingDirectory forKey:@"Working Directory"];
+    NSString* settingsDirectory = [NSHomeDirectory() stringByAppendingString:@"/Library/Application Support/ABS"];
+    [[NSFileManager defaultManager] createDirectoryAtPath:settingsDirectory withIntermediateDirectories:YES attributes:nil error:nil];
+    NSString* settingsPath = [settingsDirectory stringByAppendingString:@"/settings.plist"];
+    [settingsPlist writeToFile:settingsPath atomically:NO];
     
     //Close any files that were previously open and get root directory.
     [[ABSWriter getInstance] closeAll];
-    NSString* root;
-    NSFileManager* fileManager = [NSFileManager defaultManager];
-    NSString* desktop = [[fileManager URLForDirectory:NSDesktopDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil] path];
-    if(validRun){root = [NSString stringWithFormat:@"%@/../Dropbox/AntBot/Data",desktop];}
-    else{root = desktop;}
     
     //Get formatted date, used to name the directories.
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
@@ -73,14 +91,15 @@
     [formatter setDateFormat:@"HH_mm_ss"];
     NSString* timeDirectory = [NSString stringWithFormat:@"Trial_%@",[formatter stringFromDate:[NSDate date]]];
     
+    NSString* dataRoot;
+    dataRoot = [NSString stringWithString:workingDirectory];
+    if(!validRun){dataRoot = [NSHomeDirectory() stringByAppendingString:@"/Desktop"];}
+    
     //Concatenate everything together to get a complete directory path.
-    workingDirectory = [NSString stringWithFormat:@"%@/%@/%@",root,dateDirectory,timeDirectory];
-    NSString* filename = [NSString stringWithFormat:@"%@/trialXML.xml",workingDirectory];
+    dataDirectory = [NSString stringWithFormat:@"%@/raw/%@/%@",dataRoot,dateDirectory,timeDirectory];
+    [[NSFileManager defaultManager] createDirectoryAtPath:dataDirectory withIntermediateDirectories:YES attributes:nil error:nil];
+    NSString* filename = [dataDirectory stringByAppendingString:@"/trialXML.xml"];
     
-    //Create the directory.
-    [fileManager createDirectoryAtPath:workingDirectory withIntermediateDirectories:YES attributes:nil error:nil];
-    
-    //Open the xml file.
     ABSWriter* writer = [ABSWriter getInstance];
     if(![writer isOpen:filename]) {
         if(![writer openFilename:filename]) {
@@ -130,7 +149,7 @@
     //[[ABSGAController getInstance] start];
     
     //Set up robotDetails
-    [ABSRobotDetails initialize];
+    [ABSRobotDetails initializeWithWorkingDirectory:workingDirectory];
     
     //Set up GUI.
     [robotDisplayView setBoundsRadius:[NSNumber numberWithDouble:boundsRadius]];
@@ -206,6 +225,8 @@
         NSNumber* n = [NSNumber numberWithInt:[[messageExploded objectAtIndex:6] intValue]]; //neighboring tag count.
         
         [tagFound setObject:[NSNumber numberWithBool:YES] forKey:tagId];
+        //tagCount = [NSNumber numberWithInt:[tagCount integerValue]+1];
+        //[toolController setTagCount:tagCount];
         
         //Only leave a pheromone if there are other tags nearby.
         if(n > [NSNumber numberWithInt:1]) {
@@ -251,7 +272,7 @@
     [robotDisplayView setX:x andY:y andColor:[ABSRobotDetails colorFromName:robotName] forRobot:robotName];
     
     //Finally, log the message to a file.  See ABSWriter.
-    NSString* filename = [NSString stringWithFormat:@"%@/%@.csv",workingDirectory,robotName];
+    NSString* filename = [NSString stringWithFormat:@"%@/%@.csv",dataDirectory,robotName];
     
     ABSWriter* writer = [ABSWriter getInstance];
     

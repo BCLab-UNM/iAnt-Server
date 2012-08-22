@@ -5,16 +5,13 @@
 static NSDictionary* robotColors = nil;
 static NSDictionary* robotNames = nil;
 
-+(void) initialize {
-    //Get the current working directory.
-    NSFileManager* fileManager = [NSFileManager defaultManager];
-    NSString* desktop = [[fileManager URLForDirectory:NSDesktopDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil] path];
++(void) initializeWithWorkingDirectory:(NSString*)workingDirectory; {
     if(!robotColors) {
-        NSString* path = [NSString stringWithFormat:@"%@/../Dropbox/AntBot/Data/robotColors.plist",desktop];
+        NSString* path = [NSString stringWithFormat:@"%@/robotColors.plist",workingDirectory];
         robotColors = [[NSDictionary alloc] initWithContentsOfFile:path];
     }
     if(!robotNames) {
-        NSString* path = [NSString stringWithFormat:@"%@/../Dropbox/AntBot/Data/robotNames.plist",desktop];
+        NSString* path = [NSString stringWithFormat:@"%@/robotNames.plist",workingDirectory];
         robotNames = [[NSDictionary alloc] initWithContentsOfFile:path];
     }
 }

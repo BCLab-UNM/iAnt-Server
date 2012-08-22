@@ -6,8 +6,11 @@
 
 @interface ABSServerController : NSViewController {
     NSString* workingDirectory;
+    NSString* dataDirectory;
     NSMutableDictionary* pendingPheromones;
     NSMutableDictionary* tagFound;
+    NSMutableDictionary* settingsPlist;
+    //NSNumber* tagCount;
     
 	ABSServer* server;
     NSTextField* portTextField;
@@ -21,6 +24,7 @@
     NSButton* validRunButton;
     NSTextField* notesTextField;
     NSButton* startButton;
+    NSTextField* workingDirectoryTextField;
     ABSRobotDisplayView* robotDisplayView;
     ABSToolController* toolController;
 }
@@ -41,6 +45,7 @@
 @property (nonatomic,retain) IBOutlet NSButton* validRunButton;
 @property (nonatomic,retain) IBOutlet NSTextField* notesTextField;
 @property (nonatomic,retain) IBOutlet NSButton* startButton;
+@property (nonatomic,retain) IBOutlet NSTextField* workingDirectoryTextField;
 @property (nonatomic,retain) IBOutlet ABSRobotDisplayView* robotDisplayView;
 @property (nonatomic,retain) IBOutlet ABSToolController* toolController;
 
