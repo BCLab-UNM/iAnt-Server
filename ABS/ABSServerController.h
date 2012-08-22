@@ -5,14 +5,8 @@
 @class ABSToolController;
 
 @interface ABSServerController : NSViewController {
-    NSString* workingDirectory;
-    NSString* dataDirectory;
-    NSMutableDictionary* pendingPheromones;
-    NSMutableDictionary* tagFound;
-    NSMutableDictionary* settingsPlist;
-    //NSNumber* tagCount;
     
-	ABSServer* server;
+    //Interface controls.
     NSTextField* portTextField;
     NSPopUpButton* fusionTypePopUp;
     NSPopUpButton* tagDistributionPopUp;
@@ -25,28 +19,48 @@
     NSTextField* notesTextField;
     NSButton* startButton;
     NSTextField* workingDirectoryTextField;
+    
+    //Other important application components.
+    ABSServer* server;
     ABSRobotDisplayView* robotDisplayView;
     ABSToolController* toolController;
+    
+    //Internal variables.
+    NSString* workingDirectory;
+    NSString* dataDirectory;
+    NSMutableDictionary* pendingPheromones;
+    NSMutableDictionary* tagFound;
+    NSMutableDictionary* settingsPlist;
+    //NSNumber* tagCount;
 }
 
 -(IBAction) start:(id)sender;
 -(void) log:(NSString*)message;
 
-@property (nonatomic,retain) NSString* workingDirectory;
-@property (nonatomic,retain) NSMutableDictionary* pendingPheromones;
-@property (nonatomic,retain) IBOutlet NSTextField* portTextField;
-@property (nonatomic,retain) IBOutlet NSPopUpButton* fusionTypePopUp;
-@property (nonatomic,retain) IBOutlet NSPopUpButton* tagDistributionPopUp;
-@property (nonatomic,retain) IBOutlet NSTextField* tagRadiusTextField;
-@property (nonatomic,retain) IBOutlet NSTextField* tagCountTextField;
-@property (nonatomic,retain) IBOutlet NSTextField* boundsRadiusTextField;
-@property (nonatomic,retain) IBOutlet NSPopUpButton* trialTypePopUp;
-@property (nonatomic,retain) IBOutlet NSPopUpButton* environmentTypePopUp;
-@property (nonatomic,retain) IBOutlet NSButton* validRunButton;
-@property (nonatomic,retain) IBOutlet NSTextField* notesTextField;
-@property (nonatomic,retain) IBOutlet NSButton* startButton;
-@property (nonatomic,retain) IBOutlet NSTextField* workingDirectoryTextField;
-@property (nonatomic,retain) IBOutlet ABSRobotDisplayView* robotDisplayView;
-@property (nonatomic,retain) IBOutlet ABSToolController* toolController;
+//Interface controls.
+@property IBOutlet NSTextField* portTextField;
+@property IBOutlet NSPopUpButton* fusionTypePopUp;
+@property IBOutlet NSPopUpButton* tagDistributionPopUp;
+@property IBOutlet NSTextField* tagRadiusTextField;
+@property IBOutlet NSTextField* tagCountTextField;
+@property IBOutlet NSTextField* boundsRadiusTextField;
+@property IBOutlet NSPopUpButton* trialTypePopUp;
+@property IBOutlet NSPopUpButton* environmentTypePopUp;
+@property IBOutlet NSButton* validRunButton;
+@property IBOutlet NSTextField* notesTextField;
+@property IBOutlet NSButton* startButton;
+@property IBOutlet NSTextField* workingDirectoryTextField;
+
+//Other important application components.
+@property ABSServer* server;
+@property IBOutlet ABSRobotDisplayView* robotDisplayView;
+@property IBOutlet ABSToolController* toolController;
+
+//Internal variables.
+@property NSString* workingDirectory;
+@property NSString* dataDirectory;
+@property NSMutableDictionary* pendingPheromones;
+@property NSMutableDictionary* tagFound;
+@property NSMutableDictionary* settingsPlist;
 
 @end

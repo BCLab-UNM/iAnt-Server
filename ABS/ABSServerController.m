@@ -10,7 +10,16 @@
 
 @implementation ABSServerController
 
-@synthesize portTextField, fusionTypePopUp, tagDistributionPopUp, tagRadiusTextField, tagCountTextField, boundsRadiusTextField, trialTypePopUp, environmentTypePopUp, validRunButton, notesTextField, startButton, workingDirectoryTextField, robotDisplayView, pendingPheromones, workingDirectory, toolController;
+
+//Interface controls.
+@synthesize portTextField, fusionTypePopUp, tagDistributionPopUp, tagRadiusTextField, tagCountTextField, boundsRadiusTextField, trialTypePopUp, environmentTypePopUp, validRunButton, notesTextField, startButton, workingDirectoryTextField;
+
+//Other important application components.
+@synthesize server, robotDisplayView, toolController;
+
+//Internal variables.
+@synthesize workingDirectory, dataDirectory, pendingPheromones, tagFound, settingsPlist;
+
 
 /*
  * Called when the view loads.  Essentially our initialize function.
@@ -54,10 +63,11 @@
     [workingDirectoryTextField setStringValue:[settingsPlist objectForKey:@"Working Directory"]];
 }
 
+
 /*
  * Called when the user hits the "start" button.
  * Checks state of all form elements, writes out the XML file containing trial parameters,
- * and ultimately starts the server.
+ * and (re)starts everything up.
  */
 -(IBAction) start:(id)sender {
     
@@ -173,19 +183,31 @@
     [startButton setTitle:@"Restart"];
 }
 
+
+/*
+ * Called whenever something needs to be logged.
+ * This logs to a graphical console, not XCode's console,
+ * which allows the user to see messages when running in release
+ * mode, for example.
+ */
 -(void) log:(NSString*)message {
     //NSLog(@"%@",message);
     [toolController log:message];
 }
 
+
+/*
+ * Delegate method for ABSServer.
+ * Called whenever the server receives something.
+ * Main processing that occurs when we receive a message
+ * goes here.
+ */
 -(void) didReceiveMessage:(NSString*)message onStream:(NSInputStream*)theStream {
     
     /*
      * Current protocol
      * <MAC_addr>,<timestamp>,<x>,<y>,<event>,<event_details>
      */
-    
-    //NSString* rawMessage = message;
     
     //This bit replaces the mac address with the robot name, for a more readable output.
     NSString* macAddress = [[message componentsSeparatedByString:@","] objectAtIndex:0];
@@ -195,6 +217,10 @@
     
     NSArray* messageExploded = [message componentsSeparatedByString:@","];
     
+    /*
+     * If we receive a single number, this is assumed to be a tag id.
+     * We reply with either a 'yes' if a tag has been found or 'no' otherwise.
+     */
     if([messageExploded count] == 1){
         NSNumber* tagId = [NSNumber numberWithInt:[message intValue]];
         NSString* reply = ([[tagFound objectForKey:tagId] boolValue]==YES) ? @"old" : @"new";
@@ -210,12 +236,8 @@
     
     //event is either "", "tag", or "home"
     NSString* event;
-    if([messageExploded count]>=5){
-        event = [messageExploded objectAtIndex:4];
-    }
-    else {
-        event = @"";
-    }
+    if([messageExploded count]>=5){event = [messageExploded objectAtIndex:4];}
+    else{event = @"";}
     
     //If the robot found a tag, add its position to the pending pheromones list.
     if([event isEqualToString:@"tag"]) {
@@ -271,7 +293,7 @@
     
     [robotDisplayView setX:x andY:y andColor:[ABSRobotDetails colorFromName:robotName] forRobot:robotName];
     
-    //Finally, log the message to a file.  See ABSWriter.
+    //Finally, log the message to a file and the console.  See ABSWriter.
     NSString* filename = [NSString stringWithFormat:@"%@/%@.csv",dataDirectory,robotName];
     
     ABSWriter* writer = [ABSWriter getInstance];
@@ -287,16 +309,23 @@
     [self log:[NSString stringWithFormat:@"[CTR] Received: %@",message]];
 }
 
+
+/*
+ * Called whenever the server needs something logged to the graphical console.
+ */
 -(void) didLogMessage:(NSString*)message {
     [self log:message];
 }
 
--(void) didFinishGA:(NSArray*)returnValues {
-    //Send GA stuff to robots?
-}
 
--(void) dealloc {
-	
+/*
+ * When ABSGAController has finished a run of the GA,
+ * this delegate method is called.
+ * In theory, we will send parameters to the robots here
+ * so they dynamically adjust their behavior.
+ */
+-(void) didFinishGA:(NSArray*)returnValues {
+    //Send GA stuff to robots.
 }
 
 @end
