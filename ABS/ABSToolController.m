@@ -42,6 +42,7 @@
         [result setIdentifier:@"CellStatsIdentifier"];
     }
     
+    //Hate to use switches here
     if([[tableColumn identifier] isEqualToString:@"ColumnKey"]) {
         NSString* label;
         switch(row) {

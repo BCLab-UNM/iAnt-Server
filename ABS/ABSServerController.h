@@ -31,7 +31,7 @@
     NSMutableDictionary* pendingPheromones;
     NSMutableDictionary* tagFound;
     NSMutableDictionary* settingsPlist;
-    //NSNumber* tagCount;
+    NSNumber* statTagCount;
 }
 
 -(IBAction) start:(id)sender;
@@ -62,5 +62,6 @@
 @property NSMutableDictionary* pendingPheromones;
 @property NSMutableDictionary* tagFound;
 @property NSMutableDictionary* settingsPlist;
+@property NSNumber* statTagCount;
 
 @end

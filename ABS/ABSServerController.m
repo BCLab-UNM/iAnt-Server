@@ -18,7 +18,7 @@
 @synthesize server, robotDisplayView, toolController;
 
 //Internal variables.
-@synthesize workingDirectory, dataDirectory, pendingPheromones, tagFound, settingsPlist;
+@synthesize workingDirectory, dataDirectory, pendingPheromones, tagFound, settingsPlist, statTagCount;
 
 
 /*
@@ -247,8 +247,8 @@
         NSNumber* n = [NSNumber numberWithInt:[[messageExploded objectAtIndex:6] intValue]]; //neighboring tag count.
         
         [tagFound setObject:[NSNumber numberWithBool:YES] forKey:tagId];
-        //tagCount = [NSNumber numberWithInt:[tagCount integerValue]+1];
-        //[toolController setTagCount:tagCount];
+        statTagCount = [NSNumber numberWithInt:[statTagCount intValue]+1];
+        [toolController setTagCount:statTagCount];
         
         //Only leave a pheromone if there are other tags nearby.
         if(n > [NSNumber numberWithInt:1]) {
