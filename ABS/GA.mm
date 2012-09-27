@@ -120,7 +120,7 @@ Colony colonies[n_colonies];
 int col_count;
 Ant ants[n_ants];
 
-StochasticLib1 sto (time (NULL));
+StochasticLib1 sto ((int)time (NULL));
 
 NSArray*
 mainLoop ()
@@ -144,7 +144,7 @@ mainLoop ()
      cout << "Number of colonies: " << n_colonies << endl;
      cout << "Seeds cost per time outside nest: " << ant_time_out_cost << endl;*/
     
-    srand (time (NULL));
+    srand ((int)time (NULL));
     
     // Initialize first generation of colonies
     for (col_count = 0; col_count < n_colonies; col_count++)
@@ -1533,7 +1533,7 @@ run ()
         if (ants[ant_count].ant_status == 1)
         {
             bool move_accepted = false;
-            int reason = 0;
+            //int reason = 0;
             // Follow trail if one exists
             // Find the out-bound cell with greatest pheromone and sum of pheromone weight on all such cells
             float back_pheromone = 0.0f;
@@ -1613,7 +1613,7 @@ run ()
                 grid[ants[ant_count].x][ants[ant_count].y].ant_status =
                 ants[ant_count].ant_status = 3;
                 ants[ant_count].search_time = 0;
-                reason = 1;
+                //reason = 1;
             }
             
             // Drop off the trail if no more pheromone on out-bound cells (trail has evaporated)
@@ -1622,7 +1622,7 @@ run ()
                 grid[ants[ant_count].x][ants[ant_count].y].ant_status =
                 ants[ant_count].ant_status = 3;
                 ants[ant_count].search_time = -1;
-                reason = 2;
+                //reason = 2;
             }
             
             // ants have a small probability of dropping off the trail each time step
@@ -1634,7 +1634,7 @@ run ()
                 ants[ant_count].ant_status = 3;
                 ants[ant_count].prevx = ants[ant_count].prevy = -1;
                 ants[ant_count].search_time = -1;
-                reason = 3;
+                //reason = 3;
             }
             
             else
@@ -1972,7 +1972,6 @@ run ()
                     else
                         d_theta =
                         sto.Normal (0, colonies[col_count].dir_dev_const);
-                    new_direction = ants[ant_count].search_direction + d_theta;
                     if (update_count % 3 == 0)
                     {		// ants pick a new direction only every 30 cm, like the antbots.
                         new_direction =

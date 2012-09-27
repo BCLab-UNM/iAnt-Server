@@ -43,7 +43,7 @@
     [path lineToPoint:NSMakePoint(([x doubleValue]/100.0)*pixelsInMeter,([y doubleValue]/100.0)*pixelsInMeter)];
     
     if(path.elementCount >= 500) {
-        int n=path.elementCount;
+        int n = (int)path.elementCount;
         NSBezierPath* newPath = [[NSBezierPath alloc] init];
         int i;
         for(i=((n-1)-300); i<n; i+=1) {
@@ -105,7 +105,7 @@
         
         //Draw the robot's trail.  The path points have already been converted from cm to px.
         NSBezierPath* trailPath = [[robots objectForKey:key] objectAtIndex:3];
-        int n = trailPath.elementCount;
+        int n = (int)trailPath.elementCount;
         int i;
         int trailLength = 25;
         for(i=(n-1); i>=MAX(n-(trailLength+1),1); i--) {

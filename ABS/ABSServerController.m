@@ -258,7 +258,7 @@
     }
     else if([event isEqualToString:@"home"]) {
         
-        //First, add a pheromone if it found a tag during its run (uses pendingPheromone list):
+        //First, add a pheromone if it found a tag during its run and if neighboring tags were found nearby (uses pendingPheromone list):
         NSArray* pheromoneData = [pendingPheromones objectForKey:robotName];
         if(pheromoneData != nil) {
             NSNumber* x = [pheromoneData objectAtIndex:0];
@@ -268,7 +268,7 @@
             [pendingPheromones removeObjectForKey:robotName];
         }
         else {
-            //Robot came back without finding a tag (almost never happens).
+            //Tag had at most 1 neighbor, or no tag was found (rarely happens)
         }
         
         //Next, give the robot a (weighted) random pheromone (it chooses whether or not to use it client-side).
@@ -279,10 +279,12 @@
          * and checking for equality between the two inputStreams.
          * This is potentially inefficient, but shouldn't be much of a problem for a handful of robots.
          */
-        for(ABSConnection* connection in [server connections]) {
-            if([connection inputStream] == theStream) {
-                [server send:[NSString stringWithFormat:@"%d,%d\n", [[pheromonePosition objectAtIndex:0] intValue], [[pheromonePosition objectAtIndex:1] intValue]] toStream:[connection outputStream]];
-                break;
+        if (pheromonePosition != nil) {
+            for(ABSConnection* connection in [server connections]) {
+                if([connection inputStream] == theStream) {
+                    [server send:[NSString stringWithFormat:@"%d,%d", [[pheromonePosition objectAtIndex:0] intValue], [[pheromonePosition objectAtIndex:1] intValue]] toStream:[connection outputStream]];
+                    break;
+                }
             }
         }
     }
