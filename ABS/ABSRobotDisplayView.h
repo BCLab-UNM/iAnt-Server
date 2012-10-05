@@ -5,6 +5,7 @@
     NSMutableDictionary* robots;
     NSMutableDictionary* pheromones;
     NSNumber* boundsRadius;
+    NSTimer* drawTimer;
 }
 
 @property (nonatomic,retain) NSNumber* boundsRadius;
@@ -13,6 +14,8 @@
 
 -(void) addRobot:(NSString*)robotName;
 -(void) setX:(NSNumber*)x andY:(NSNumber*)y andColor:(NSColor*)color forRobot:(NSString*)robotName;
+
+-(void) redraw;
 
 -(void) reset;
 

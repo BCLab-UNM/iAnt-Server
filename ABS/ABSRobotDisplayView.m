@@ -16,6 +16,7 @@
         // Initialization code here.
         robots = [[NSMutableDictionary alloc] init];
         pheromones = [[NSMutableDictionary alloc] init];
+        drawTimer = nil;
         
         [self translateOriginToPoint:NSMakePoint(200,200)];
         [self setBounds:NSMakeRect(-210,-210,420,420)];
@@ -25,10 +26,14 @@
 }
 
 -(void) addRobot:(NSString*)robotName {
-    [robots setObject:[NSMutableArray arrayWithObjects:[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSColor blackColor], [[NSBezierPath alloc] init], nil] forKey:robotName];
-    NSBezierPath* path = [[robots objectForKey:robotName] objectAtIndex:3];
-    [path moveToPoint:NSMakePoint(0.0,0.0)];
-    [self setNeedsDisplay:YES];
+    [robots setObject:[NSMutableArray arrayWithObjects:
+                       [NSNumber numberWithDouble:0.0],
+                       [NSNumber numberWithDouble:0.0],
+                       [NSNumber numberWithDouble:0.0],
+                       [NSColor blackColor],
+                       nil]
+               forKey:robotName];
+    [self redraw];
 }
 
 -(void) setX:(NSNumber*)x andY:(NSNumber*)y andColor:(NSColor*)color forRobot:(NSString *)robotName {
@@ -36,31 +41,27 @@
         [self addRobot:robotName];
     }
     
-    NSBezierPath* path = [[robots objectForKey:robotName] objectAtIndex:3];
-    double pixelsInMeter;
-    if([[self boundsRadius] doubleValue]>0){pixelsInMeter = 400.0/([[self boundsRadius] doubleValue]*2);}
-    else{pixelsInMeter = 0.0;}
-    [path lineToPoint:NSMakePoint(([x doubleValue]/100.0)*pixelsInMeter,([y doubleValue]/100.0)*pixelsInMeter)];
+    double xPrevious = [[[robots objectForKey:robotName] objectAtIndex:0] doubleValue],
+           yPrevious = [[[robots objectForKey:robotName] objectAtIndex:1] doubleValue],
+           dx = [x doubleValue]-xPrevious,
+           dy = [y doubleValue]-yPrevious;
     
-    if(path.elementCount >= 500) {
-        int n = (int)path.elementCount;
-        NSBezierPath* newPath = [[NSBezierPath alloc] init];
-        int i;
-        for(i=((n-1)-300); i<n; i+=1) {
-            NSPoint point[1];
-            [path elementAtIndex:i associatedPoints:point];
-            if(i == (n-1)-300) {
-                [newPath moveToPoint:point[0]];
-            }
-            else {
-                [newPath lineToPoint:point[0]];
-            }
-        }
-        path = newPath;
+    NSNumber* direction = [NSNumber numberWithDouble:atan2(dy,dx)];
+    
+    [robots setObject:[NSMutableArray arrayWithObjects:x, y, direction, color, nil] forKey:robotName];
+    
+    [self redraw];
+}
+
+-(void) redraw {
+    if(drawTimer == nil) {
+        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5f target:self selector:@selector(drawTimerDidFire:) userInfo:nil repeats:NO];
     }
-    
-    [robots setObject:[NSMutableArray arrayWithObjects:x, y, color, path, nil] forKey:robotName];
-    
+}
+
+-(void) drawTimerDidFire:(id)sender {
+    [drawTimer invalidate];
+    drawTimer = nil;
     [self setNeedsDisplay:YES];
 }
 
@@ -68,7 +69,7 @@
     [robots removeAllObjects];
     [self translateOriginToPoint:NSMakePoint(200,200)];
     [self setBounds:NSMakeRect(-210,-210,420,420)];
-    [self setNeedsDisplay:YES];
+    [self redraw];
 }
 
 -(void) drawRect:(NSRect)dirtyRect {
@@ -97,15 +98,16 @@
     }
     
     for(NSString* key in robots) {
-        double x,y;
+        double x,y,direction;
         NSColor* color;
         x = [[[robots objectForKey:key] objectAtIndex:0] doubleValue];
         y = [[[robots objectForKey:key] objectAtIndex:1] doubleValue];
-        color = [NSColor whiteColor];//[[robots objectForKey:key] objectAtIndex:2];
+        direction=[[[robots objectForKey:key] objectAtIndex:2] doubleValue];
+        color = [[robots objectForKey:key] objectAtIndex:3];
         
         //Draw the robot's trail.  The path points have already been converted from cm to px.
-        NSBezierPath* trailPath = [[robots objectForKey:key] objectAtIndex:3];
-        int n = (int)trailPath.elementCount;
+        /*NSBezierPath* trailPath = [[robots objectForKey:key] objectAtIndex:3];
+        int n = trailPath.elementCount;
         int i;
         int trailLength = 25;
         for(i=(n-1); i>=MAX(n-(trailLength+1),1); i--) {
@@ -126,7 +128,7 @@
         [[color colorWithAlphaComponent:.35f] set];
         [trailPath setLineDash:dashStyle count:2 phase:0.0];
         [trailPath setLineWidth:.75f];
-        [trailPath stroke];
+        [trailPath stroke];*/
         
         //Convert the robot's current position from cm to px (can we do this in setX:andY: ?).
         double pixelsInMeter;
@@ -136,33 +138,20 @@
         x = (x/100.0)*pixelsInMeter;
         y = (y/100.0)*pixelsInMeter;
         
-        //Here, I checked if a robot went outside the view, and resized accordingly.  Took it out when pinch commands were added.
-        /*if((x-8) < self.bounds.origin.x) {
-            double newSize=self.bounds.size.width+(self.bounds.origin.x-(x-8));
-            [self setBounds:NSMakeRect(x-8,self.bounds.origin.y,newSize,newSize)];
-        }
-        if((y-8) < self.bounds.origin.y) {
-            double newSize=self.bounds.size.height+(self.bounds.origin.y-(y-8));
-            [self setBounds:NSMakeRect(self.bounds.origin.x,y-8,newSize,newSize)];
-        }
-        if((x+8) > self.bounds.size.width+self.bounds.origin.x) {
-            double newSize=(x+8)-self.bounds.origin.x;
-            [self setBounds:NSMakeRect(self.bounds.origin.x,self.bounds.origin.y,newSize,newSize)];
-        }
-        if((y+8) > self.bounds.size.height+self.bounds.origin.y) {
-            double newSize=(y+8)-self.bounds.origin.y;
-            [self setBounds:NSMakeRect(self.bounds.origin.x,self.bounds.origin.y,newSize,newSize)];
-        }*/
-        
         //Draw a circle at the robot's current position.
         NSRect rect = NSMakeRect(x-8,y-8,16,16);
         NSBezierPath* path = [NSBezierPath bezierPathWithOvalInRect:rect];
         
-        color=[[robots objectForKey:key] objectAtIndex:2];
         [color set];
         [path fill];
         [[NSColor whiteColor] set];
         [path stroke];
+        
+        NSBezierPath* directionPath = [[NSBezierPath alloc] init];
+        [directionPath moveToPoint:NSMakePoint(x,y)];
+        [directionPath lineToPoint:NSMakePoint(x+(cos(direction)*8),y+(sin(direction)*8))];
+        [[NSColor whiteColor] set];
+        [directionPath stroke];
     }
 }
 

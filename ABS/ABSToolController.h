@@ -4,12 +4,15 @@
     NSTextView* console;
     NSTableView* stats;
     NSMutableArray* dataValues;
+    NSDate* startTime;
+    NSTimer* timerIntakeRate;
 }
 
 -(void) log:(NSString*)message;
 -(IBAction) didSelectToolbarThing:(id)sender;
 -(void) initialize;
 -(void) setTagCount:(NSNumber*)tagCount;
+-(double) currentTime;
 
 @property IBOutlet NSTextView* console;
 @property IBOutlet NSTableView* stats;
