@@ -57,7 +57,9 @@
     if([[self delegate] respondsToSelector:@selector(didFinishGA:)]) {
         [[self delegate] didFinishGA:returnValues];
     }
-    [self performSelector:@selector(runGA:) onThread:GAThread withObject:nil waitUntilDone:NO];
+    
+    //Don't re-run the GA for now.
+    //[self performSelector:@selector(runGA:) onThread:GAThread withObject:nil waitUntilDone:NO];
 }
 
 -(void) stop {

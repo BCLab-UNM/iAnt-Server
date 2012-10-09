@@ -224,13 +224,18 @@
     if([messageExploded count] == 1){
         NSNumber* tagId = [NSNumber numberWithInt:[message intValue]];
         NSString* reply = ([[tagFound objectForKey:tagId] boolValue]==YES) ? @"old" : @"new";
-        NSLog(@"Received tag query for tag %@.  Replied with %@",tagId,reply);
+        [self log:[NSString stringWithFormat:@"Received tag query for tag %@.  Replied with %@",tagId,reply]];
         for(ABSConnection* connection in [server connections]) {
             if([connection inputStream] == theStream) {
                 [server send:reply toStream:[connection outputStream]];
                 break;
             }
         }
+        return;
+    }
+    else if([messageExploded count] < 4) {
+        //Malformed message.
+        [self log:[NSString stringWithFormat:@"Malformed message: %@",message]];
         return;
     }
     
@@ -293,7 +298,9 @@
     NSNumber* x = [NSNumber numberWithDouble:[[messageExploded objectAtIndex:2] intValue]];
     NSNumber* y = [NSNumber numberWithDouble:[[messageExploded objectAtIndex:3] intValue]];
     
-    [robotDisplayView setX:x andY:y andColor:[ABSRobotDetails colorFromName:robotName] forRobot:robotName];
+    if(![robotName isEqualToString:@"unknownRobot"]) {
+        [robotDisplayView setX:x andY:y andColor:[ABSRobotDetails colorFromName:robotName] forRobot:robotName];
+    }
     
     //Finally, log the message to a file and the console.  See ABSWriter.
     NSString* filename = [NSString stringWithFormat:@"%@/%@.csv",dataDirectory,robotName];
@@ -327,7 +334,10 @@
  * so they dynamically adjust their behavior.
  */
 -(void) didFinishGA:(NSArray*)returnValues {
-    //Send GA stuff to robots.
+    NSLog(@"GA finished:");
+    for(NSNumber* n in returnValues) {
+        NSLog(@"%@",[n stringValue]);
+    }
 }
 
 @end

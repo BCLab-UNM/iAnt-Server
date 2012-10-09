@@ -126,15 +126,22 @@
 }
 
 -(void) log:(NSString*)message {
-    [console setString:[NSString stringWithFormat:@"%@%@\n",[console string],message]];
     
-    NSScrollView* scrollView = (NSScrollView*)[[console superview] superview];
-    if(self.console.frame.size.height > scrollView.frame.size.height) {
-        if([scrollView hasVerticalScroller]) {
-            if([[scrollView verticalScroller] doubleValue] == 1.) {
-                [console scrollRangeToVisible:NSMakeRange([[console string] length],0)];
-            }
-        }
+    //Keep track of whether or not we should scroll BEFORE we add the text.
+    BOOL shouldScroll=NO;
+    
+    //Conveniently, the verticalScroller always has a value of 1 (even if there IS no vertical scroller).
+    NSScrollView* scrollView = (NSScrollView*)[console enclosingScrollView];
+    if([[scrollView verticalScroller] floatValue] == 1.f) {
+        shouldScroll=YES;
+    }
+    
+    //Add text to the console.
+    [[[console textStorage] mutableString] appendString:[NSString stringWithFormat:@"%@\n",message]];
+    
+    //Scroll to bottom if we were previously scrolled to the bottom.
+    if(shouldScroll){
+        [console scrollRangeToVisible:NSMakeRange([[console string] length],0)];
     }
 }
 

@@ -70,22 +70,22 @@ const int n_colonies = 200;
 const int n_generations = 100;
 const int n_evals = 8;
 const int n_steps = 13500 / 2;
-const int n_ants = 6;
+const int n_ants = 3;
 const float ant_time_out_cost = 0.0000;
 
-const bool recruit = true;	// Turns pheromones on/off
+const bool recruit = false;	// Turns pheromones on/off
 const bool patch = true;	// Turns site fidelity on/off
 
 int search_delay = 4;		// time steps between a searching ant's move.  0 is move on every time step.
 int return_delay = 0;		// time steps between a returning ant's move.  0 is move on every time step.
 int crossover_rate = 10;	// Percent chance for crossover.  50 is complete shuffling.  0 or 100 is no crossover
 
-const int clumpradius = 2;
-const int n_food_red = 8;	// one pile
-const int n_food_orange = 8;	// two piles
-const int n_food_green = 8;	// four piles
+const int clumpradius = 3;
+const int n_food_red = 0;	// one pile
+const int n_food_orange = 0;	// two piles
+const int n_food_green = 0;	// four piles
 const int n_food_purple = 0;	// 64 piles -- not part of the AntBot setup
-const int n_food_blue = 8;	// random
+const int n_food_blue = 256;	// random
 const int num_each_clump = 6676 / 32;	// 6676/256; // 118/32; // 128/32; 6676/32
 const int n_food_background = 256 * (100 - num_each_clump) * 0;	// random
 int count_food_red = 0;
