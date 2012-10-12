@@ -21,6 +21,8 @@
 @synthesize workingDirectory, dataDirectory, pendingPheromones, tagFound, settingsPlist, statTagCount;
 
 
+
+
 /*
  * Called when the view loads.  Essentially our initialize function.
  */
@@ -113,7 +115,7 @@
     ABSWriter* writer = [ABSWriter getInstance];
     if(![writer isOpen:filename]) {
         if(![writer openFilename:filename]) {
-            [self log:@"[CTR] Error creating the xml file.  Check permissions, paths, etc."];
+            [self log:@"[CTR] Error creating the xml file.  Check permissions, paths, etc." withTag:LOG_TAG_PROBLEM];
         }
     }
     
@@ -190,9 +192,9 @@
  * which allows the user to see messages when running in release
  * mode, for example.
  */
--(void) log:(NSString*)message {
+-(void) log:(NSString*)message withTag:(int)tag {
     //NSLog(@"%@",message);
-    [toolController log:message];
+    [toolController log:message withTag:tag];
 }
 
 
@@ -224,7 +226,7 @@
     if([messageExploded count] == 1){
         NSNumber* tagId = [NSNumber numberWithInt:[message intValue]];
         NSString* reply = ([[tagFound objectForKey:tagId] boolValue]==YES) ? @"old" : @"new";
-        [self log:[NSString stringWithFormat:@"Received tag query for tag %@.  Replied with %@",tagId,reply]];
+        [self log:[NSString stringWithFormat:@"[CTR] Received tag query for tag %@.  Replied with %@",tagId,reply] withTag:LOG_TAG_EVENT];
         for(ABSConnection* connection in [server connections]) {
             if([connection inputStream] == theStream) {
                 [server send:reply toStream:[connection outputStream]];
@@ -235,7 +237,7 @@
     }
     else if([messageExploded count] < 4) {
         //Malformed message.
-        [self log:[NSString stringWithFormat:@"Malformed message: %@",message]];
+        [self log:[NSString stringWithFormat:@"[CTR] Malformed message: %@",message] withTag:LOG_TAG_PROBLEM];
         return;
     }
     
@@ -273,7 +275,7 @@
             [pendingPheromones removeObjectForKey:robotName];
         }
         else {
-            //Tag had at most 1 neighbor, or no tag was found (rarely happens)
+            //Tag had at most 1 neighbor, or no tag was found (rarely happens).
         }
         
         //Next, give the robot a (weighted) random pheromone (it chooses whether or not to use it client-side).
@@ -309,21 +311,29 @@
     
     if(![writer isOpen:filename]) {
         if(![writer openFilename:filename]) {
-            [self log:[NSString stringWithFormat:@"[CTR] Error opening %@ for writing.",filename]];
+            [self log:[NSString stringWithFormat:@"[CTR] Error opening %@ for writing.",filename] withTag:LOG_TAG_PROBLEM];
         }
     }
     
     [writer writeString:[NSString stringWithFormat:@"%@\n",message] toFile:filename];
     
-    [self log:[NSString stringWithFormat:@"[CTR] Received: %@",message]];
+    [self log:[NSString stringWithFormat:@"[CTR] Received: %@",message] withTag:LOG_TAG_MESSAGE];
+}
+
+
+/*
+ * Called whenever the pheromone controller places a pheromone.
+ */
+-(void) didPlacePheromoneAt:(NSPoint)position {
+    [self log:[NSString stringWithFormat:@"[PHC] Placed pheromone at %f,%f.",position.x,position.y] withTag:LOG_TAG_EVENT];
 }
 
 
 /*
  * Called whenever the server needs something logged to the graphical console.
  */
--(void) didLogMessage:(NSString*)message {
-    [self log:message];
+-(void) didLogMessage:(NSString*)message withTag:(int)tag {
+    [self log:message withTag:tag];
 }
 
 

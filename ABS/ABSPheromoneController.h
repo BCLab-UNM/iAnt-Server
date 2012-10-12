@@ -16,7 +16,12 @@
 
 @end
 
+@interface NSObject(ABSPheromoneControllerNotifications)
+-(void)didPlacePheromoneAt:(NSPoint)position;
+@end
+
 @interface ABSPheromoneController : NSObject {
+    NSObject* delegate;
     NSMutableArray* pheromoneList;
     double pheromoneSum;
     NSDate* startTime;
@@ -30,5 +35,7 @@
 -(NSArray*) getPheromone;
 -(NSArray*) getAllPheromones;
 -(void) clearPheromones;
+
+@property (nonatomic,retain) NSObject* delegate;
 
 @end

@@ -4,17 +4,6 @@
 
 @synthesize console,stats;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Initialization code here.
-        NSLog(@"Init");
-    }
-    
-    return self;
-}
-
 -(void) initialize {
     dataValues = [[NSMutableArray alloc] initWithObjects:
                   [NSNumber numberWithInt:0],
@@ -25,6 +14,9 @@
                   [NSNumber numberWithFloat:0.],
                   nil];
     [stats reloadData];
+    consoleMessages = [[NSMutableArray alloc] init];
+    consoleTags = 7;
+    [self resetConsole];
     startTime = [NSDate date];
     timerIntakeRate = [NSTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(updateIntakeRate:) userInfo:nil repeats:YES];
 }
@@ -33,6 +25,7 @@
     //Update intake rate in dataValues.
     double newIntakeRate = [[dataValues objectAtIndex:1] doubleValue]/([self currentTime]/60.);
     [dataValues replaceObjectAtIndex:1 withObject:[NSNumber numberWithDouble:newIntakeRate]];
+    [stats reloadData];
 }
 
 -(double) currentTime {
@@ -115,33 +108,73 @@
 }
 
 -(IBAction)didSelectToolbarThing:(id)sender {
-    if([[sender label] isEqualToString:@"Console"]) {
-        [[[console superview] superview] setHidden:NO];
-        [[[stats superview] superview] setHidden:YES];
+    if([sender class] == [NSSegmentedControl class]) {
+        long segments = [sender segmentCount];
+        consoleTags = 0;
+        for(int i=0; i<segments; i++) {
+            if([sender isSelectedForSegment:i]) {
+                consoleTags |= (1 << i);
+            }
+        }
+        [self resetConsole];
     }
     else {
-        [[[console superview] superview] setHidden:YES];
-        [[[stats superview] superview] setHidden:NO];
+        if([[sender label] isEqualToString:@"Console"]) {
+            [[[console superview] superview] setHidden:NO];
+            [[[stats superview] superview] setHidden:YES];
+        }
+        else if([[sender label] isEqualToString:@"Stats"]) {
+            [[[console superview] superview] setHidden:YES];
+            [[[stats superview] superview] setHidden:NO];
+        }
     }
 }
 
--(void) log:(NSString*)message {
+-(void) resetConsole {
     
-    //Keep track of whether or not we should scroll BEFORE we add the text.
-    BOOL shouldScroll=NO;
+    //Clear the console.
+    [console setString:@""];
     
-    //Conveniently, the verticalScroller always has a value of 1 (even if there IS no vertical scroller).
-    NSScrollView* scrollView = (NSScrollView*)[console enclosingScrollView];
-    if([[scrollView verticalScroller] floatValue] == 1.f) {
-        shouldScroll=YES;
+    //Iterate through the array of messages.
+    for(NSArray* arr in consoleMessages) {
+        int tag = [[arr objectAtIndex:0] intValue];
+        if(consoleTags & (1 << tag)) {
+            [[[console textStorage] mutableString] appendString:[NSString stringWithFormat:@"%@\n",[arr objectAtIndex:1]]];
+        }
     }
     
-    //Add text to the console.
-    [[[console textStorage] mutableString] appendString:[NSString stringWithFormat:@"%@\n",message]];
+    //Set the correct font and scroll to the bottom.
+    [[console textStorage] setFont:[NSFont fontWithName:@"Monaco" size:11.f]];
+    [console scrollRangeToVisible:NSMakeRange([[console string] length],0)];
+}
+
+-(void) log:(NSString*)message withTag:(int)tag {
+
+    //Add the message to the array of messages.
+    [consoleMessages addObject:[[NSArray alloc] initWithObjects:[NSNumber numberWithInt:tag],message,nil]];
     
-    //Scroll to bottom if we were previously scrolled to the bottom.
-    if(shouldScroll){
-        [console scrollRangeToVisible:NSMakeRange([[console string] length],0)];
+    //If we actually have to display the message, update the NSTextView.
+    if(consoleTags & (1 << tag)){
+        
+        //Keep track of whether or not we should scroll BEFORE we add the text.
+        BOOL shouldScroll=NO;
+        
+        //Conveniently, the verticalScroller always has a value of 1 (even if there IS no vertical scroller).
+        NSScrollView* scrollView = (NSScrollView*)[console enclosingScrollView];
+        if([[scrollView verticalScroller] floatValue] == 1.f) {
+            shouldScroll=YES;
+        }
+        
+        //Add the text.
+        [[[console textStorage] mutableString] appendString:[NSString stringWithFormat:@"%@\n",message]];
+        
+        //Set the correct font.
+        [[console textStorage] setFont:[NSFont fontWithName:@"Monaco" size:11.f]];
+        
+        //Scroll to bottom if we were previously scrolled to the bottom.
+        if(shouldScroll){
+            [console scrollRangeToVisible:NSMakeRange([[console string] length],0)];
+        }
     }
 }
 

@@ -35,7 +35,7 @@
 }
 
 -(IBAction) start:(id)sender;
--(void) log:(NSString*)message;
+-(void) log:(NSString*)message withTag:(int)tag;
 
 //Interface controls.
 @property IBOutlet NSTextField* portTextField;

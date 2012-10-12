@@ -70,7 +70,7 @@ const int n_colonies = 200;
 const int n_generations = 100;
 const int n_evals = 8;
 const int n_steps = 13500 / 2;
-const int n_ants = 3;
+const int n_ants = 1;
 const float ant_time_out_cost = 0.0000;
 
 const bool recruit = false;	// Turns pheromones on/off

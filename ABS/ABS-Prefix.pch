@@ -5,3 +5,7 @@
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
 #endif
+
+#define LOG_TAG_PROBLEM 0
+#define LOG_TAG_EVENT   1
+#define LOG_TAG_MESSAGE 2

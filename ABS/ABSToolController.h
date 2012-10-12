@@ -6,9 +6,12 @@
     NSMutableArray* dataValues;
     NSDate* startTime;
     NSTimer* timerIntakeRate;
+    
+    NSMutableArray* consoleMessages;
+    int consoleTags;
 }
 
--(void) log:(NSString*)message;
+-(void) log:(NSString*)message withTag:(int)tag;
 -(IBAction) didSelectToolbarThing:(id)sender;
 -(void) initialize;
 -(void) setTagCount:(NSNumber*)tagCount;

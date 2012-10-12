@@ -7,6 +7,7 @@
 
 //Implementation for the actual PheromoneController
 @implementation ABSPheromoneController
+@synthesize delegate;
 
 +(ABSPheromoneController*) getInstance {
     static ABSPheromoneController* instance;
@@ -41,8 +42,11 @@
     [pheromone setY:y];
     [pheromone setN:[NSNumber numberWithDouble:1.0]];
     [pheromone setT:[NSNumber numberWithDouble:[self currentTime]]]; //seconds since class was created.
-    NSLog(@"Placed pheromone at: %@, %@",[pheromone x],[pheromone y]);
     [pheromoneList addObject:pheromone];
+    
+    if([[self delegate] respondsToSelector:@selector(didPlacePheromoneAt:)]) {
+        [[self delegate] didPlacePheromoneAt:NSMakePoint([x floatValue],[y floatValue])];
+    }
 }
 
 -(void) decayPheromones {

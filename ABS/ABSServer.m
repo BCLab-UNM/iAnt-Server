@@ -20,7 +20,7 @@
 	//Create the socket.  The constants here indicate that it's a TCP socket (vs. UDP).
 	listenSocket = CFSocketCreate(kCFAllocatorDefault, PF_INET, SOCK_STREAM, IPPROTO_TCP, kCFSocketAcceptCallBack, (CFSocketCallBack)&socketAcceptCallBack, &context);
 	if(!listenSocket) {
-        [self log:@"[SRV] Couldn't create socket."];
+        [self log:@"[SRV] Couldn't create socket." withTag:LOG_TAG_PROBLEM];
 		return NO;
 	}
 	
@@ -33,7 +33,7 @@
 	int reuse = true;
 	int fileDescriptor = CFSocketGetNative(listenSocket);
 	if(setsockopt(fileDescriptor, SOL_SOCKET, SO_REUSEADDR, (void*)&reuse, sizeof(int)) != 0) {
-		[self log:@"[SRV] Couldn't set socket options."];
+		[self log:@"[SRV] Couldn't set socket options." withTag:LOG_TAG_PROBLEM];
 		return NO;
 	}
     
@@ -52,7 +52,7 @@
 	if(CFSocketSetAddress(listenSocket, addressData) != kCFSocketSuccess)
     {
         CFRelease(addressData);
-		[self log:@"[SRV] Couldn't bind socket."];
+		[self log:@"[SRV] Couldn't bind socket." withTag:LOG_TAG_PROBLEM];
 		return NO;
 	}
     CFRelease(addressData);
@@ -61,7 +61,7 @@
     CFRunLoopAddSource(CFRunLoopGetCurrent(), source, kCFRunLoopDefaultMode);
     CFRelease(source);
     
-    [self log:[NSString stringWithFormat:@"[SRV] Listening on port %d", port]];
+    [self log:[NSString stringWithFormat:@"[SRV] Listening on port %d", port] withTag:LOG_TAG_EVENT];
     
     connections = [[NSMutableArray alloc] init];
     
@@ -74,7 +74,7 @@
 
 
 -(void) netService:(NSNetService *)sender didNotPublish:(NSDictionary *)errorDict {
-    [self log:@"[SRV] Error publishing Bonjour."];
+    [self log:@"[SRV] Error publishing Bonjour." withTag:LOG_TAG_PROBLEM];
 }
 
 
@@ -109,10 +109,10 @@ static void socketAcceptCallBack(CFSocketRef socket, CFSocketCallBackType type, 
             const uint8* ipInt = (const uint8*)&addr_in->sin_addr.s_addr;
             ip = [NSString stringWithFormat:@"%u.%u.%u.%u",(unsigned)ipInt[0],(unsigned)ipInt[1],(unsigned)ipInt[2],(unsigned)ipInt[3]];
             port = ntohs(addr_in->sin_port);
-            [self log:[NSString stringWithFormat:@"[SRV] New client: %@:%d",ip,port]];
+            [self log:[NSString stringWithFormat:@"[SRV] New client: %@:%d",ip,port] withTag:LOG_TAG_EVENT];
         }
         else {
-            [self log:@"[SRV] Can't get IP/Port from client."];
+            [self log:@"[SRV] Can't get IP/Port from client." withTag:LOG_TAG_PROBLEM];
         }
         
         //Create higher-level streams used to send/receive data.
@@ -143,7 +143,7 @@ static void socketAcceptCallBack(CFSocketRef socket, CFSocketCallBackType type, 
             [self->connections addObject:connection];
         }
         else {
-            [self log:@"[SRV] Error creating input and output streams."];
+            [self log:@"[SRV] Error creating input and output streams." withTag:LOG_TAG_PROBLEM];
         }
     }
 }
@@ -153,7 +153,7 @@ static void socketAcceptCallBack(CFSocketRef socket, CFSocketCallBackType type, 
  * Sends a string to a specific outputStream.
  */
 -(void) send:(NSString*)message toStream:(NSOutputStream*)stream {
-    [self log:[NSString stringWithFormat:@"[SRV] Sending %@",message]];
+    [self log:[NSString stringWithFormat:@"[SRV] Sending %@",message] withTag:LOG_TAG_MESSAGE];
     NSData* data = [[NSData alloc] initWithData:[message dataUsingEncoding:NSASCIIStringEncoding]];
     [stream write:[data bytes] maxLength:[data length]];
 }
@@ -214,7 +214,7 @@ static void socketAcceptCallBack(CFSocketRef socket, CFSocketCallBackType type, 
             break;
             
 		case NSStreamEventErrorOccurred:
-			[self log:@"[SRV] Can not connect to the host!"];
+			[self log:@"[SRV] Can not connect to the host!" withTag:LOG_TAG_PROBLEM];
 			break;
             
         //If remote host closes the connection, close stream on this end and remove from runloop.
@@ -228,9 +228,9 @@ static void socketAcceptCallBack(CFSocketRef socket, CFSocketCallBackType type, 
     }
 }
 
--(void) log:(NSString*)message {
-    if([[self delegate] respondsToSelector:@selector(didLogMessage:)]) {
-        [[self delegate] didLogMessage:message];
+-(void) log:(NSString*)message withTag:(int)tag {
+    if([[self delegate] respondsToSelector:@selector(didLogMessage:withTag:)]) {
+        [[self delegate] didLogMessage:message withTag:tag];
     }
 }
 
