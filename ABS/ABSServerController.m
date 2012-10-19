@@ -223,6 +223,7 @@
   //This bit replaces the mac address with the robot name, for a more readable output.
   NSString* macAddress = [[message componentsSeparatedByString:@","] objectAtIndex:0];
   NSString* robotName = [ABSRobotDetails nameFromMacAddress:macAddress];
+  int logTag = LOG_TAG_MESSAGE;
   if(robotName == nil){robotName = @"unknownRobot";}
   message = [message stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%@%@",macAddress,@","] withString:[NSString stringWithFormat:@"%@%@",robotName,@","]];
   
@@ -257,6 +258,8 @@
   
   //If the robot found a tag, add its position to the pending pheromones list.
   if([event isEqualToString:@"tag"]) {
+    logTag=LOG_TAG_EVENT;
+  
     NSNumber* x = [NSNumber numberWithInt:[[messageExploded objectAtIndex:2] intValue]];
     NSNumber* y = [NSNumber numberWithInt:[[messageExploded objectAtIndex:3] intValue]];
     NSNumber* tagId = [NSNumber numberWithInt:[[messageExploded objectAtIndex:5] intValue]];
@@ -273,6 +276,7 @@
     }
   }
   else if([event isEqualToString:@"home"]) {
+    logTag = LOG_TAG_EVENT;
     
     //First, add a pheromone if it found a tag during its run and if neighboring tags were found nearby (uses pendingPheromone list):
     NSArray* pheromoneData = [pendingPheromones objectForKey:robotName];
@@ -326,7 +330,7 @@
   
   [writer writeString:[NSString stringWithFormat:@"%@\n",message] toFile:filename];
   
-  [self log:[NSString stringWithFormat:@"[CTR] Received: %@",message] withTag:LOG_TAG_MESSAGE];
+  [self log:[NSString stringWithFormat:@"[CTR] Received: %@",message] withTag:logTag];
 }
 
 

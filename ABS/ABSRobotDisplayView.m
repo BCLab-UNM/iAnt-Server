@@ -16,6 +16,7 @@
     // Initialization code here.
     robots = [[NSMutableDictionary alloc] init];
     pheromones = [[NSMutableDictionary alloc] init];
+    startTime = [NSDate date];
     drawTimer = nil;
     
     [self translateOriginToPoint:NSMakePoint(200,200)];
@@ -25,12 +26,17 @@
   return self;
 }
 
+-(double) currentTime {
+  return [startTime timeIntervalSinceNow] * -1; //multiply by -1000 for milliseconds, -1000000 for microseconds, -1 for seconds, etc.
+}
+
 -(void) addRobot:(NSString*)robotName {
   [robots setObject:[NSMutableArray arrayWithObjects:
                      [NSNumber numberWithDouble:0.0],
                      [NSNumber numberWithDouble:0.0],
                      [NSNumber numberWithDouble:0.0],
                      [NSColor blackColor],
+                     [NSNumber numberWithDouble:[self currentTime]],
                      nil]
              forKey:robotName];
   [self redraw];
@@ -47,10 +53,15 @@
   dy = [y doubleValue]-yPrevious;
   
   NSNumber* direction = [NSNumber numberWithDouble:atan2(dy,dx)];
+  NSNumber* lastUpdated = [NSNumber numberWithDouble:[self currentTime]];
   
-  [robots setObject:[NSMutableArray arrayWithObjects:x, y, direction, color, nil] forKey:robotName];
+  [robots setObject:[NSMutableArray arrayWithObjects:x, y, direction, color, lastUpdated, nil] forKey:robotName];
   
   [self redraw];
+}
+
+-(void) removeRobot:(NSString*)robotName {
+  [robots removeObjectForKey:robotName];
 }
 
 -(void) redraw {
@@ -104,6 +115,10 @@
     y = [[[robots objectForKey:key] objectAtIndex:1] doubleValue];
     direction=[[[robots objectForKey:key] objectAtIndex:2] doubleValue];
     color = [[robots objectForKey:key] objectAtIndex:3];
+    
+    if([self currentTime] - [[[robots objectForKey:key] objectAtIndex:4] doubleValue] > 30) {
+      [self removeRobot:key];
+    }
     
     //Draw the robot's trail.  The path points have already been converted from cm to px.
     /*NSBezierPath* trailPath = [[robots objectForKey:key] objectAtIndex:3];
