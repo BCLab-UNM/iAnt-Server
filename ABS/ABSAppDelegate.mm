@@ -14,8 +14,8 @@
 	 * This then triggers the "loadView" event of ABSController,
 	 * which is the entry point for everything else.
 	 */
-    [[serverWindow contentView] addSubview:[serverController view]];
-    [toolController initialize];
+  [[serverWindow contentView] addSubview:[serverController view]];
+  [toolController initialize];
 }
 
 @end

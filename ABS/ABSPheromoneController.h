@@ -1,11 +1,11 @@
 #import <Foundation/Foundation.h>
 
 @interface Pheromone : NSObject { //Miniclass used as container for pheromone data
-    NSNumber* i; //The QR tag index of the pheromone.
-    NSNumber* x; //The x coordinate of the pheromone.
-    NSNumber* y; //The y coordinate of the pheromone.
-    NSNumber* n; //The strength of the pheromone [0..1]
-    NSNumber* t; //The time (in microseconds) at which the pheromone last decayed.
+  NSNumber* i; //The QR tag index of the pheromone.
+  NSNumber* x; //The x coordinate of the pheromone.
+  NSNumber* y; //The y coordinate of the pheromone.
+  NSNumber* n; //The strength of the pheromone [0..1]
+  NSNumber* t; //The time (in microseconds) at which the pheromone last decayed.
 }
 
 @property NSNumber* i;
@@ -17,14 +17,14 @@
 @end
 
 @interface NSObject(ABSPheromoneControllerNotifications)
--(void)didPlacePheromoneAt:(NSPoint)position;
+  -(void) didPlacePheromoneAt:(NSPoint)position;
 @end
 
 @interface ABSPheromoneController : NSObject {
-    NSObject* delegate;
-    NSMutableArray* pheromoneList;
-    double pheromoneSum;
-    NSDate* startTime;
+  NSObject* delegate;
+  NSMutableArray* pheromoneList;
+  double pheromoneSum;
+  NSDate* startTime;
 }
 
 +(ABSPheromoneController*) getInstance;

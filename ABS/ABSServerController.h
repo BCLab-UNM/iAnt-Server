@@ -5,33 +5,33 @@
 @class ABSToolController;
 
 @interface ABSServerController : NSViewController {
-    
-    //Interface controls.
-    NSTextField* portTextField;
-    NSPopUpButton* fusionTypePopUp;
-    NSPopUpButton* tagDistributionPopUp;
-    NSTextField* tagRadiusTextField;
-    NSTextField* tagCountTextField;
-    NSTextField* boundsRadiusTextField;
-    NSPopUpButton* trialTypePopUp;
-    NSPopUpButton* environmentTypePopUp;
-    NSButton* validRunButton;
-    NSTextField* notesTextField;
-    NSButton* startButton;
-    NSTextField* workingDirectoryTextField;
-    
-    //Other important application components.
-    ABSServer* server;
-    ABSRobotDisplayView* robotDisplayView;
-    ABSToolController* toolController;
-    
-    //Internal variables.
-    NSString* workingDirectory;
-    NSString* dataDirectory;
-    NSMutableDictionary* pendingPheromones;
-    NSMutableDictionary* tagFound;
-    NSMutableDictionary* settingsPlist;
-    NSNumber* statTagCount;
+  
+  //Interface controls.
+  NSTextField* portTextField;
+  NSPopUpButton* fusionTypePopUp;
+  NSPopUpButton* tagDistributionPopUp;
+  NSTextField* tagRadiusTextField;
+  NSTextField* tagCountTextField;
+  NSTextField* boundsRadiusTextField;
+  NSPopUpButton* trialTypePopUp;
+  NSPopUpButton* environmentTypePopUp;
+  NSButton* validRunButton;
+  NSTextField* notesTextField;
+  NSButton* startButton;
+  NSTextField* workingDirectoryTextField;
+  
+  //Other important application components.
+  ABSServer* server;
+  ABSRobotDisplayView* robotDisplayView;
+  ABSToolController* toolController;
+  
+  //Internal variables.
+  NSString* workingDirectory;
+  NSString* dataDirectory;
+  NSMutableDictionary* pendingPheromones;
+  NSMutableDictionary* tagFound;
+  NSMutableDictionary* settingsPlist;
+  NSNumber* statTagCount;
 }
 
 -(IBAction) start:(id)sender;

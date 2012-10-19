@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 
 @interface ABSWriter : NSObject {
-    NSMutableDictionary* files; //A mapping of filenames to filehandles.
+  NSMutableDictionary* files; //A mapping of filenames to filehandles.
 }
 
 +(ABSWriter*)getInstance;

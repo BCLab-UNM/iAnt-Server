@@ -1,11 +1,11 @@
 #import <Cocoa/Cocoa.h>
 
 @interface ABSRobotDisplayView : NSView {
-    //Dictionary of robot names to an array of x, y, color.
-    NSMutableDictionary* robots;
-    NSMutableDictionary* pheromones;
-    NSNumber* boundsRadius;
-    NSTimer* drawTimer;
+  //Dictionary of robot names to an array of x, y, color.
+  NSMutableDictionary* robots;
+  NSMutableDictionary* pheromones;
+  NSNumber* boundsRadius;
+  NSTimer* drawTimer;
 }
 
 @property (nonatomic,retain) NSNumber* boundsRadius;

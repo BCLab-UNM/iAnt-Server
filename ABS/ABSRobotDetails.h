@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 
 @interface ABSRobotDetails : NSObject {
-    
+  
 }
 
 +(void) initializeWithWorkingDirectory:(NSString*)workingDirectory;

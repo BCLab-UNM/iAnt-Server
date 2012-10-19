@@ -5,12 +5,12 @@
 #import "ABSToolController.h"
 
 @interface ABSAppDelegate : NSObject <NSApplicationDelegate> {
-    NSWindow* serverWindow;
-    NSWindow* robotDisplayWindow;
-    NSWindow* toolWindow;
-    ABSRobotDisplayController* robotDisplayController;
-    ABSServerController* serverController;
-    ABSToolController* toolController;
+  NSWindow* serverWindow;
+  NSWindow* robotDisplayWindow;
+  NSWindow* toolWindow;
+  ABSRobotDisplayController* robotDisplayController;
+  ABSServerController* serverController;
+  ABSToolController* toolController;
 }
 
 @property (nonatomic,retain) IBOutlet NSWindow* serverWindow;

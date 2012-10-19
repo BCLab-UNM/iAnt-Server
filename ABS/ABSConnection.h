@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 
 @interface ABSConnection : NSObject {
-    
+  
 }
 
 @property (readwrite, nonatomic, assign) NSInputStream* inputStream;

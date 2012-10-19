@@ -4,15 +4,15 @@
 @class ABSRobotDisplayView;
 
 @interface NSObject(ABSServerNotifications)
--(void)didReceiveMessage:(NSString*)message onStream:(NSInputStream*)theStream;
--(void)didLogMessage:(NSString*)message withTag:(int)tag;
+  -(void) didReceiveMessage:(NSString*)message onStream:(NSInputStream*)theStream;
+  -(void) didLogMessage:(NSString*)message withTag:(int)tag;
 @end
 
 @interface ABSServer : NSObject <NSStreamDelegate,NSNetServiceDelegate> {
-    NSObject* delegate;
+  NSObject* delegate;
 	CFSocketRef listenSocket;
-    NSMutableArray* connections;
-    NSNetService* netService;
+  NSMutableArray* connections;
+  NSNetService* netService;
 }
 
 -(BOOL) listenOnPort:(int)port;
