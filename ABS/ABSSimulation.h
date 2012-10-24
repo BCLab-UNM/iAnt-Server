@@ -2,6 +2,7 @@
 
 #define DISTR_RANDOM 0
 #define DISTR_POWERLAW 1
+#define DISTR_CLUSTERED 2
 
 @class ABSSimulationColony;
 @class ABSSimulationLocation;
@@ -79,7 +80,9 @@
 @property BOOL usesPheromones;
 @property BOOL usesSiteFidelity;
 
-@property int distributionType;
+@property float distributionRandom;
+@property float distributionPowerlaw;
+@property float distributionClustered;
 @property int numberOfSeeds;
 
 @property BOOL started;

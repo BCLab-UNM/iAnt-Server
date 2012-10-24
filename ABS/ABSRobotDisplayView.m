@@ -109,64 +109,65 @@
   }
   
   for(NSString* key in robots) {
-    double x,y,direction;
-    NSColor* color;
-    x = [[[robots objectForKey:key] objectAtIndex:0] doubleValue];
-    y = [[[robots objectForKey:key] objectAtIndex:1] doubleValue];
-    direction=[[[robots objectForKey:key] objectAtIndex:2] doubleValue];
-    color = [[robots objectForKey:key] objectAtIndex:3];
-    
-    if([self currentTime] - [[[robots objectForKey:key] objectAtIndex:4] doubleValue] > 30) {
-      [self removeRobot:key];
+  
+    //Only draw robots that we've heard from recently:
+    if([self currentTime] - [[[robots objectForKey:key] objectAtIndex:4] doubleValue] < 90) {
+       
+      double x,y,direction;
+      NSColor* color;
+      x = [[[robots objectForKey:key] objectAtIndex:0] doubleValue];
+      y = [[[robots objectForKey:key] objectAtIndex:1] doubleValue];
+      direction=[[[robots objectForKey:key] objectAtIndex:2] doubleValue];
+      color = [[robots objectForKey:key] objectAtIndex:3];
+      
+      //Draw the robot's trail.  The path points have already been converted from cm to px.
+      /*NSBezierPath* trailPath = [[robots objectForKey:key] objectAtIndex:3];
+       int n = trailPath.elementCount;
+       int i;
+       int trailLength = 25;
+       for(i=(n-1); i>=MAX(n-(trailLength+1),1); i--) {
+       NSPoint point[1];
+       NSBezierPath* tempPath = [[NSBezierPath alloc] init];
+       [trailPath elementAtIndex:i associatedPoints:point];
+       [tempPath moveToPoint:point[0]];
+       [trailPath elementAtIndex:i-1 associatedPoints:point];
+       [tempPath lineToPoint:point[0]];
+       int idx = trailLength-(n-(i+1));
+       [[color colorWithAlphaComponent:((idx+1)/((float)trailLength))] set];
+       [tempPath setLineWidth:(1.f+(2*(idx/((float)trailLength))))];
+       [tempPath stroke];
+       }
+       CGFloat dashStyle[2];
+       dashStyle[0]=4.0;
+       dashStyle[1]=2.0;
+       [[color colorWithAlphaComponent:.35f] set];
+       [trailPath setLineDash:dashStyle count:2 phase:0.0];
+       [trailPath setLineWidth:.75f];
+       [trailPath stroke];*/
+      
+      //Convert the robot's current position from cm to px (can we do this in setX:andY: ?).
+      double pixelsInMeter;
+      if([[self boundsRadius] doubleValue]>0){pixelsInMeter = 400.0/([[self boundsRadius] doubleValue]*2);}
+      else{pixelsInMeter = 0.0;}
+      
+      x = (x/100.0)*pixelsInMeter;
+      y = (y/100.0)*pixelsInMeter;
+      
+      //Draw a circle at the robot's current position.
+      NSRect rect = NSMakeRect(x-8,y-8,16,16);
+      NSBezierPath* path = [NSBezierPath bezierPathWithOvalInRect:rect];
+      
+      [color set];
+      [path fill];
+      [[NSColor whiteColor] set];
+      [path stroke];
+      
+      NSBezierPath* directionPath = [[NSBezierPath alloc] init];
+      [directionPath moveToPoint:NSMakePoint(x,y)];
+      [directionPath lineToPoint:NSMakePoint(x+(cos(direction)*8),y+(sin(direction)*8))];
+      [[NSColor whiteColor] set];
+      [directionPath stroke];
     }
-    
-    //Draw the robot's trail.  The path points have already been converted from cm to px.
-    /*NSBezierPath* trailPath = [[robots objectForKey:key] objectAtIndex:3];
-     int n = trailPath.elementCount;
-     int i;
-     int trailLength = 25;
-     for(i=(n-1); i>=MAX(n-(trailLength+1),1); i--) {
-     NSPoint point[1];
-     NSBezierPath* tempPath = [[NSBezierPath alloc] init];
-     [trailPath elementAtIndex:i associatedPoints:point];
-     [tempPath moveToPoint:point[0]];
-     [trailPath elementAtIndex:i-1 associatedPoints:point];
-     [tempPath lineToPoint:point[0]];
-     int idx = trailLength-(n-(i+1));
-     [[color colorWithAlphaComponent:((idx+1)/((float)trailLength))] set];
-     [tempPath setLineWidth:(1.f+(2*(idx/((float)trailLength))))];
-     [tempPath stroke];
-     }
-     CGFloat dashStyle[2];
-     dashStyle[0]=4.0;
-     dashStyle[1]=2.0;
-     [[color colorWithAlphaComponent:.35f] set];
-     [trailPath setLineDash:dashStyle count:2 phase:0.0];
-     [trailPath setLineWidth:.75f];
-     [trailPath stroke];*/
-    
-    //Convert the robot's current position from cm to px (can we do this in setX:andY: ?).
-    double pixelsInMeter;
-    if([[self boundsRadius] doubleValue]>0){pixelsInMeter = 400.0/([[self boundsRadius] doubleValue]*2);}
-    else{pixelsInMeter = 0.0;}
-    
-    x = (x/100.0)*pixelsInMeter;
-    y = (y/100.0)*pixelsInMeter;
-    
-    //Draw a circle at the robot's current position.
-    NSRect rect = NSMakeRect(x-8,y-8,16,16);
-    NSBezierPath* path = [NSBezierPath bezierPathWithOvalInRect:rect];
-    
-    [color set];
-    [path fill];
-    [[NSColor whiteColor] set];
-    [path stroke];
-    
-    NSBezierPath* directionPath = [[NSBezierPath alloc] init];
-    [directionPath moveToPoint:NSMakePoint(x,y)];
-    [directionPath lineToPoint:NSMakePoint(x+(cos(direction)*8),y+(sin(direction)*8))];
-    [[NSColor whiteColor] set];
-    [directionPath stroke];
   }
 }
 

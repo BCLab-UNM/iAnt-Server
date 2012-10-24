@@ -156,7 +156,7 @@
   [writer closeFilename:filename];
   
   //Set up GA.
-  [[ABSSimulationController getInstance] setDelegate:self];
+  /*[[ABSSimulationController getInstance] setDelegate:self];
   [[ABSSimulationController getInstance] addSimulationWithTag:@"MainSimulation"];
   ABSSimulation* sim = [[ABSSimulationController getInstance] simulationWithTag:@"MainSimulation"];
   [sim setGenerationCount:10];
@@ -164,10 +164,9 @@
   [sim setColonyCount:10];
   [sim setUsesPheromones:YES];
   [sim setUsesSiteFidelity:YES];
-  [sim setDistributionType:DISTR_POWERLAW];
+  [sim setDistributionPowerlaw:1.];
   [sim setNumberOfSeeds:256];
-  [[ABSSimulationController getInstance] startAll];
-  //[[ABSSimulationController getInstance] removeSimulationWithTag:@"TestTag"];
+  [[ABSSimulationController getInstance] startAll];*/
   
   //Set up robotDetails
   [ABSRobotDetails initializeWithWorkingDirectory:workingDirectory];
@@ -313,6 +312,9 @@
   NSNumber* x = [NSNumber numberWithDouble:[[messageExploded objectAtIndex:2] intValue]];
   NSNumber* y = [NSNumber numberWithDouble:[[messageExploded objectAtIndex:3] intValue]];
   
+  //Start the elapsed-time clock if it isn't started yet.
+  if([toolController startTime] == [NSDate distantFuture]){[toolController updateStartTime];}
+  
   if(![robotName isEqualToString:@"unknownRobot"]) {
     [robotDisplayView setX:x andY:y andColor:[ABSRobotDetails colorFromName:robotName] forRobot:robotName];
   }
@@ -339,6 +341,7 @@
  */
 -(void) didPlacePheromoneAt:(NSPoint)position {
   [self log:[NSString stringWithFormat:@"[PHC] Placed pheromone at %f,%f.",position.x,position.y] withTag:LOG_TAG_EVENT];
+  [toolController setPheromoneCount:[NSNumber numberWithInt:(int)[[[ABSPheromoneController getInstance] getAllPheromones] count]]];
 }
 
 
@@ -354,9 +357,9 @@
  * Called whenever a simulation finishes.
  */
 -(void) didFinishSimulationWithTag:(NSString*)tag {
-  ABSSimulation* simulation = [[ABSSimulationController getInstance] simulationWithTag:tag];
+  /*ABSSimulation* simulation = [[ABSSimulationController getInstance] simulationWithTag:tag];
   ABSSimulationColony* colony = [simulation bestColony];
-  NSLog(@"Average directional deviation coefficient for \"%@\": %f",tag,[colony dirDevCoeff2]);
+  float bestParameter = [colony dirDevConst];*/
 }
 
 @end

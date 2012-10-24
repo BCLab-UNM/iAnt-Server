@@ -3,6 +3,7 @@
 @implementation ABSToolController
 
 @synthesize console,stats;
+@synthesize startTime;
 
 -(void) initialize {
   dataValues = [[NSMutableArray alloc] initWithObjects:
@@ -12,24 +13,47 @@
                 [NSNumber numberWithInt:0],
                 [NSNumber numberWithInt:0],
                 [NSNumber numberWithFloat:0.],
+                [NSNumber numberWithFloat:0],
                 nil];
-  [stats reloadData];
+  
+  startTime = [NSDate distantFuture];
+  timerTemporals = [NSTimer scheduledTimerWithTimeInterval:5.f target:self selector:@selector(updateTemporals:) userInfo:nil repeats:YES];
+  
   consoleMessages = [[NSMutableArray alloc] init];
-  consoleTags = 6;
+  consoleTags = 3;
+  
   [self resetConsole];
-  startTime = [NSDate date];
-  timerIntakeRate = [NSTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(updateIntakeRate:) userInfo:nil repeats:YES];
-}
-
--(void) updateIntakeRate:(id)sender {
-  //Update intake rate in dataValues.
-  double newIntakeRate = [[dataValues objectAtIndex:1] doubleValue]/([self currentTime]/60.);
-  [dataValues replaceObjectAtIndex:1 withObject:[NSNumber numberWithDouble:newIntakeRate]];
   [stats reloadData];
 }
 
 -(double) currentTime {
-  return [startTime timeIntervalSinceNow] * -1; //multiply by -1000 for milliseconds, -1000000 for microseconds, -1 for seconds, etc.
+  return [startTime timeIntervalSinceNow] * -1; //multiply by -1000 for milliseconds, -1 for seconds, etc.
+}
+
+-(void) updateTemporals:(id)sender {
+  if(startTime == [NSDate distantFuture]){return;}
+
+  double newIntakeRate = [[dataValues objectAtIndex:0] doubleValue]/([self currentTime]/60.);
+  [dataValues replaceObjectAtIndex:1 withObject:[NSNumber numberWithDouble:newIntakeRate]];
+
+  double elapsed = floor(([self currentTime]/60.)*100.)/100;
+  [dataValues replaceObjectAtIndex:6 withObject:[NSNumber numberWithDouble:(elapsed)]];
+  
+  [stats reloadData];
+}
+
+-(void) updateStartTime {
+  startTime = [NSDate date];
+  [timerTemporals fire];
+}
+
+-(void) updatePheromonesPerTag {
+  double pheromones = [[dataValues objectAtIndex:4] doubleValue];
+  double tags = [[dataValues objectAtIndex:0] doubleValue];
+  if(tags){
+    [dataValues replaceObjectAtIndex:5 withObject:[NSNumber numberWithDouble:(pheromones/tags)]];
+  }
+  [stats reloadData];
 }
 
 -(void) setTagCount:(NSNumber*)tagCount {
@@ -44,16 +68,8 @@
   [stats reloadData];
 }
 
--(void) updatePheromonesPerTag {
-  double pheromones = [[dataValues objectAtIndex:4] doubleValue];
-  double tags = [[dataValues objectAtIndex:0] doubleValue];
-  if(tags){
-    [dataValues replaceObjectAtIndex:5 withObject:[NSNumber numberWithDouble:(pheromones/tags)]];
-  }
-}
-
 -(NSInteger) numberOfRowsInTableView:(NSTableView *)tableView {
-  return 6;
+  return 7;
 }
 
 -(NSView*) tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
@@ -66,7 +82,7 @@
   
   //Hate to use switches here
   if([[tableColumn identifier] isEqualToString:@"ColumnKey"]) {
-    NSString* label;
+    NSString* label = @"";
     switch(row) {
       case 0:
         label = @"Tag Count";
@@ -91,16 +107,16 @@
       case 5:
         label = @"Pheromones/Tags";
       break;
+      
+      case 6:
+        label = @"Elapsed Time";
+      break;
     }
     [result setString:label];
   }
   else {
-    if(dataValues == nil) {
-      [result setString:@""];
-    }
-    else {
-      [result setString:[[dataValues objectAtIndex:row] stringValue]];
-    }
+    if(dataValues == nil){[result setString:@""];}
+    else{[result setString:[[dataValues objectAtIndex:row] stringValue]];}
   }
   [result setEditable:NO];
   

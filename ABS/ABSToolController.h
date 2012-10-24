@@ -1,23 +1,28 @@
 #import <Cocoa/Cocoa.h>
 
 @interface ABSToolController : NSViewController <NSToolbarDelegate,NSTableViewDataSource,NSTableViewDelegate> {
-  NSTextView* console;
-  NSTableView* stats;
   NSMutableArray* dataValues;
-  NSDate* startTime;
-  NSTimer* timerIntakeRate;
+  
+  NSTimer* timerTemporals;
     
   NSMutableArray* consoleMessages;
   int consoleTags;
 }
 
+-(void) initialize;
+
+-(double) currentTime;
+-(void) updateStartTime;
+
 -(void) log:(NSString*)message withTag:(int)tag;
 -(IBAction) didSelectToolbarThing:(id)sender;
--(void) initialize;
+
 -(void) setTagCount:(NSNumber*)tagCount;
--(double) currentTime;
+-(void) setPheromoneCount:(NSNumber*) pheromoneCount;
 
 @property IBOutlet NSTextView* console;
 @property IBOutlet NSTableView* stats;
+
+@property NSDate* startTime;
 
 @end

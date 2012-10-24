@@ -16,7 +16,7 @@ static inline float randomFloat(float x) {
 @synthesize delegate;
 @synthesize colonyCount, generationCount, antCount;
 @synthesize usesPheromones, usesSiteFidelity;
-@synthesize distributionType, numberOfSeeds;
+@synthesize distributionRandom, distributionPowerlaw, distributionClustered, numberOfSeeds;
 @synthesize bestColony;
 @synthesize started;
 
@@ -1634,18 +1634,19 @@ static inline float randomFloat(float x) {
 
 -(void) initDistribution {
   if(numberOfSeeds == 0){numberOfSeeds = 256;}
-  switch(distributionType) {
-      case DISTR_RANDOM:
-        n_food_blue = numberOfSeeds;
-      break;
-      
-      case DISTR_POWERLAW:
-        n_food_red = numberOfSeeds / 4;
-        n_food_orange = numberOfSeeds / 4;
-        n_food_green = numberOfSeeds / 4;
-        n_food_blue = numberOfSeeds / 4;
-      break;
-  }
+  n_food_blue = numberOfSeeds * distributionRandom;
+
+  n_food_red = (numberOfSeeds / 4) * distributionPowerlaw;
+  n_food_orange = (numberOfSeeds / 4) * distributionPowerlaw;
+  n_food_green = (numberOfSeeds / 4) * distributionPowerlaw;
+  n_food_blue += (numberOfSeeds / 4) * distributionPowerlaw;
+
+  n_food_green += numberOfSeeds * distributionPowerlaw;
+  
+  n_food_red = roundf(n_food_red);
+  n_food_orange = roundf(n_food_orange);
+  n_food_green = roundf(n_food_green);
+  n_food_blue = roundf(n_food_blue);
 }
 
 @end
