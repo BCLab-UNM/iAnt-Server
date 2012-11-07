@@ -6,6 +6,7 @@
 
 @class ABSSimulationColony;
 @class ABSSimulationLocation;
+@class ABSWriter;
 
 @interface NSObject(ABSSimulationNotifications)
   -(void) didFinishGeneration;
@@ -61,6 +62,9 @@
   ABSSimulationLocation* gen_grid[768][768]; //Really?
   
   int col_count; //Really?
+  
+  ABSWriter* writer;
+  NSString* filename;
 }
 
 -(int) startSimulation;
@@ -70,6 +74,7 @@
 -(void) initDistribution; 
 
 @property id delegate;
+@property NSString* simulationTag;
 
 @property ABSSimulationColony* bestColony;
 

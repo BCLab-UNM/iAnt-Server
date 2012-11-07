@@ -4,6 +4,7 @@
 @implementation ABSSimulationController
 
 @synthesize delegate;
+@synthesize simulations;
 
 +(ABSSimulationController*) getInstance {
   static ABSSimulationController* instance;
@@ -27,6 +28,7 @@
 -(void) addSimulationWithTag:(NSString*)tag {
   [simulations setObject:[[ABSSimulation alloc] init] forKey:tag];
   //Leave the thread as nil for now.
+  [[simulations objectForKey:tag] setSimulationTag:tag];
 }
 
 -(ABSSimulation*) simulationWithTag:(NSString*)tag {

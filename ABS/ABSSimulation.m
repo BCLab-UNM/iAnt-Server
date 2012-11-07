@@ -3,6 +3,7 @@
 #import "ABSSimulationColony.h"
 #import "ABSSimulationAnt.h"
 #import "ABSSimulationLocation.h"
+#import "ABSWriter.h"
 
 /*
  * Returns a random float between 0 and x.
@@ -14,6 +15,7 @@ static inline float randomFloat(float x) {
 @implementation ABSSimulation
 
 @synthesize delegate;
+@synthesize simulationTag;
 @synthesize colonyCount, generationCount, antCount;
 @synthesize usesPheromones, usesSiteFidelity;
 @synthesize distributionRandom, distributionPowerlaw, distributionClustered, numberOfSeeds;
@@ -34,6 +36,10 @@ static inline float randomFloat(float x) {
   if(started){return 1;} //No stopping and starting for now.
   
   started = YES;
+  
+  writer = [ABSWriter getInstance];
+  filename = [NSString stringWithFormat:@"/Users/bjorn/Desktop/%@.csv",simulationTag];
+  [writer openFilename:filename];
 
   bestColony = [[ABSSimulationColony alloc] init];
   ants = [[NSMutableArray alloc] init];
@@ -41,21 +47,12 @@ static inline float randomFloat(float x) {
     [ants addObject:[[ABSSimulationAnt alloc] init]];
   }
   colonies = [[NSMutableArray alloc] init];
-  for(int i = 0; i < colonyCount; i++) {
-    [colonies addObject:[[ABSSimulationColony alloc] init]];
-  }
-  
-  for(int i = 0; i < grid_height; i++) {
-    for(int j = 0; j < grid_width; j++) {
-      grid[i][j] = [[ABSSimulationLocation alloc] init];
-    }
-  }
   
   [self initDistribution];
   
   //Set default values for non-configurable variables.
   updateCount = 0;
-  evaluationCount = 8;
+  evaluationCount = 1;
   stepCount = 13500 / 2; //13500 = 1 hour.
   antTimeOutCost = 0.f;
   search_delay = 4;
@@ -68,8 +65,8 @@ static inline float randomFloat(float x) {
   count_food_orange = 0;
   count_food_green = 0;
   count_food_blue = 0;
-  grid_width = 53; //3m
-  grid_height = 53;
+  grid_width = 90; //88.6 = 5m
+  grid_height = 90;
   nestx = grid_width / 2;
   nesty = grid_height / 2;
   pherminx = nestx;
@@ -83,16 +80,22 @@ static inline float randomFloat(float x) {
   return_pheromone = 0.0;
   sumdx = 0;
   sumdy = 0;
+  
+  for(int i = 0; i < grid_height; i++) {
+    for(int j = 0; j < grid_width; j++) {
+      grid[i][j] = [[ABSSimulationLocation alloc] init];
+      gen_grid[i][j] = [[ABSSimulationLocation alloc] init];
+    }
+  }
 
   //Initialize first generation of colonies
   [self initColonies];
 
   for(int gen_count = 0; gen_count < generationCount; gen_count++) {
-    
+    printf("gen%d\n",gen_count);
     if([[NSThread currentThread] isCancelled]){return 2;}
     
     for(int eval_count = 0; eval_count < evaluationCount; eval_count++) {
-      
       //Clean up grid for new evalution
       for(int x = 0; x < grid_width; x++) {
         for(int y = 0; y < grid_width; y++) {
@@ -349,7 +352,7 @@ static inline float randomFloat(float x) {
         }
         
         //Clean up ants
-        int n_active_ants = ceil (antCount * [[colonies objectAtIndex:col_count] activeProportion]);
+        int n_active_ants = ceil (antCount * [[colonies objectAtIndex:col_count] activeProportion]); //6 * 
         for(int i = 0; i < antCount; i++) {
           [[ants objectAtIndex:i] setX:nestx];
           [[ants objectAtIndex:i] setY:nesty];
@@ -375,311 +378,313 @@ static inline float randomFloat(float x) {
     }
     
     //Populate next generation
-    ABSSimulationColony* new_colonies[colonyCount];
-    for(int i = 0; i < colonyCount; i++) {
-      new_colonies[i] = [[ABSSimulationColony alloc] init];
-      int p1;
-      int p2;
-      int candidate1;
-      int candidate2;
-      
-      //1st parent candidates
-      candidate1 = arc4random () % colonyCount;
-      candidate2 = arc4random () % colonyCount;
-      while(candidate1 == candidate2){candidate2 = arc4random () % colonyCount;}
-      if([[colonies objectAtIndex:candidate1] seedsCollected] > [[colonies objectAtIndex:candidate2] seedsCollected]){p1 = candidate1;}
-      else{p1 = candidate2;}
-      
-      //2nd parent candidates
-      candidate1 = arc4random () % colonyCount;
-      candidate2 = arc4random () % colonyCount;
-      while(candidate1 == candidate2){candidate2 = arc4random () % colonyCount;}
-      if([[colonies objectAtIndex:candidate1] seedsCollected] > [[colonies objectAtIndex:candidate2] seedsCollected]){p2 = candidate1;}
-      else{p2 = candidate2;}
-      
-      ABSSimulationColony* parent1 = [colonies objectAtIndex:p1];
-      ABSSimulationColony* parent2 = [colonies objectAtIndex:p2];
-      
-      //Independent Assortment for each parameter.
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].decayRate = [parent1 decayRate];}
-      else{new_colonies[i].decayRate = [parent2 decayRate];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].walkDropRate = [parent1 walkDropRate];}
-      else{new_colonies[i].walkDropRate =[parent2 walkDropRate];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].searchGiveupRate = [parent1 searchGiveupRate];}
-      else{new_colonies[i].searchGiveupRate =[parent2 searchGiveupRate];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].trailDropRate = [parent1 trailDropRate];}
-      else{new_colonies[i].trailDropRate = [parent2 trailDropRate];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].dirDevConst = [parent1 dirDevConst];}
-      else{new_colonies[i].dirDevConst = [parent2 dirDevConst];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].dirDevCoeff1 = [parent1 dirDevCoeff1];}
-      else{new_colonies[i].dirDevCoeff1 = [parent2 dirDevCoeff1];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].dirTimePow1 = [parent1 dirTimePow1];}
-      else{new_colonies[i].dirTimePow1 = [parent2 dirTimePow1];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].dirDevCoeff2 = [parent1 dirDevCoeff2];}
-      else{new_colonies[i].dirDevCoeff2 = [parent2 dirDevCoeff2];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].dirTimePow2 = [parent1 dirTimePow2];}
-      else{new_colonies[i].dirTimePow2 = [parent2 dirTimePow2];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].densitySensitivity = [parent1 densitySensitivity];}
-      else{new_colonies[i].densitySensitivity = [parent2 densitySensitivity];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].densityThreshold = [parent1 densityThreshold];}
-      else{new_colonies[i].densityThreshold = [parent2 densityThreshold];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].densityConstant = [parent1 densityConstant];}
-      else{new_colonies[i].densityConstant = [parent2 densityConstant];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].densityPatchConstant = [parent1 densityPatchConstant];}
-      else{new_colonies[i].densityPatchConstant =[parent2 densityPatchConstant];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].densityPatchThreshold = [parent1 densityPatchThreshold];}
-      else{new_colonies[i].densityPatchThreshold = [parent2 densityPatchThreshold];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].densityInfluenceConstant = [parent1 densityInfluenceConstant];}
-      else{new_colonies[i].densityInfluenceConstant = [parent2 densityInfluenceConstant];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].densityInfluenceThreshold = [parent1 densityInfluenceThreshold];}
-      else{new_colonies[i].densityInfluenceThreshold = [parent2 densityInfluenceThreshold];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].activeProportion = [parent1 activeProportion];}
-      else{new_colonies[i].activeProportion = [parent2 activeProportion];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].activationSensitivity = [parent1 activationSensitivity];}
-      else{new_colonies[i].activationSensitivity = [parent2 activationSensitivity];}
-      
-      if(arc4random () % 100 < crossover_rate){new_colonies[i].decayRateReturn = [parent1 decayRateReturn];}
-      else{new_colonies[i].decayRateReturn = [parent2 decayRateReturn];}
-      
-      //Random mutation
-      if(arc4random () % 10 == 0)
-      {
-        new_colonies[i].decayRate +=
-        randomFloat(new_colonies[i].decayRate * 0.05);
-        if(new_colonies[i].decayRate < 0.0f)
-          new_colonies[i].decayRate = 0;
-        if(new_colonies[i].decayRate > 1.0f)
-          new_colonies[i].decayRate = 1.0f;
-      }
-      //Random mutation
-      if(arc4random () % 10 == 0)
-      {
-        new_colonies[i].walkDropRate +=
-        randomFloat(new_colonies[i].walkDropRate * 0.05);
-        if(new_colonies[i].walkDropRate < 0.0f)
-          new_colonies[i].walkDropRate = 0;
-        if(new_colonies[i].walkDropRate > 1.0f)
-          new_colonies[i].walkDropRate = 1.0f;
-      }
-      //Random mutation
-      if(arc4random () % 10 == 0)
-      {
-        new_colonies[i].searchGiveupRate +=
-        randomFloat(new_colonies[i].searchGiveupRate * 0.05);
-        if(new_colonies[i].searchGiveupRate < 0.0f)
-          new_colonies[i].searchGiveupRate = 0;
-        if(new_colonies[i].searchGiveupRate > 1.0f)
-          new_colonies[i].searchGiveupRate = 1.0f;
-      }
-      //Random mutation
-      if(arc4random () % 10 == 0)
-      {
-        new_colonies[i].trailDropRate +=
-        randomFloat(new_colonies[i].trailDropRate * .05);
-        if(new_colonies[i].trailDropRate < 0.0f)
-          new_colonies[i].trailDropRate = 0;
-        if(new_colonies[i].trailDropRate > 1.0f)
-          new_colonies[i].trailDropRate = 1.0f;
-      }
-      //Random mutation
-      if(arc4random () % 10 == 0)
-      {
-        new_colonies[i].dirDevConst +=
-        randomFloat(
-                    0.001 +
-                    fabs (new_colonies[i].dirDevConst * .05));
-        if(new_colonies[i].dirDevConst < 0.0f)
-          new_colonies[i].dirDevConst = 0;
-      }
-      //Random mutation
-      if(arc4random () % 10 == 0)
-      {
-        new_colonies[i].dirDevCoeff2 +=
-        randomFloat(
-                    0.001 +
-                    fabs (new_colonies[i].dirDevCoeff2 * .05));
-        if(new_colonies[i].dirDevCoeff2 < 0.0f)
-          new_colonies[i].dirDevCoeff2 = 0;
-      }
-      //Random mutation
-      if(arc4random () % 10 == 0)
-      {
-        new_colonies[i].dirTimePow2 +=
-        randomFloat(
-                    0.001 +
-                    fabs (new_colonies[i].dirTimePow2 * .05));
-        if(new_colonies[i].dirTimePow2 < 0.0f)
-          new_colonies[i].dirTimePow2 = 0;
-      }
-      //Random mutation
-      if(usesPheromones)
-      {
+    if(colonyCount>1) {
+      ABSSimulationColony* new_colonies[colonyCount];
+      for(int i = 0; i < colonyCount; i++) {
+        new_colonies[i] = [[ABSSimulationColony alloc] init];
+        int p1;
+        int p2;
+        int candidate1;
+        int candidate2;
+        
+        //1st parent candidates
+        candidate1 = arc4random () % colonyCount;
+        candidate2 = arc4random () % colonyCount;
+        while(candidate1 == candidate2){candidate2 = arc4random () % colonyCount;}
+        if([[colonies objectAtIndex:candidate1] seedsCollected] > [[colonies objectAtIndex:candidate2] seedsCollected]){p1 = candidate1;}
+        else{p1 = candidate2;}
+        
+        //2nd parent candidates
+        candidate1 = arc4random () % colonyCount;
+        candidate2 = arc4random () % colonyCount;
+        while(candidate1 == candidate2){candidate2 = arc4random () % colonyCount;}
+        if([[colonies objectAtIndex:candidate1] seedsCollected] > [[colonies objectAtIndex:candidate2] seedsCollected]){p2 = candidate1;}
+        else{p2 = candidate2;}
+        
+        ABSSimulationColony* parent1 = [colonies objectAtIndex:p1];
+        ABSSimulationColony* parent2 = [colonies objectAtIndex:p2];
+        
+        //Independent Assortment for each parameter.
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].decayRate = [parent1 decayRate];}
+        else{new_colonies[i].decayRate = [parent2 decayRate];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].walkDropRate = [parent1 walkDropRate];}
+        else{new_colonies[i].walkDropRate =[parent2 walkDropRate];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].searchGiveupRate = [parent1 searchGiveupRate];}
+        else{new_colonies[i].searchGiveupRate =[parent2 searchGiveupRate];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].trailDropRate = [parent1 trailDropRate];}
+        else{new_colonies[i].trailDropRate = [parent2 trailDropRate];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].dirDevConst = [parent1 dirDevConst];}
+        else{new_colonies[i].dirDevConst = [parent2 dirDevConst];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].dirDevCoeff1 = [parent1 dirDevCoeff1];}
+        else{new_colonies[i].dirDevCoeff1 = [parent2 dirDevCoeff1];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].dirTimePow1 = [parent1 dirTimePow1];}
+        else{new_colonies[i].dirTimePow1 = [parent2 dirTimePow1];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].dirDevCoeff2 = [parent1 dirDevCoeff2];}
+        else{new_colonies[i].dirDevCoeff2 = [parent2 dirDevCoeff2];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].dirTimePow2 = [parent1 dirTimePow2];}
+        else{new_colonies[i].dirTimePow2 = [parent2 dirTimePow2];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].densitySensitivity = [parent1 densitySensitivity];}
+        else{new_colonies[i].densitySensitivity = [parent2 densitySensitivity];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].densityThreshold = [parent1 densityThreshold];}
+        else{new_colonies[i].densityThreshold = [parent2 densityThreshold];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].densityConstant = [parent1 densityConstant];}
+        else{new_colonies[i].densityConstant = [parent2 densityConstant];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].densityPatchConstant = [parent1 densityPatchConstant];}
+        else{new_colonies[i].densityPatchConstant =[parent2 densityPatchConstant];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].densityPatchThreshold = [parent1 densityPatchThreshold];}
+        else{new_colonies[i].densityPatchThreshold = [parent2 densityPatchThreshold];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].densityInfluenceConstant = [parent1 densityInfluenceConstant];}
+        else{new_colonies[i].densityInfluenceConstant = [parent2 densityInfluenceConstant];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].densityInfluenceThreshold = [parent1 densityInfluenceThreshold];}
+        else{new_colonies[i].densityInfluenceThreshold = [parent2 densityInfluenceThreshold];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].activeProportion = [parent1 activeProportion];}
+        else{new_colonies[i].activeProportion = [parent2 activeProportion];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].activationSensitivity = [parent1 activationSensitivity];}
+        else{new_colonies[i].activationSensitivity = [parent2 activationSensitivity];}
+        
+        if(arc4random () % 100 < crossover_rate){new_colonies[i].decayRateReturn = [parent1 decayRateReturn];}
+        else{new_colonies[i].decayRateReturn = [parent2 decayRateReturn];}
+        
+        //Random mutation
         if(arc4random () % 10 == 0)
         {
-          new_colonies[i].densityThreshold +=
+          new_colonies[i].decayRate +=
+          randomFloat(new_colonies[i].decayRate * 0.05);
+          if(new_colonies[i].decayRate < 0.0f)
+            new_colonies[i].decayRate = 0;
+          if(new_colonies[i].decayRate > 1.0f)
+            new_colonies[i].decayRate = 1.0f;
+        }
+        //Random mutation
+        if(arc4random () % 10 == 0)
+        {
+          new_colonies[i].walkDropRate +=
+          randomFloat(new_colonies[i].walkDropRate * 0.05);
+          if(new_colonies[i].walkDropRate < 0.0f)
+            new_colonies[i].walkDropRate = 0;
+          if(new_colonies[i].walkDropRate > 1.0f)
+            new_colonies[i].walkDropRate = 1.0f;
+        }
+        //Random mutation
+        if(arc4random () % 10 == 0)
+        {
+          new_colonies[i].searchGiveupRate +=
+          randomFloat(new_colonies[i].searchGiveupRate * 0.05);
+          if(new_colonies[i].searchGiveupRate < 0.0f)
+            new_colonies[i].searchGiveupRate = 0;
+          if(new_colonies[i].searchGiveupRate > 1.0f)
+            new_colonies[i].searchGiveupRate = 1.0f;
+        }
+        //Random mutation
+        if(arc4random () % 10 == 0)
+        {
+          new_colonies[i].trailDropRate +=
+          randomFloat(new_colonies[i].trailDropRate * .05);
+          if(new_colonies[i].trailDropRate < 0.0f)
+            new_colonies[i].trailDropRate = 0;
+          if(new_colonies[i].trailDropRate > 1.0f)
+            new_colonies[i].trailDropRate = 1.0f;
+        }
+        //Random mutation
+        if(arc4random () % 10 == 0)
+        {
+          new_colonies[i].dirDevConst +=
           randomFloat(
                       0.001 +
-                      fabs (new_colonies[i].densityThreshold * .05));
+                      fabs (new_colonies[i].dirDevConst * .05));
+          if(new_colonies[i].dirDevConst < 0.0f)
+            new_colonies[i].dirDevConst = 0;
+        }
+        //Random mutation
+        if(arc4random () % 10 == 0)
+        {
+          new_colonies[i].dirDevCoeff2 +=
+          randomFloat(
+                      0.001 +
+                      fabs (new_colonies[i].dirDevCoeff2 * .05));
+          if(new_colonies[i].dirDevCoeff2 < 0.0f)
+            new_colonies[i].dirDevCoeff2 = 0;
+        }
+        //Random mutation
+        if(arc4random () % 10 == 0)
+        {
+          new_colonies[i].dirTimePow2 +=
+          randomFloat(
+                      0.001 +
+                      fabs (new_colonies[i].dirTimePow2 * .05));
+          if(new_colonies[i].dirTimePow2 < 0.0f)
+            new_colonies[i].dirTimePow2 = 0;
+        }
+        //Random mutation
+        if(usesPheromones)
+        {
+          if(arc4random () % 10 == 0)
+          {
+            new_colonies[i].densityThreshold +=
+            randomFloat(
+                        0.001 +
+                        fabs (new_colonies[i].densityThreshold * .05));
+          }
+          if(arc4random () % 10 == 0)
+          {
+            new_colonies[i].densityConstant +=
+            randomFloat(
+                        0.001 +
+                        fabs (new_colonies[i].densityConstant * .05));
+          }
+        }
+        if(usesSiteFidelity)
+        {
+          if(arc4random () % 10 == 0)
+          {
+            new_colonies[i].densityPatchConstant +=
+            randomFloat(
+                        0.001 +
+                        fabs (new_colonies[i].densityPatchConstant *
+                              .05));
+          }
+          if(arc4random () % 10 == 0)
+          {
+            new_colonies[i].densityPatchThreshold +=
+            randomFloat(
+                        0.001 +
+                        fabs (new_colonies[i].densityPatchThreshold *
+                              .05));
+          }
         }
         if(arc4random () % 10 == 0)
         {
-          new_colonies[i].densityConstant +=
+          new_colonies[i].densityInfluenceConstant +=
           randomFloat(
                       0.001 +
-                      fabs (new_colonies[i].densityConstant * .05));
-        }
-      }
-      if(usesSiteFidelity)
-      {
-        if(arc4random () % 10 == 0)
-        {
-          new_colonies[i].densityPatchConstant +=
-          randomFloat(
-                      0.001 +
-                      fabs (new_colonies[i].densityPatchConstant *
+                      fabs (new_colonies[i].densityInfluenceConstant *
                             .05));
         }
         if(arc4random () % 10 == 0)
         {
-          new_colonies[i].densityPatchThreshold +=
+          new_colonies[i].densityInfluenceThreshold +=
           randomFloat(
                       0.001 +
-                      fabs (new_colonies[i].densityPatchThreshold *
+                      fabs (new_colonies[i].densityInfluenceThreshold *
                             .05));
         }
-      }
-      if(arc4random () % 10 == 0)
-      {
-        new_colonies[i].densityInfluenceConstant +=
-        randomFloat(
-                    0.001 +
-                    fabs (new_colonies[i].densityInfluenceConstant *
-                          .05));
-      }
-      if(arc4random () % 10 == 0)
-      {
-        new_colonies[i].densityInfluenceThreshold +=
-        randomFloat(
-                    0.001 +
-                    fabs (new_colonies[i].densityInfluenceThreshold *
-                          .05));
-      }
-      if(arc4random () % 10 == 0)
-      {
-        new_colonies[i].activationSensitivity +=
-        randomFloat(
-                    0.001 +
-                    fabs (new_colonies[i].activationSensitivity *
-                          .05));
-        if(new_colonies[i].activationSensitivity < 0.0f)
-          new_colonies[i].activationSensitivity = 0.0;
-      }
-      if(arc4random () % 10 == 0)
-      {
-        new_colonies[i].decayRateReturn +=
-        randomFloat(
-                    0.001 +
-                    fabs (new_colonies[i].decayRateReturn * .05));
-        if(new_colonies[i].decayRateReturn < 0.0f)
-          new_colonies[i].decayRateReturn = 0.0;
-        if(new_colonies[i].decayRateReturn > 1.0f)
-          new_colonies[i].decayRateReturn = 1.0;
+        if(arc4random () % 10 == 0)
+        {
+          new_colonies[i].activationSensitivity +=
+          randomFloat(
+                      0.001 +
+                      fabs (new_colonies[i].activationSensitivity *
+                            .05));
+          if(new_colonies[i].activationSensitivity < 0.0f)
+            new_colonies[i].activationSensitivity = 0.0;
+        }
+        if(arc4random () % 10 == 0)
+        {
+          new_colonies[i].decayRateReturn +=
+          randomFloat(
+                      0.001 +
+                      fabs (new_colonies[i].decayRateReturn * .05));
+          if(new_colonies[i].decayRateReturn < 0.0f)
+            new_colonies[i].decayRateReturn = 0.0;
+          if(new_colonies[i].decayRateReturn > 1.0f)
+            new_colonies[i].decayRateReturn = 1.0;
+        }
+        
       }
       
-    }
-    
-    //Set next generation of colonies, and average together colony parameters.
-    float decayRateSum = 0.f,
-    walkDropRateSum = 0.f,
-    trailDropRateSum = 0.f,
-    dirDevConstSum = 0.f,
-    dirDevCoeff2Sum = 0.f,
-    dirTimePow2Sum = 0.f,
-    densityThresholdSum = 0.f,
-    densityConstantSum = 0.f,
-    densityPatchThresholdSum = 0.f,
-    densityPatchConstantSum = 0.f,
-    densityInfluenceThresholdSum = 0.f,
-    densityInfluenceConstantSum = 0.f,
-    activeProportionSum = 0.f,
-    activationSensitivitySum = 0.f,
-    decayRateReturnSum = 0.f;
+      //Set next generation of colonies, and average together colony parameters.
+      float decayRateSum = 0.f,
+      walkDropRateSum = 0.f,
+      trailDropRateSum = 0.f,
+      dirDevConstSum = 0.f,
+      dirDevCoeff2Sum = 0.f,
+      dirTimePow2Sum = 0.f,
+      densityThresholdSum = 0.f,
+      densityConstantSum = 0.f,
+      densityPatchThresholdSum = 0.f,
+      densityPatchConstantSum = 0.f,
+      densityInfluenceThresholdSum = 0.f,
+      densityInfluenceConstantSum = 0.f,
+      activeProportionSum = 0.f,
+      activationSensitivitySum = 0.f,
+      decayRateReturnSum = 0.f;
 
-    for(int i = 0; i < colonyCount; i++) {
-      ABSSimulationColony* c = [colonies objectAtIndex:i];
-      decayRateSum += [c decayRate];
-      walkDropRateSum += [c walkDropRate];
-      trailDropRateSum += [c trailDropRate];
-      dirDevConstSum += [c dirDevConst];
-      dirDevCoeff2Sum += [c dirDevCoeff2];
-      dirTimePow2Sum += [c dirTimePow2];
-      densityThresholdSum += [c densityThreshold];
-      densityConstantSum += [c densityConstant];
-      densityPatchThresholdSum += [c densityPatchThreshold];
-      densityPatchConstantSum += [c densityPatchConstant];
-      densityInfluenceThresholdSum += [c densityInfluenceThreshold];
-      densityInfluenceConstantSum += [c densityInfluenceConstant];
-      activeProportionSum += [c activeProportion];
-      activationSensitivitySum += [c activationSensitivity];
-      decayRateReturnSum += [c decayRateReturn];
+      for(int i = 0; i < colonyCount; i++) {
+        ABSSimulationColony* c = [colonies objectAtIndex:i];
+        decayRateSum += [c decayRate];
+        walkDropRateSum += [c walkDropRate];
+        trailDropRateSum += [c trailDropRate];
+        dirDevConstSum += [c dirDevConst];
+        dirDevCoeff2Sum += [c dirDevCoeff2];
+        dirTimePow2Sum += [c dirTimePow2];
+        densityThresholdSum += [c densityThreshold];
+        densityConstantSum += [c densityConstant];
+        densityPatchThresholdSum += [c densityPatchThreshold];
+        densityPatchConstantSum += [c densityPatchConstant];
+        densityInfluenceThresholdSum += [c densityInfluenceThreshold];
+        densityInfluenceConstantSum += [c densityInfluenceConstant];
+        activeProportionSum += [c activeProportion];
+        activationSensitivitySum += [c activationSensitivity];
+        decayRateReturnSum += [c decayRateReturn];
+        
+        [c setDecayRate:new_colonies[i].decayRate];
+        [c setWalkDropRate:new_colonies[i].walkDropRate];
+        [c setSearchGiveupRate:new_colonies[i].searchGiveupRate];
+        [c setTrailDropRate:new_colonies[i].trailDropRate];
+        [c setDirDevConst:new_colonies[i].dirDevConst];
+        [c setDirDevCoeff1:new_colonies[i].dirDevCoeff1];
+        [c setDirTimePow1:new_colonies[i].dirTimePow1];
+        [c setDirDevCoeff2:new_colonies[i].dirDevCoeff2];
+        [c setDirTimePow2:new_colonies[i].dirTimePow2];
+        [c setDensitySensitivity:new_colonies[i].densitySensitivity];
+        [c setDensityThreshold:new_colonies[i].densityThreshold];
+        [c setDensityConstant:new_colonies[i].densityConstant];
+        [c setDensityPatchThreshold:new_colonies[i].densityPatchThreshold];
+        [c setDensityPatchConstant:new_colonies[i].densityPatchConstant];
+        [c setDensityInfluenceThreshold:new_colonies[i].densityInfluenceThreshold];
+        [c setDensityInfluenceConstant:new_colonies[i].densityInfluenceConstant];
+        [c setActiveProportion:new_colonies[i].activeProportion];
+        [c setActivationSensitivity:new_colonies[i].activationSensitivity];
+        [c setDecayRateReturn:new_colonies[i].decayRateReturn];
+        [c setSeedsCollected:0];
+        
+        new_colonies[i].decayRate = 0;
+        new_colonies[i].dirDevConst = 0;
+      }
       
-      [c setDecayRate:new_colonies[i].decayRate];
-      [c setWalkDropRate:new_colonies[i].walkDropRate];
-      [c setSearchGiveupRate:new_colonies[i].searchGiveupRate];
-      [c setTrailDropRate:new_colonies[i].trailDropRate];
-      [c setDirDevConst:new_colonies[i].dirDevConst];
-      [c setDirDevCoeff1:new_colonies[i].dirDevCoeff1];
-      [c setDirTimePow1:new_colonies[i].dirTimePow1];
-      [c setDirDevCoeff2:new_colonies[i].dirDevCoeff2];
-      [c setDirTimePow2:new_colonies[i].dirTimePow2];
-      [c setDensitySensitivity:new_colonies[i].densitySensitivity];
-      [c setDensityThreshold:new_colonies[i].densityThreshold];
-      [c setDensityConstant:new_colonies[i].densityConstant];
-      [c setDensityPatchThreshold:new_colonies[i].densityPatchThreshold];
-      [c setDensityPatchConstant:new_colonies[i].densityPatchConstant];
-      [c setDensityInfluenceThreshold:new_colonies[i].densityInfluenceThreshold];
-      [c setDensityInfluenceConstant:new_colonies[i].densityInfluenceConstant];
-      [c setActiveProportion:new_colonies[i].activeProportion];
-      [c setActivationSensitivity:new_colonies[i].activationSensitivity];
-      [c setDecayRateReturn:new_colonies[i].decayRateReturn];
-      [c setSeedsCollected:0];
-      
-      new_colonies[i].decayRate = 0;
-      new_colonies[i].dirDevConst = 0;
+      bestColony.decayRate = decayRateSum/colonyCount;
+      bestColony.walkDropRate = walkDropRateSum/colonyCount;
+      bestColony.trailDropRate = trailDropRateSum/colonyCount;
+      bestColony.dirDevConst = dirDevConstSum/colonyCount;
+      bestColony.dirDevCoeff2 = dirDevCoeff2Sum/colonyCount;
+      bestColony.dirTimePow2 = dirTimePow2Sum/colonyCount;
+      bestColony.densityThreshold = densityThresholdSum/colonyCount;
+      bestColony.densityConstant = densityConstantSum/colonyCount;
+      bestColony.densityPatchThreshold = densityPatchThresholdSum/colonyCount;
+      bestColony.densityPatchConstant = densityPatchConstantSum/colonyCount;
+      bestColony.densityInfluenceThreshold = densityInfluenceThresholdSum/colonyCount;
+      bestColony.densityInfluenceConstant = densityInfluenceConstantSum/colonyCount;
+      bestColony.activeProportion = activeProportionSum/colonyCount;
+      bestColony.activationSensitivity = activationSensitivitySum/colonyCount;
+      bestColony.decayRateReturn = decayRateReturnSum/colonyCount;
     }
-    
-    bestColony.decayRate = decayRateSum/colonyCount;
-    bestColony.walkDropRate = walkDropRateSum/colonyCount;
-    bestColony.trailDropRate = trailDropRateSum/colonyCount;
-    bestColony.dirDevConst = dirDevConstSum/colonyCount;
-    bestColony.dirDevCoeff2 = dirDevCoeff2Sum/colonyCount;
-    bestColony.dirTimePow2 = dirTimePow2Sum/colonyCount;
-    bestColony.densityThreshold = densityThresholdSum/colonyCount;
-    bestColony.densityConstant = densityConstantSum/colonyCount;
-    bestColony.densityPatchThreshold = densityPatchThresholdSum/colonyCount;
-    bestColony.densityPatchConstant = densityPatchConstantSum/colonyCount;
-    bestColony.densityInfluenceThreshold = densityInfluenceThresholdSum/colonyCount;
-    bestColony.densityInfluenceConstant = densityInfluenceConstantSum/colonyCount;
-    bestColony.activeProportion = activeProportionSum/colonyCount;
-    bestColony.activationSensitivity = activationSensitivitySum/colonyCount;
-    bestColony.decayRateReturn = decayRateReturnSum/colonyCount;
   }
   
   return 0;
@@ -746,6 +751,12 @@ static inline float randomFloat(float x) {
             }
           }
         }
+        
+        //Log all seed collections to a file.
+        @autoreleasepool {
+          [writer writeString:[NSString stringWithFormat:@"%@,%d,%d,%d,%d\n",simulationTag,updateCount,[ant x],[ant y],density_count] toFile:filename];
+        }
+        //End logging.
         
         if(arc4random () % 100 / 100.0f <=
             (density_count / [[colonies objectAtIndex:col_count] densityThreshold] +
@@ -1337,12 +1348,12 @@ static inline float randomFloat(float x) {
          {
          for( int l = -1; l < 2; l++ )
          {
-         if( [ant x]+k < grid_width && ants[ant_count].x+k >= 0 && [ant y]+l < grid_height && [ant y]+l >= 0 )
+         if( [ant x]+k < grid_width && [ant x]+k >= 0 && [ant y]+l < grid_height && [ant y]+l >= 0 )
          {
-         if( grid[ants[ant_count].x+k][[ant y]+l].food > 0 & grid[ants[ant_count].x+k][[ant y]+l].ant_status == 0 ) food_count++;
+         if( grid[[ant x]+k][[ant y]+l].food > 0 & grid[[ant x]+k][[ant y]+l].ant_status == 0 ) food_count++;
          }
          }
-         } */
+         }*/ 
         int new_x = -1, new_y = -1;
         int search_loop = 0;
         bool found_a_seed = false;
@@ -1629,6 +1640,29 @@ static inline float randomFloat(float x) {
     [c setDensityInfluenceConstant:arc4random () % 200 / 100.0f - 1];
     [c setActivationSensitivity:arc4random () % 100 / 100.0f];
     [c setDecayRateReturn:arc4random () % 500 / 1000.0f];
+    [c setActiveProportion:1.0];
+    
+    //Manual Override.
+    
+    [c setDecayRate:0.007859];
+    [c setTrailDropRate:0.004721];
+    [c setWalkDropRate:0.024760];
+    [c setSearchGiveupRate:0.f];
+    [c setDirDevConst:0.209427];
+    [c setDirDevCoeff1:0.f];
+    [c setDirTimePow1:0.f];
+    [c setDirDevCoeff2:3.737541];
+    [c setDirTimePow2:0.249095];
+    [c setDensityThreshold:0.532423];
+    [c setDensitySensitivity:0.000000];
+    [c setDensityConstant:-0.474696];
+    [c setDensityPatchThreshold:0.516473];
+    [c setDensityPatchConstant:0.494699];
+    [c setDensityInfluenceThreshold:0.321963];
+    [c setDensityInfluenceConstant:-0.816648];
+    [c setActiveProportion:1.000000];
+    [c setDecayRateReturn:0.244337];
+    [c setActivationSensitivity:0.076127];
   }
 }
 
@@ -1641,12 +1675,12 @@ static inline float randomFloat(float x) {
   n_food_green = (numberOfSeeds / 4) * distributionPowerlaw;
   n_food_blue += (numberOfSeeds / 4) * distributionPowerlaw;
 
-  n_food_green += numberOfSeeds * distributionPowerlaw;
+  n_food_green += numberOfSeeds * distributionClustered;
   
-  n_food_red = roundf(n_food_red);
-  n_food_orange = roundf(n_food_orange);
-  n_food_green = roundf(n_food_green);
-  n_food_blue = roundf(n_food_blue);
+  n_food_red = (int)roundf(n_food_red);
+  n_food_orange = (int)roundf(n_food_orange);
+  n_food_green = (int)roundf(n_food_green);
+  n_food_blue = (int)roundf(n_food_blue);
 }
 
 @end

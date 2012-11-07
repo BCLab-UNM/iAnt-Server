@@ -8,13 +8,13 @@
 @end
 
 @interface ABSSimulationController : NSObject {
-  NSMutableDictionary* simulations;
   NSMutableDictionary* simulationThreads;
 }
 
 +(ABSSimulationController*) getInstance;
 
 @property NSObject* delegate;
+@property NSMutableDictionary* simulations;
 
 -(void) addSimulationWithTag:(NSString*)tag;
 

@@ -14,7 +14,7 @@
 
 
 //Interface controls.
-@synthesize portTextField, fusionTypePopUp, tagDistributionPopUp, tagRadiusTextField, tagCountTextField, boundsRadiusTextField, trialTypePopUp, environmentTypePopUp, validRunButton, notesTextField, startButton, workingDirectoryTextField;
+@synthesize serverWindow, tabView, tagDistributionPopUp, tagCountTextField, boundsRadiusTextField, trialTypePopUp, environmentTypePopUp, validRunButton, startButton, workingDirectoryTextField, userLogTextField;
 
 //Other important application components.
 @synthesize server, robotDisplayView, toolController;
@@ -27,27 +27,6 @@
  * Called when the view loads.  Essentially our initialize function.
  */
 -(void) loadView {
-	[fusionTypePopUp addItemWithTitle:@"None"];
-  [fusionTypePopUp addItemWithTitle:@"Bayesian"];
-  [fusionTypePopUp addItemWithTitle:@"Kahlman"];
-  [fusionTypePopUp addItemWithTitle:@"Other"];
-  
-  [tagDistributionPopUp addItemWithTitle:@"Clumped"];
-  [tagDistributionPopUp addItemWithTitle:@"Uniform"];
-  [tagDistributionPopUp addItemWithTitle:@"Normal"];
-  [tagDistributionPopUp addItemWithTitle:@"Powerlaw"];
-  [tagDistributionPopUp addItemWithTitle:@"Other"];
-  
-  [trialTypePopUp addItemWithTitle:@"Site Fidelity"];
-  [trialTypePopUp addItemWithTitle:@"Pheromones"];
-  [trialTypePopUp addItemWithTitle:@"Both"];
-  
-  [environmentTypePopUp addItemWithTitle:@"Concrete"];
-  [environmentTypePopUp addItemWithTitle:@"Asphalt"];
-  [environmentTypePopUp addItemWithTitle:@"Grass"];
-  [environmentTypePopUp addItemWithTitle:@"Sand"];
-  [environmentTypePopUp addItemWithTitle:@"Tile"];
-  [environmentTypePopUp addItemWithTitle:@"Other"];
   
   //Load the working directory from the settings.plist file located in the User's library.
   NSString* settingsPath = [NSHomeDirectory() stringByAppendingString:@"/Library/Application Support/ABS/settings.plist"];
@@ -63,6 +42,7 @@
   
   //Set the working directory text field's string to whatever the settings file says it should be.
   [workingDirectoryTextField setStringValue:[settingsPlist objectForKey:@"Working Directory"]];
+  NSLog(@"started");
 }
 
 
@@ -74,16 +54,12 @@
 -(IBAction) start:(id)sender {
   
   //Read all the values from the parameter form.
-  int port = [[portTextField stringValue] intValue];
-  NSString* fusionType = [[fusionTypePopUp selectedItem] title];
   NSString* tagDistribution = [[tagDistributionPopUp selectedItem] title];
-  int tagRadius = [[tagRadiusTextField stringValue] intValue];
   int tagCount = [[tagCountTextField stringValue] intValue];
-  double boundsRadius = [[boundsRadiusTextField stringValue] doubleValue];
+  int boundsRadius = [[boundsRadiusTextField stringValue] intValue];
   NSString* trialType = [[trialTypePopUp selectedItem] title];
   NSString* environmentType = [[environmentTypePopUp selectedItem] title];
   BOOL validRun = ([validRunButton state]==NSOnState ? YES : NO);
-  NSString* notes = [notesTextField stringValue];
   workingDirectory = [workingDirectoryTextField stringValue];
   
   //Write the desired workingDirectory to a plist file.
@@ -123,11 +99,9 @@
   NSString* params = [NSString stringWithFormat:
                       @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                       "<trial>\n"
-                      "   <fusion method> %@ </fusion method>\n"
                       "   <tag distribution> %@ </tag distribution>\n"
-                      "   <tag radius> %d </tag radius>\n"
                       "   <total tags> %d </total tags>\n"
-                      "   <bounds radius> %g </bounds radius>\n"
+                      "   <bounds radius> %d </bounds radius>\n"
                       "   <trial type> %@ </trial type>\n"
                       "   <environment> %@ </environment>\n"
                       "   <valid> %d </valid>\n"
@@ -142,31 +116,14 @@
                       "   <date> %@ </date>\n"
                       "</info>\n"
                       "<additional>\n"
-                      "   <notes>\n"
-                      "   %@\n"
-                      "   </notes>\n"
                       "</additional>\n",
-                      fusionType, tagDistribution, tagRadius, tagCount, boundsRadius, trialType, environmentType, validRun,
+                      tagDistribution, tagCount, boundsRadius, trialType, environmentType, validRun,
                       @"something here", @"something here",
-                      @"something here", @"something here", dateDirectory,
-                      notes];
+                      @"something here", @"something here", dateDirectory];
   
   //Write the xml string to the file and close the file.
   [writer writeString:params toFile:filename];
   [writer closeFilename:filename];
-  
-  //Set up GA.
-  /*[[ABSSimulationController getInstance] setDelegate:self];
-  [[ABSSimulationController getInstance] addSimulationWithTag:@"MainSimulation"];
-  ABSSimulation* sim = [[ABSSimulationController getInstance] simulationWithTag:@"MainSimulation"];
-  [sim setGenerationCount:10];
-  [sim setAntCount:1];
-  [sim setColonyCount:10];
-  [sim setUsesPheromones:YES];
-  [sim setUsesSiteFidelity:YES];
-  [sim setDistributionPowerlaw:1.];
-  [sim setNumberOfSeeds:256];
-  [[ABSSimulationController getInstance] startAll];*/
   
   //Set up robotDetails
   [ABSRobotDetails initializeWithWorkingDirectory:workingDirectory];
@@ -176,6 +133,7 @@
   [robotDisplayView reset];
   
   //Set up pheromones.
+  [[ABSPheromoneController getInstance] setDelegate:self];
   [[ABSPheromoneController getInstance] clearPheromones];
   pendingPheromones = [[NSMutableDictionary alloc] init];
   tagFound = [[NSMutableDictionary alloc] init];
@@ -187,10 +145,30 @@
   [server stop];
   server = [[ABSServer alloc] init];
   [server setDelegate:self];
-  [server listenOnPort:port];
+  [server listenOnPort:2223];
   
-  //if everything went well, change button text.
+  //if everything went well, change button text and alter the window size/state.
   [startButton setTitle:@"Restart"];
+  NSRect frame = [serverWindow frame];
+    if(frame.size.width<800) {
+    frame.origin.y-=(250-22);
+    frame.size.width=800;
+    frame.size.height=600;
+    [serverWindow setFrame:frame display:YES animate:NO];
+    [serverWindow setMinSize:NSMakeSize(800,600)];
+  }
+  [tabView selectTabViewItemAtIndex:1];
+}
+
+
+-(void) logUserMessage:(id)sender {
+  ABSWriter* writer = [ABSWriter getInstance];
+  NSString* filename = [dataDirectory stringByAppendingString:@"/userLogs.log"];
+  NSString* message = [userLogTextField stringValue];
+  if(![writer isOpen:filename]){[writer openFilename:filename];}
+  
+  [writer writeString:message toFile:filename];
+  [self log:[NSString stringWithFormat:@"User logged \"%@\".",message] withTag:LOG_TAG_EVENT];
 }
 
 
@@ -360,6 +338,14 @@
   /*ABSSimulation* simulation = [[ABSSimulationController getInstance] simulationWithTag:tag];
   ABSSimulationColony* colony = [simulation bestColony];
   float bestParameter = [colony dirDevConst];*/
+  NSLog(@"%@ finished.",tag);
+  
+  simCount--;
+  if(!simCount){
+    for(NSString* tag in [[ABSSimulationController getInstance] simulations]) {
+      NSLog(@"All finished.");
+    }
+  }
 }
 
 @end

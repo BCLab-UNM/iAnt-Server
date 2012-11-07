@@ -119,6 +119,7 @@
     else{[result setString:[[dataValues objectAtIndex:row] stringValue]];}
   }
   [result setEditable:NO];
+  [result setSelectable:NO];
   
   return result;
 }
