@@ -86,6 +86,7 @@
   //Concatenate everything together to get a complete directory path.
   dataDirectory = [NSString stringWithFormat:@"%@/raw/%@/%@",dataRoot,dateDirectory,timeDirectory];
   [[NSFileManager defaultManager] createDirectoryAtPath:dataDirectory withIntermediateDirectories:YES attributes:nil error:nil];
+  NSLog(@"%@",dataDirectory);
   NSString* filename = [dataDirectory stringByAppendingString:@"/trialXML.xml"];
   
   ABSWriter* writer = [ABSWriter getInstance];
@@ -167,8 +168,10 @@
   NSString* message = [userLogTextField stringValue];
   if(![writer isOpen:filename]){[writer openFilename:filename];}
   
-  [writer writeString:message toFile:filename];
+  [writer writeString:[message stringByAppendingString:@"\n"] toFile:filename];
   [self log:[NSString stringWithFormat:@"User logged \"%@\".",message] withTag:LOG_TAG_EVENT];
+  
+  [userLogTextField setStringValue:@""];
 }
 
 
