@@ -1334,7 +1334,6 @@
 							<string key="NSFrame">{{-8, -10}, {656, 354}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="624983193"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<array class="NSMutableArray" key="NSTabViewItems">
 								<object class="NSTabViewItem" id="43287551">
@@ -1933,7 +1932,7 @@
 																<string key="NSFrameSize">{382, 339}</string>
 																<reference key="NSSuperview" ref="316985552"/>
 																<reference key="NSWindow"/>
-																<reference key="NSNextKeyView" ref="767472635"/>
+																<reference key="NSNextKeyView" ref="1031117689"/>
 																<string key="NSReuseIdentifierKey">_NS:13</string>
 																<object class="_NSCornerView" key="NSCornerView">
 																	<nil key="NSNextResponder"/>
@@ -2077,7 +2076,7 @@
 												<string key="NSFrame">{{17, 214}, {384, 341}}</string>
 												<reference key="NSSuperview" ref="624983193"/>
 												<reference key="NSWindow"/>
-												<reference key="NSNextKeyView" ref="1031117689"/>
+												<reference key="NSNextKeyView" ref="316985552"/>
 												<string key="NSReuseIdentifierKey">_NS:9</string>
 												<int key="NSsFlags">154130</int>
 												<reference key="NSVScroller" ref="767472635"/>
@@ -2109,7 +2108,7 @@
 																<string key="NSFrameSize">{600, 14}</string>
 																<reference key="NSSuperview" ref="1070639632"/>
 																<reference key="NSWindow"/>
-																<reference key="NSNextKeyView" ref="297702689"/>
+																<reference key="NSNextKeyView" ref="849131073"/>
 																<string key="NSReuseIdentifierKey">_NS:13</string>
 																<object class="NSTextContainer" key="NSTextContainer" id="771344852">
 																	<object class="NSLayoutManager" key="NSLayoutManager">
@@ -2204,7 +2203,6 @@
 														<string key="NSFrame">{{746, 1}, {15, 158}}</string>
 														<reference key="NSSuperview" ref="238749990"/>
 														<reference key="NSWindow"/>
-														<reference key="NSNextKeyView"/>
 														<string key="NSReuseIdentifierKey">_NS:84</string>
 														<reference key="NSTarget" ref="238749990"/>
 														<string key="NSAction">_doScroller:</string>
@@ -2228,7 +2226,7 @@
 												<string key="NSFrame">{{17, 17}, {762, 160}}</string>
 												<reference key="NSSuperview" ref="624983193"/>
 												<reference key="NSWindow"/>
-												<reference key="NSNextKeyView" ref="849131073"/>
+												<reference key="NSNextKeyView" ref="1070639632"/>
 												<string key="NSReuseIdentifierKey">_NS:9</string>
 												<int key="NSsFlags">133138</int>
 												<reference key="NSVScroller" ref="297702689"/>
@@ -2344,7 +2342,7 @@
 					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="1017605809"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1280, 800}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1280, 778}}</string>
 				<string key="NSMinSize">{640, 372}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">NO</bool>
@@ -3057,14 +3055,6 @@
 					<int key="connectionID">746</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">robotDisplayView</string>
-						<reference key="source" ref="594253550"/>
-						<reference key="destination" ref="152089036"/>
-					</object>
-					<int key="connectionID">675</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">start:</string>
 						<reference key="source" ref="594253550"/>
@@ -3170,6 +3160,22 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
+						<string key="label">robotDisplayView</string>
+						<reference key="source" ref="594253550"/>
+						<reference key="destination" ref="152089036"/>
+					</object>
+					<int key="connectionID">1030</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">monitorView</string>
+						<reference key="source" ref="594253550"/>
+						<reference key="destination" ref="624983193"/>
+					</object>
+					<int key="connectionID">1033</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
 						<string key="label">console</string>
 						<reference key="source" ref="1007085354"/>
 						<reference key="destination" ref="484344575"/>
@@ -3183,6 +3189,14 @@
 						<reference key="destination" ref="1065316716"/>
 					</object>
 					<int key="connectionID">854</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">didSelectConsoleTags:</string>
+						<reference key="source" ref="1007085354"/>
+						<reference key="destination" ref="970205020"/>
+					</object>
+					<int key="connectionID">1031</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -4947,7 +4961,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1029</int>
+			<int key="maxID">1033</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5029,6 +5043,7 @@
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="boundsRadiusTextField">NSTextField</string>
 						<string key="environmentTypePopUp">NSPopUpButton</string>
+						<string key="monitorView">NSView</string>
 						<string key="robotDisplayView">ABSRobotDisplayView</string>
 						<string key="serverWindow">NSWindow</string>
 						<string key="startButton">NSButton</string>
@@ -5049,6 +5064,10 @@
 						<object class="IBToOneOutletInfo" key="environmentTypePopUp">
 							<string key="name">environmentTypePopUp</string>
 							<string key="candidateClassName">NSPopUpButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="monitorView">
+							<string key="name">monitorView</string>
+							<string key="candidateClassName">NSView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="robotDisplayView">
 							<string key="name">robotDisplayView</string>
@@ -5104,13 +5123,13 @@
 					<string key="className">ABSToolController</string>
 					<string key="superclassName">NSViewController</string>
 					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">didSelectToolbarThing:</string>
+						<string key="NS.key.0">didSelectConsoleTags:</string>
 						<string key="NS.object.0">id</string>
 					</object>
 					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">didSelectToolbarThing:</string>
+						<string key="NS.key.0">didSelectConsoleTags:</string>
 						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">didSelectToolbarThing:</string>
+							<string key="name">didSelectConsoleTags:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 					</object>

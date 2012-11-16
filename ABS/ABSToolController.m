@@ -124,27 +124,15 @@
   return result;
 }
 
--(IBAction)didSelectToolbarThing:(id)sender {
-  if([sender class] == [NSSegmentedControl class]) {
-    long segments = [sender segmentCount];
-    consoleTags = 0;
-    for(int i=0; i<segments; i++) {
-      if([sender isSelectedForSegment:i]) {
-        consoleTags |= (1 << i);
-      }
-    }
-    [self resetConsole];
-  }
-  else {
-    if([[sender label] isEqualToString:@"Console"]) {
-      [[[console superview] superview] setHidden:NO];
-      [[[stats superview] superview] setHidden:YES];
-    }
-    else if([[sender label] isEqualToString:@"Stats"]) {
-      [[[console superview] superview] setHidden:YES];
-      [[[stats superview] superview] setHidden:NO];
+-(IBAction)didSelectConsoleTags:(id)sender {
+  long segments = [sender segmentCount];
+  consoleTags = 0;
+  for(int i=0; i<segments; i++) {
+    if([sender isSelectedForSegment:i]) {
+      consoleTags |= (1 << i);
     }
   }
+  [self resetConsole];
 }
 
 -(void) resetConsole {

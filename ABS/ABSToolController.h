@@ -15,7 +15,7 @@
 -(void) updateStartTime;
 
 -(void) log:(NSString*)message withTag:(int)tag;
--(IBAction) didSelectToolbarThing:(id)sender;
+-(IBAction) didSelectConsoleTags:(id)sender;
 
 -(void) setTagCount:(NSNumber*)tagCount;
 -(void) setPheromoneCount:(NSNumber*) pheromoneCount;

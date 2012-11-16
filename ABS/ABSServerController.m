@@ -14,7 +14,7 @@
 
 
 //Interface controls.
-@synthesize serverWindow, tabView, tagDistributionPopUp, tagCountTextField, boundsRadiusTextField, trialTypePopUp, environmentTypePopUp, validRunButton, startButton, workingDirectoryTextField, userLogTextField;
+@synthesize serverWindow, tabView, monitorView, tagDistributionPopUp, tagCountTextField, boundsRadiusTextField, trialTypePopUp, environmentTypePopUp, validRunButton, startButton, workingDirectoryTextField, userLogTextField;
 
 //Other important application components.
 @synthesize server, robotDisplayView, toolController;
@@ -42,7 +42,6 @@
   
   //Set the working directory text field's string to whatever the settings file says it should be.
   [workingDirectoryTextField setStringValue:[settingsPlist objectForKey:@"Working Directory"]];
-  NSLog(@"started");
 }
 
 
@@ -86,7 +85,6 @@
   //Concatenate everything together to get a complete directory path.
   dataDirectory = [NSString stringWithFormat:@"%@/raw/%@/%@",dataRoot,dateDirectory,timeDirectory];
   [[NSFileManager defaultManager] createDirectoryAtPath:dataDirectory withIntermediateDirectories:YES attributes:nil error:nil];
-  NSLog(@"%@",dataDirectory);
   NSString* filename = [dataDirectory stringByAppendingString:@"/trialXML.xml"];
   
   ABSWriter* writer = [ABSWriter getInstance];
@@ -149,7 +147,7 @@
   [server listenOnPort:2223];
   
   //if everything went well, change button text and alter the window size/state.
-  [startButton setTitle:@"Restart"];
+  [startButton setEnabled:NO];
   NSRect frame = [serverWindow frame];
     if(frame.size.width<800) {
     frame.origin.y-=(250-22);

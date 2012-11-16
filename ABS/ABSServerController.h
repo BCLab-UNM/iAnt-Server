@@ -42,6 +42,7 @@
 //Interface controls.
 @property IBOutlet NSWindow* serverWindow;
 @property IBOutlet NSTabView* tabView;
+@property IBOutlet NSView* monitorView;
 @property IBOutlet NSPopUpButton* tagDistributionPopUp;
 @property IBOutlet NSTextField* tagCountTextField;
 @property IBOutlet NSTextField* boundsRadiusTextField;
