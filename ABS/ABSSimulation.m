@@ -12,6 +12,21 @@ static inline float randomFloat(float x) {
   return (((float)arc4random())/0x100000000)*x;
 }
 
+/*
+ * Returns a NORMAL distribution with a MEAN of m and a _STANDARD_DEVIATION_ of s.
+ */
+static inline float randomNormal(float m, float s) {
+  float u = randomFloat(1);
+  float v = randomFloat(1);
+  
+  float x = sqrtf(-2 * logf(1.0-u));
+  
+  if(roundf(randomFloat(1.))==0){
+    return x*cos(2*M_PI*v)*s+m;
+  }
+  return x*sin(2*M_PI*v)*s+m;
+}
+
 @implementation ABSSimulation
 
 @synthesize delegate;
@@ -466,7 +481,7 @@ static inline float randomFloat(float x) {
         if(arc4random () % 10 == 0)
         {
           new_colonies[i].decayRate +=
-          randomFloat(new_colonies[i].decayRate * 0.05);
+          randomNormal(0,new_colonies[i].decayRate * 0.05);
           if(new_colonies[i].decayRate < 0.0f)
             new_colonies[i].decayRate = 0;
           if(new_colonies[i].decayRate > 1.0f)
@@ -476,7 +491,7 @@ static inline float randomFloat(float x) {
         if(arc4random () % 10 == 0)
         {
           new_colonies[i].walkDropRate +=
-          randomFloat(new_colonies[i].walkDropRate * 0.05);
+          randomNormal(0,new_colonies[i].walkDropRate * 0.05);
           if(new_colonies[i].walkDropRate < 0.0f)
             new_colonies[i].walkDropRate = 0;
           if(new_colonies[i].walkDropRate > 1.0f)
@@ -486,7 +501,7 @@ static inline float randomFloat(float x) {
         if(arc4random () % 10 == 0)
         {
           new_colonies[i].searchGiveupRate +=
-          randomFloat(new_colonies[i].searchGiveupRate * 0.05);
+          randomNormal(0,new_colonies[i].searchGiveupRate * 0.05);
           if(new_colonies[i].searchGiveupRate < 0.0f)
             new_colonies[i].searchGiveupRate = 0;
           if(new_colonies[i].searchGiveupRate > 1.0f)
@@ -496,7 +511,7 @@ static inline float randomFloat(float x) {
         if(arc4random () % 10 == 0)
         {
           new_colonies[i].trailDropRate +=
-          randomFloat(new_colonies[i].trailDropRate * .05);
+          randomNormal(0,new_colonies[i].trailDropRate * .05);
           if(new_colonies[i].trailDropRate < 0.0f)
             new_colonies[i].trailDropRate = 0;
           if(new_colonies[i].trailDropRate > 1.0f)
@@ -506,7 +521,7 @@ static inline float randomFloat(float x) {
         if(arc4random () % 10 == 0)
         {
           new_colonies[i].dirDevConst +=
-          randomFloat(
+          randomNormal(0,
                       0.001 +
                       fabs (new_colonies[i].dirDevConst * .05));
           if(new_colonies[i].dirDevConst < 0.0f)
@@ -516,7 +531,7 @@ static inline float randomFloat(float x) {
         if(arc4random () % 10 == 0)
         {
           new_colonies[i].dirDevCoeff2 +=
-          randomFloat(
+          randomNormal(0,
                       0.001 +
                       fabs (new_colonies[i].dirDevCoeff2 * .05));
           if(new_colonies[i].dirDevCoeff2 < 0.0f)
@@ -526,7 +541,7 @@ static inline float randomFloat(float x) {
         if(arc4random () % 10 == 0)
         {
           new_colonies[i].dirTimePow2 +=
-          randomFloat(
+          randomNormal(0,
                       0.001 +
                       fabs (new_colonies[i].dirTimePow2 * .05));
           if(new_colonies[i].dirTimePow2 < 0.0f)
@@ -538,14 +553,14 @@ static inline float randomFloat(float x) {
           if(arc4random () % 10 == 0)
           {
             new_colonies[i].densityThreshold +=
-            randomFloat(
+            randomNormal(0,
                         0.001 +
                         fabs (new_colonies[i].densityThreshold * .05));
           }
           if(arc4random () % 10 == 0)
           {
             new_colonies[i].densityConstant +=
-            randomFloat(
+            randomNormal(0,
                         0.001 +
                         fabs (new_colonies[i].densityConstant * .05));
           }
@@ -555,7 +570,7 @@ static inline float randomFloat(float x) {
           if(arc4random () % 10 == 0)
           {
             new_colonies[i].densityPatchConstant +=
-            randomFloat(
+            randomNormal(0,
                         0.001 +
                         fabs (new_colonies[i].densityPatchConstant *
                               .05));
@@ -563,7 +578,7 @@ static inline float randomFloat(float x) {
           if(arc4random () % 10 == 0)
           {
             new_colonies[i].densityPatchThreshold +=
-            randomFloat(
+            randomNormal(0,
                         0.001 +
                         fabs (new_colonies[i].densityPatchThreshold *
                               .05));
@@ -572,7 +587,7 @@ static inline float randomFloat(float x) {
         if(arc4random () % 10 == 0)
         {
           new_colonies[i].densityInfluenceConstant +=
-          randomFloat(
+          randomNormal(0,
                       0.001 +
                       fabs (new_colonies[i].densityInfluenceConstant *
                             .05));
@@ -580,7 +595,7 @@ static inline float randomFloat(float x) {
         if(arc4random () % 10 == 0)
         {
           new_colonies[i].densityInfluenceThreshold +=
-          randomFloat(
+          randomNormal(0,
                       0.001 +
                       fabs (new_colonies[i].densityInfluenceThreshold *
                             .05));
@@ -588,7 +603,7 @@ static inline float randomFloat(float x) {
         if(arc4random () % 10 == 0)
         {
           new_colonies[i].activationSensitivity +=
-          randomFloat(
+          randomNormal(0,
                       0.001 +
                       fabs (new_colonies[i].activationSensitivity *
                             .05));
@@ -598,7 +613,7 @@ static inline float randomFloat(float x) {
         if(arc4random () % 10 == 0)
         {
           new_colonies[i].decayRateReturn +=
-          randomFloat(
+          randomNormal(0,
                       0.001 +
                       fabs (new_colonies[i].decayRateReturn * .05));
           if(new_colonies[i].decayRateReturn < 0.0f)
@@ -1375,7 +1390,7 @@ static inline float randomFloat(float x) {
           if([ant searchTime] >= 0.0)
           {
             d_theta =
-            randomFloat(
+            randomNormal(0,
                         (([[colonies objectAtIndex:col_count] dirDevCoeff1] *
                           pow ([ant searchTime],
                                [[colonies objectAtIndex:col_count]
@@ -1388,7 +1403,7 @@ static inline float randomFloat(float x) {
           }
           else
             d_theta =
-            randomFloat([[colonies objectAtIndex:col_count] dirDevConst]);
+            randomNormal(0,[[colonies objectAtIndex:col_count] dirDevConst]);
           if(updateCount % 3 == 0)
           {		//ants pick a new direction only every 30 cm, like the antbots.
             new_direction =

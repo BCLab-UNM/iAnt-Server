@@ -22,7 +22,6 @@
 //Internal variables.
 @synthesize workingDirectory, dataDirectory, pendingPheromones, tagFound, settingsPlist, statTagCount;
 
-
 /*
  * Called when the view loads.  Essentially our initialize function.
  */
@@ -127,18 +126,26 @@
   //Set up robotDetails
   [ABSRobotDetails initializeWithWorkingDirectory:workingDirectory];
   
-  //Set up GUI.
-  [robotDisplayView setBoundsRadius:[NSNumber numberWithDouble:boundsRadius]];
-  [robotDisplayView reset];
-  
   //Set up pheromones.
   [[ABSPheromoneController getInstance] setDelegate:self];
   [[ABSPheromoneController getInstance] clearPheromones];
+  NSString* pheromoneInit = [NSString stringWithContentsOfFile:[NSHomeDirectory() stringByAppendingString:@"/Desktop/pheromoneInit.txt"] encoding:NSUTF8StringEncoding error:nil];
+  for(NSString* line in [pheromoneInit componentsSeparatedByString:@"\n"]) {
+    NSArray* vals = [line componentsSeparatedByString:@","];
+    NSNumber* i = [NSNumber numberWithInt:[[vals objectAtIndex:0] intValue]];
+    NSNumber* x = [NSNumber numberWithInt:[[vals objectAtIndex:1] intValue]];
+    NSNumber* y = [NSNumber numberWithInt:[[vals objectAtIndex:2] intValue]];
+    [[ABSPheromoneController getInstance] addPheromoneAtX:x andY:y forTag:i];
+  }
   pendingPheromones = [[NSMutableDictionary alloc] init];
   tagFound = [[NSMutableDictionary alloc] init];
   for(int i=0; i<tagCount; i+=1) {
     [tagFound setObject:[NSNumber numberWithBool:NO] forKey:[NSNumber numberWithInt:i]];
   }
+  
+  //Set up GUI.
+  [robotDisplayView setBoundsRadius:[NSNumber numberWithDouble:boundsRadius]];
+  [robotDisplayView reset];
   
   //Set up and start server.
   [server stop];
