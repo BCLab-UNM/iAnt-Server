@@ -13,7 +13,7 @@ static inline float randomFloat(float x) {
 }
 
 /*
- * Returns a NORMAL distribution with a MEAN of m and a _STANDARD_DEVIATION_ of s.
+ * Returns a sample from a NORMAL distribution with a MEAN of m and a _STANDARD_DEVIATION_ of s.
  */
 static inline float randomNormal(float m, float s) {
   float u = randomFloat(1);
@@ -25,6 +25,16 @@ static inline float randomNormal(float m, float s) {
     return x*cos(2*M_PI*v)*s+m;
   }
   return x*sin(2*M_PI*v)*s+m;
+}
+
+/*
+ * Returns proper modulus of dividend and divisor
+ */
+static inline float pmod(float dividend, float divisor)
+{
+	float temp = fmod(dividend,divisor);
+	while (temp < 0) temp += divisor;
+	return temp;
 }
 
 @implementation ABSSimulation
@@ -1125,9 +1135,9 @@ static inline float randomNormal(float m, float s) {
       {
         [ant setAntStatus:3];
         [ant setSearchTime:0];
-        [ant setSearchDirection:arc4random () % 360 - 180];
-        int newdx = round (cos ([ant searchDirection]));
-        int newdy = round (sin ([ant searchDirection]));
+        [ant setSearchDirection:(arc4random () % 360)];
+        int newdx = round (cos ([ant searchDirection] * M_PI / 180.0));
+        int newdy = round (sin ([ant searchDirection] * M_PI / 180.0));
         if([ant x] + newdx >= 0
             && [ant x] + newdx < grid_width
             && [ant y] + newdy >= 0
@@ -1231,8 +1241,8 @@ static inline float randomNormal(float m, float s) {
         [ant setAntStatus:3];
         [ant setSearchTime:-1];
         [ant setSearchDirection:360.0];
-        int newdx = round (cos ([ant searchDirection]));
-        int newdy = round (sin ([ant searchDirection]));
+        int newdx = round (cos ([ant searchDirection] * M_PI / 180.0));
+        int newdy = round (sin ([ant searchDirection] * M_PI / 180.0));
         if([ant x] + newdx >= 0
             && [ant x] + newdx < grid_width
             && [ant y] + newdy >= 0
@@ -1246,28 +1256,28 @@ static inline float randomNormal(float m, float s) {
       }
       float idealx;		//Optimal X and Y move given the ant's chosen direction
       float idealy;		//Move may not be possible (i.e., not on the grid) but the ant will try to get as close as possible
-      if(fabs (sin ([ant direction] * pi / 180)) >
-          fabs (cos ([ant direction] * pi / 180)))
+      if(fabs (sin ([ant direction] * M_PI / 180)) >
+          fabs (cos ([ant direction] * M_PI / 180)))
       {
         idealx =
         [ant x] +
-        50 * (cos ([ant direction] * pi / 180) /
-              fabs (sin ([ant direction] * pi / 180)));
+        50 * (cos ([ant direction] * M_PI / 180) /
+              fabs (sin ([ant direction] * M_PI / 180)));
         idealy =
         [ant y] +
-        50 * (sin ([ant direction] * pi / 180) /
-              fabs (sin ([ant direction] * pi / 180)));
+        50 * (sin ([ant direction] * M_PI / 180) /
+              fabs (sin ([ant direction] * M_PI / 180)));
       }
       else
       {
         idealx =
         [ant x] +
-        50 * (cos ([ant direction] * pi / 180) /
-              fabs (cos ([ant direction] * pi / 180)));
+        50 * (cos ([ant direction] * M_PI / 180) /
+              fabs (cos ([ant direction] * M_PI / 180)));
         idealy =
         [ant y] +
-        50 * (sin ([ant direction] * pi / 180) /
-              fabs (cos ([ant direction] * pi / 180)));
+        50 * (sin ([ant direction] * M_PI / 180) /
+              fabs (cos ([ant direction] * M_PI / 180)));
       }
       
       
@@ -1383,7 +1393,7 @@ static inline float randomNormal(float m, float s) {
               || ([ant y] == grid_height - 1)
               || (food_count > 0))
           {
-            [ant setSearchDirection:(arc4random () % 360) - 180];
+            [ant setSearchDirection:(arc4random () % 360)];
           }
           
           float d_theta;
@@ -1407,7 +1417,7 @@ static inline float randomNormal(float m, float s) {
           if(updateCount % 3 == 0)
           {		//ants pick a new direction only every 30 cm, like the antbots.
             new_direction =
-            [ant searchDirection] + d_theta;
+              pmod([ant searchDirection] + d_theta, 360);
             if([ant searchTime] >= 0.0)
               [ant setSearchTime:[ant searchTime]+1];
           }
@@ -1415,8 +1425,8 @@ static inline float randomNormal(float m, float s) {
           {
             new_direction = [ant searchDirection];
           }
-          int newdx = round (cos (new_direction));
-          int newdy = round (sin (new_direction));
+          int newdx = round (cos (new_direction * M_PI / 180.0));
+          int newdy = round (sin (new_direction * M_PI / 180.0));
           new_x = [ant x] + newdx;
           new_y = [ant y] + newdy;
           
@@ -1473,8 +1483,8 @@ static inline float randomNormal(float m, float s) {
         {
           //ant turns in the direction it intends to travel, RFID/QR reader rotates in front of it
           float rfid_direction = [ant searchDirection];
-          int newdx = round (cos (rfid_direction));
-          int newdy = round (sin (rfid_direction));
+          int newdx = round (cos (rfid_direction * M_PI / 180.0));
+          int newdy = round (sin (rfid_direction * M_PI / 180.0));
           if([ant x] + newdx >= 0
               && [ant x] + newdx < grid_width
               && [ant y] + newdy >= 0
