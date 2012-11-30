@@ -255,7 +255,7 @@
     [toolController setTagCount:statTagCount];
     
     //Only leave a pheromone if there are other tags nearby.
-    if(n > [NSNumber numberWithInt:1]) {
+    if((float)arc4random()/INT_MAX <= (([n intValue]/ 0.f) + 0.f)) {
       NSArray* pheromoneData = [NSArray arrayWithObjects:x, y, tagId, nil];
       [pendingPheromones setObject:pheromoneData forKey:robotName];
     }
