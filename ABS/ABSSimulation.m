@@ -1417,7 +1417,7 @@ static inline float pmod(float dividend, float divisor)
           if(updateCount % 3 == 0)
           {		//ants pick a new direction only every 30 cm, like the antbots.
             new_direction =
-              pmod([ant searchDirection] + d_theta, 360);
+              pmod([ant searchDirection] + (d_theta * 180.f / M_PI), 360);
             if([ant searchTime] >= 0.0)
               [ant setSearchTime:[ant searchTime]+1];
           }
@@ -1666,28 +1666,6 @@ static inline float pmod(float dividend, float divisor)
     [c setActivationSensitivity:arc4random () % 100 / 100.0f];
     [c setDecayRateReturn:arc4random () % 500 / 1000.0f];
     [c setActiveProportion:1.0];
-    
-    //Manual Override.
-    
-    [c setDecayRate:0.007859];
-    [c setTrailDropRate:0.004721];
-    [c setWalkDropRate:0.024760];
-    [c setSearchGiveupRate:0.f];
-    [c setDirDevConst:0.209427];
-    [c setDirDevCoeff1:0.f];
-    [c setDirTimePow1:0.f];
-    [c setDirDevCoeff2:3.737541];
-    [c setDirTimePow2:0.249095];
-    [c setDensityThreshold:0.532423];
-    [c setDensitySensitivity:0.000000];
-    [c setDensityConstant:-0.474696];
-    [c setDensityPatchThreshold:0.516473];
-    [c setDensityPatchConstant:0.494699];
-    [c setDensityInfluenceThreshold:0.321963];
-    [c setDensityInfluenceConstant:-0.816648];
-    [c setActiveProportion:1.000000];
-    [c setDecayRateReturn:0.244337];
-    [c setActivationSensitivity:0.076127];
   }
 }
 
