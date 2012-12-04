@@ -637,6 +637,7 @@ static inline float pmod(float dividend, float divisor)
       //Set next generation of colonies, and average together colony parameters.
       float decayRateSum = 0.f,
       walkDropRateSum = 0.f,
+      searchGiveupRateSum = 0.f,
       trailDropRateSum = 0.f,
       dirDevConstSum = 0.f,
       dirDevCoeff2Sum = 0.f,
@@ -649,12 +650,14 @@ static inline float pmod(float dividend, float divisor)
       densityInfluenceConstantSum = 0.f,
       activeProportionSum = 0.f,
       activationSensitivitySum = 0.f,
-      decayRateReturnSum = 0.f;
+      decayRateReturnSum = 0.f,
+      seedsCollectedSum = 0.f;
 
       for(int i = 0; i < colonyCount; i++) {
         ABSSimulationColony* c = [colonies objectAtIndex:i];
         decayRateSum += [c decayRate];
         walkDropRateSum += [c walkDropRate];
+        searchGiveupRateSum += [c searchGiveupRate];
         trailDropRateSum += [c trailDropRate];
         dirDevConstSum += [c dirDevConst];
         dirDevCoeff2Sum += [c dirDevCoeff2];
@@ -668,6 +671,7 @@ static inline float pmod(float dividend, float divisor)
         activeProportionSum += [c activeProportion];
         activationSensitivitySum += [c activationSensitivity];
         decayRateReturnSum += [c decayRateReturn];
+        seedsCollectedSum += [c seedsCollected];
         
         [c setDecayRate:new_colonies[i].decayRate];
         [c setWalkDropRate:new_colonies[i].walkDropRate];
@@ -696,6 +700,7 @@ static inline float pmod(float dividend, float divisor)
       
       bestColony.decayRate = decayRateSum/colonyCount;
       bestColony.walkDropRate = walkDropRateSum/colonyCount;
+      bestColony.searchGiveupRate = searchGiveupRateSum/colonyCount;
       bestColony.trailDropRate = trailDropRateSum/colonyCount;
       bestColony.dirDevConst = dirDevConstSum/colonyCount;
       bestColony.dirDevCoeff2 = dirDevCoeff2Sum/colonyCount;
@@ -709,6 +714,7 @@ static inline float pmod(float dividend, float divisor)
       bestColony.activeProportion = activeProportionSum/colonyCount;
       bestColony.activationSensitivity = activationSensitivitySum/colonyCount;
       bestColony.decayRateReturn = decayRateReturnSum/colonyCount;
+      bestColony.seedsCollected = seedsCollectedSum/colonyCount;
     }
   }
   
