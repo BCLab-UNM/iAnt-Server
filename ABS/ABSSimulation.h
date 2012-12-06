@@ -31,10 +31,8 @@
   int n_food_red; //1 pile
   int n_food_orange; //2 piles
   int n_food_green; //4 piles
-  int n_food_purple; //64 piles
   int n_food_blue; //random
   int num_each_clump;
-  int n_food_background; //please...please kill me.. (take this out though, seriously).
   int count_food_red;
   int count_food_orange;
   int count_food_green;
@@ -71,7 +69,8 @@
 -(void) stopSimulation;
 -(void) run;
 -(void) initColonies;
--(void) initDistribution; 
+-(void) initDistribution;
+-(void) layoutTags;
 
 @property id delegate;
 @property NSString* simulationTag;
