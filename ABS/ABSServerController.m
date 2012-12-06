@@ -253,9 +253,9 @@
     [tagFound setObject:[NSNumber numberWithBool:YES] forKey:tagId];
     statTagCount = [NSNumber numberWithInt:[statTagCount intValue]+1];
     [toolController setTagCount:statTagCount];
-    
+
     //Only leave a pheromone if there are other tags nearby.
-    if((float)arc4random()/INT_MAX <= (([n intValue]/ 0.f) + 0.f)) {
+    if((float)arc4random()/INT_MAX <= (([n intValue]/ 3.124444) + -0.113426)) {
       NSArray* pheromoneData = [NSArray arrayWithObjects:x, y, tagId, nil];
       [pendingPheromones setObject:pheromoneData forKey:robotName];
     }
@@ -343,16 +343,27 @@
  * Called whenever a simulation finishes.
  */
 -(void) didFinishSimulationWithTag:(NSString*)tag {
-  /*ABSSimulation* simulation = [[ABSSimulationController getInstance] simulationWithTag:tag];
+  ABSSimulation* simulation = [[ABSSimulationController getInstance] simulationWithTag:tag];
   ABSSimulationColony* colony = [simulation bestColony];
-  float bestParameter = [colony dirDevConst];*/
-  NSLog(@"%@ finished.",tag);
+  printf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",
+        [colony decayRate],
+        [colony densityThreshold],
+        [colony densityConstant],
+        [colony walkDropRate],
+        [colony searchGiveupRate],
+        [colony trailDropRate],
+        [colony dirDevConst],
+        [colony dirDevCoeff],
+        [colony dirTimePow],
+        [colony densityPatchThreshold],
+        [colony densityPatchConstant],
+        [colony densityInfluenceThreshold],
+        [colony densityInfluenceConstant],
+        [colony seedsCollected]);
   
   simCount--;
   if(!simCount){
-    for(NSString* tag in [[ABSSimulationController getInstance] simulations]) {
       NSLog(@"All finished.");
-    }
   }
 }
 
