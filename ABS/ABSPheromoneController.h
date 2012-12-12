@@ -31,6 +31,7 @@
 
 -(double) currentTime;
 -(void) addPheromoneAtX:(NSNumber*)x andY:(NSNumber*)y forTag:(NSNumber*)tagId;
+-(void) removePheromoneForTag:(NSNumber*)tagId;
 -(void) decayPheromones;
 -(NSArray*) getPheromone;
 -(NSArray*) getAllPheromones;
