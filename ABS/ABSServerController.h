@@ -34,13 +34,16 @@
   
   int simCount;
   
-  NSArray* sortedTags;
-  int tagIdx;
+  NSMutableDictionary* tagRef; //IDX => DIS
+  NSMutableDictionary* unassignedTags; //IDX => DIS
+  NSMutableDictionary* assignedTags; //MACADDR => IDX
+  NSNumber* top; //Top of unassigned tags.  Gets refreshed every time a tag is added/removed from unassigned.
 }
 
 -(IBAction) start:(id)sender;
 -(IBAction) logUserMessage:(id)sender;
 -(void) log:(NSString*)message withTag:(int)tag;
+-(void) refreshTop;
 
 //Interface controls.
 @property IBOutlet NSWindow* serverWindow;

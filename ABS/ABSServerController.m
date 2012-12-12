@@ -41,6 +41,10 @@
   
   //Set the working directory text field's string to whatever the settings file says it should be.
   [workingDirectoryTextField setStringValue:[settingsPlist objectForKey:@"Working Directory"]];
+  
+  tagRef = [[NSMutableDictionary alloc] init];
+  unassignedTags = [[NSMutableDictionary alloc] init];
+  assignedTags = [[NSMutableDictionary alloc] init];
 }
 
 
@@ -139,7 +143,6 @@
   [[ABSPheromoneController getInstance] clearPheromones];
   NSString* pheromoneInit = [NSString stringWithContentsOfFile:[NSHomeDirectory() stringByAppendingString:@"/Desktop/pheromoneInit.txt"] encoding:NSUTF8StringEncoding error:nil];
   
-  NSMutableDictionary* tagDict = [[NSMutableDictionary alloc] init];
   for(NSString* line in [pheromoneInit componentsSeparatedByString:@"\n"]) {
     NSArray* vals = [line componentsSeparatedByString:@","];
     NSNumber* i = [NSNumber numberWithInt:[[vals objectAtIndex:0] intValue]];
@@ -148,16 +151,12 @@
     [[ABSPheromoneController getInstance] addPheromoneAtX:x andY:y forTag:i];
     
     NSNumber* d = [NSNumber numberWithDouble:sqrt(([x doubleValue]*[x doubleValue])+([y doubleValue]*[y doubleValue]))];
-    [tagDict setObject:d forKey:i];
+    [tagRef setObject:d forKey:i];
   }
   
-  //Sort initial pheromones by distance, store in sortedTags.
-  sortedTags = [tagDict keysSortedByValueUsingComparator:^(id first, id second) {
-    if([first doubleValue] > [second doubleValue]){return (NSComparisonResult)NSOrderedDescending;}
-    if([first doubleValue] < [second doubleValue]){return (NSComparisonResult)NSOrderedAscending;}
-    return (NSComparisonResult)NSOrderedSame;
-  }];
-  tagIdx = 0;
+  unassignedTags = [[NSMutableDictionary alloc] initWithDictionary:tagRef];
+  
+  [self refreshTop];
   
   pendingPheromones = [[NSMutableDictionary alloc] init];
   tagFound = [[NSMutableDictionary alloc] init];
@@ -277,6 +276,26 @@
     [toolController setTagCount:statTagCount];
     
     [[ABSPheromoneController getInstance] removePheromoneForTag:tagId];
+    
+    NSNumber* assigned = [assignedTags objectForKey:macAddress];
+    if(assigned == tagId) { //They found the tag they were assigned to.
+      [assignedTags setObject:nil forKey:macAddress]; //Just assign this robot to no tag (they'll go home and get assigned a new one).
+    }
+    else {
+      if([unassignedTags objectForKey:assigned] != nil) { //They found an unassigned tag.
+        [unassignedTags removeObjectForKey:tagId]; //Remove the tag they found from the pool of unassigned tags.
+        
+        [unassignedTags setObject:[tagRef objectForKey:assigned] forKey:assigned]; //Put the tag they were assigned to back into the unassigned pool.
+      }
+      else { //They found another robot's tag.
+        [unassignedTags setObject:[tagRef objectForKey:assigned] forKey:assigned];
+        [assignedTags setObject:nil forKey:macAddress];
+        
+        //Leave the entry in assigned for the robot who's tag we found as-is.  Shouldn't cause any problems (we don't expect them to find the tag they were assigned to anymore).
+      }
+      
+      [self refreshTop];
+    }
 
     //Only leave a pheromone if there are other tags nearby.
     /*if((float)arc4random()/INT_MAX <= (([n intValue]/ 3.124444) + -0.113426)) {
@@ -288,8 +307,14 @@
     logTag = LOG_TAG_EVENT;
     
     //First, add a pheromone if it found a tag during its run and if neighboring tags were found nearby (uses pendingPheromone list):
-    NSArray* pheromoneData = [pendingPheromones objectForKey:robotName];
-    if(pheromoneData != nil) {
+    //NSArray* pheromoneData = [pendingPheromones objectForKey:robotName];
+    NSNumber* tagId = top;
+    [assignedTags setObject:tagId forKey:macAddress]; //Assign the closest unassigned tag to the appropriate mac addr.
+    [unassignedTags removeObjectForKey:tagId]; //Remove this tag from the unassigned pool.
+    [self refreshTop]; //Select a new tag to be used next time.
+    
+    NSArray* pheromonePosition = [[ABSPheromoneController getInstance] getPheromoneForTag:tagId];
+    /*if(pheromoneData != nil) {
       NSNumber* x = [pheromoneData objectAtIndex:0];
       NSNumber* y = [pheromoneData objectAtIndex:1];
       NSNumber* tagId = [pheromoneData objectAtIndex:2];
@@ -301,7 +326,7 @@
     }
     
     //Next, give the robot a (weighted) random pheromone (it chooses whether or not to use it client-side).
-    NSArray* pheromonePosition = [[ABSPheromoneController getInstance] getPheromone];
+    NSArray* pheromonePosition = [[ABSPheromoneController getInstance] getPheromone];*/
     
     /*
      * Here, we find which client we are receiving from by looping through the list of clients
@@ -389,6 +414,20 @@
   if(!simCount){
       NSLog(@"All finished.");
   }
+}
+
+
+/*
+ * Used in perfectMap.
+ */
+-(void) refreshTop {
+  NSArray* sortedTags;
+  sortedTags = [unassignedTags keysSortedByValueUsingComparator:^(id first, id second) {
+    if([first doubleValue] > [second doubleValue]){return (NSComparisonResult)NSOrderedDescending;}
+    if([first doubleValue] < [second doubleValue]){return (NSComparisonResult)NSOrderedAscending;}
+    return (NSComparisonResult)NSOrderedSame;
+  }];
+  top = [sortedTags objectAtIndex:0];
 }
 
 @end

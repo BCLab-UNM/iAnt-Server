@@ -52,14 +52,29 @@
 -(void) removePheromoneForTag:(NSNumber*)tagId {
   
   //Inefficient.  Consider switching to a dictionary.
-  int i;
-  for(i=0; i<[pheromoneList count]; i++) {
-    Pheromone* pheromone = [pheromoneList objectAtIndex:i];
-    if([pheromone i] == tagId) {
-      [pheromoneList removeObjectAtIndex:i];
+  int j;
+  for(j=0; j<[pheromoneList count]; j++) {
+    Pheromone* pheromone = [pheromoneList objectAtIndex:j];
+    if([[pheromone i] intValue] == [tagId intValue]) {
+      [pheromoneList removeObjectAtIndex:j];
       break;
     }
   }
+}
+
+-(NSArray*) getPheromoneForTag:(NSNumber*)tagId {
+  int j;
+  for(j=0; j<[pheromoneList count]; j++) {
+    Pheromone* pheromone = [pheromoneList objectAtIndex:j];
+    if([[pheromone i] intValue] == [tagId intValue]) {
+      NSNumber* x = [pheromone x];
+      NSNumber* y = [pheromone y];
+      NSArray* position = [NSArray arrayWithObjects:x, y, nil];
+      return position;
+    }
+  }
+  
+  return nil;
 }
 
 -(void) decayPheromones {
