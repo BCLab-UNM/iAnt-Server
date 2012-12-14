@@ -33,9 +33,6 @@
   NSNumber* statTagCount;
   
   int simCount;
-  
-  NSArray* sortedTags;
-  int tagIdx;
 }
 
 -(IBAction) start:(id)sender;

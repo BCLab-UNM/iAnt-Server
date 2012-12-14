@@ -130,27 +130,13 @@
   [[ABSPheromoneController getInstance] setDelegate:self];
   [[ABSPheromoneController getInstance] clearPheromones];
   NSString* pheromoneInit = [NSString stringWithContentsOfFile:[NSHomeDirectory() stringByAppendingString:@"/Desktop/pheromoneInit.txt"] encoding:NSUTF8StringEncoding error:nil];
-  
-  NSMutableDictionary* tagDict = [[NSMutableDictionary alloc] init];
   for(NSString* line in [pheromoneInit componentsSeparatedByString:@"\n"]) {
     NSArray* vals = [line componentsSeparatedByString:@","];
     NSNumber* i = [NSNumber numberWithInt:[[vals objectAtIndex:0] intValue]];
     NSNumber* x = [NSNumber numberWithInt:[[vals objectAtIndex:1] intValue]];
     NSNumber* y = [NSNumber numberWithInt:[[vals objectAtIndex:2] intValue]];
     [[ABSPheromoneController getInstance] addPheromoneAtX:x andY:y forTag:i];
-    
-    NSNumber* d = [NSNumber numberWithDouble:sqrt(([x doubleValue]*[x doubleValue])+([y doubleValue]*[y doubleValue]))];
-    [tagDict setObject:d forKey:i];
   }
-  
-  //Sort initial pheromones by distance, store in sortedTags.
-  sortedTags = [tagDict keysSortedByValueUsingComparator:^(id first, id second) {
-    if([first doubleValue] > [second doubleValue]){return (NSComparisonResult)NSOrderedDescending;}
-    if([first doubleValue] < [second doubleValue]){return (NSComparisonResult)NSOrderedAscending;}
-    return (NSComparisonResult)NSOrderedSame;
-  }];
-  tagIdx = 0;
-  
   pendingPheromones = [[NSMutableDictionary alloc] init];
   tagFound = [[NSMutableDictionary alloc] init];
   for(int i=0; i<tagCount; i+=1) {
@@ -259,22 +245,20 @@
   if([event isEqualToString:@"tag"]) {
     logTag=LOG_TAG_EVENT;
   
-    //NSNumber* x = [NSNumber numberWithInt:[[messageExploded objectAtIndex:2] intValue]];
-    //NSNumber* y = [NSNumber numberWithInt:[[messageExploded objectAtIndex:3] intValue]];
+    NSNumber* x = [NSNumber numberWithInt:[[messageExploded objectAtIndex:2] intValue]];
+    NSNumber* y = [NSNumber numberWithInt:[[messageExploded objectAtIndex:3] intValue]];
     NSNumber* tagId = [NSNumber numberWithInt:[[messageExploded objectAtIndex:5] intValue]];
-    //NSNumber* n = [NSNumber numberWithInt:[[messageExploded objectAtIndex:6] intValue]]; //neighboring tag count.
+    NSNumber* n = [NSNumber numberWithInt:[[messageExploded objectAtIndex:6] intValue]]; //neighboring tag count.
     
     [tagFound setObject:[NSNumber numberWithBool:YES] forKey:tagId];
     statTagCount = [NSNumber numberWithInt:[statTagCount intValue]+1];
     [toolController setTagCount:statTagCount];
-    
-    [[ABSPheromoneController getInstance] removePheromoneForTag:tagId];
 
     //Only leave a pheromone if there are other tags nearby.
-    /*if((float)arc4random()/INT_MAX <= (([n intValue]/ 3.124444) + -0.113426)) {
+    if((float)arc4random()/INT_MAX <= (([n intValue]/ 3.124444) + -0.113426)) {
       NSArray* pheromoneData = [NSArray arrayWithObjects:x, y, tagId, nil];
       [pendingPheromones setObject:pheromoneData forKey:robotName];
-    }*/
+    }
   }
   else if([event isEqualToString:@"home"]) {
     logTag = LOG_TAG_EVENT;

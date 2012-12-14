@@ -49,19 +49,6 @@
   }
 }
 
--(void) removePheromoneForTag:(NSNumber*)tagId {
-  
-  //Inefficient.  Consider switching to a dictionary.
-  int i;
-  for(i=0; i<[pheromoneList count]; i++) {
-    Pheromone* pheromone = [pheromoneList objectAtIndex:i];
-    if([pheromone i] == tagId) {
-      [pheromoneList removeObjectAtIndex:i];
-      break;
-    }
-  }
-}
-
 -(void) decayPheromones {
   pheromoneSum = 0;
   double currentTime = [self currentTime]; //seconds since class was created.
