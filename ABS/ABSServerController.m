@@ -55,14 +55,6 @@
  */
 -(IBAction) start:(id)sender {
   
-  //Set default values for empty fields.
-  if([[tagCountTextField stringValue] isEqualToString:@""]) {
-    [tagCountTextField setStringValue:[[tagCountTextField cell] placeholderString]];
-  }
-  if([[boundsRadiusTextField stringValue] isEqualToString:@""]) {
-    [boundsRadiusTextField setStringValue:[[boundsRadiusTextField cell] placeholderString]];
-  }
-  
   //Read all the values from the parameter form.
   NSString* tagDistribution = [[tagDistributionPopUp selectedItem] title];
   int tagCount = [[tagCountTextField stringValue] intValue];
