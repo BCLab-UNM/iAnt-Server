@@ -1232,13 +1232,13 @@ static inline float pmod(float dividend, float divisor)
         [colonies addObject:[[ABSSimulationColony alloc] init]];
         ABSSimulationColony* c = [colonies objectAtIndex:i];
     
-        [c setDecayRate:arc4random() % 20000 / 1000000.0f];
-        [c setWalkDropRate:arc4random() % 20000 / 1000000.0f];
-        [c setSearchGiveupRate:arc4random() % 10000 / 1000000.0f];
-        [c setTrailDropRate:arc4random() % 20000 / 1000000.0f];
-        [c setDirDevConst:arc4random() % 314 / 100.0f];
-        [c setDirDevCoeff:arc4random() % 314 / 100.0f];
-        [c setDirTimePow:arc4random() % 200 / 1000.0f];
+        [c setDecayRate:.005+randomFloat(.02)];
+        [c setWalkDropRate:.08+randomFloat(.1)];
+        [c setSearchGiveupRate:.005+randomFloat(.01)];
+        [c setTrailDropRate:randomFloat(.02)];
+        [c setDirDevConst:randomFloat(3.14)];
+        [c setDirDevCoeff:randomFloat(3.14)];
+        [c setDirTimePow:randomFloat(.2)];
     
         if(usesPheromones) {
             [c setDensityThreshold:arc4random() % 80 / 10.0f];
