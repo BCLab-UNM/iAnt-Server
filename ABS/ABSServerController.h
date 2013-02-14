@@ -5,34 +5,34 @@
 @class ABSToolController;
 
 @interface ABSServerController : NSViewController {
-  
-  //Interface controls.
-  NSWindow* serverWindow;
-  NSTabView* tabView;
-  NSPopUpButton* tagDistributionPopUp;
-  NSTextField* tagCountTextField;
-  NSTextField* boundsRadiusTextField;
-  NSPopUpButton* trialTypePopUp;
-  NSPopUpButton* environmentTypePopUp;
-  NSButton* validRunButton;
-  NSButton* startButton;
-  NSTextField* workingDirectoryTextField;
-  NSTextField* userLogTextField;
-  
-  //Other important application components.
-  ABSServer* server;
-  ABSRobotDisplayView* robotDisplayView;
-  ABSToolController* toolController;
-  
-  //Internal variables.
-  NSString* workingDirectory;
-  NSString* dataDirectory;
-  NSMutableDictionary* pendingPheromones;
-  NSMutableDictionary* tagFound;
-  NSMutableDictionary* settingsPlist;
-  NSNumber* statTagCount;
-  
-  int simCount;
+    
+    //Interface controls.
+    NSWindow* serverWindow;
+    NSTabView* tabView;
+    NSPopUpButton* tagDistributionPopUp;
+    NSTextField* tagCountTextField;
+    NSTextField* boundsRadiusTextField;
+    NSPopUpButton* trialTypePopUp;
+    NSPopUpButton* environmentTypePopUp;
+    NSButton* validRunButton;
+    NSButton* startButton;
+    NSTextField* workingDirectoryTextField;
+    NSTextField* userLogTextField;
+    
+    //Other important application components.
+    ABSServer* server;
+    ABSRobotDisplayView* robotDisplayView;
+    ABSToolController* toolController;
+    
+    //Internal variables.
+    NSString* workingDirectory;
+    NSString* dataDirectory;
+    NSMutableDictionary* pendingPheromones;
+    NSMutableDictionary* tagFound;
+    NSMutableDictionary* settingsPlist;
+    NSNumber* statTagCount;
+    
+    int simCount;
 }
 
 -(IBAction) start:(id)sender;
