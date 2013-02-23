@@ -33,6 +33,8 @@
     NSNumber* statTagCount;
     
     int simCount;
+    double dronePositionX;
+    double dronePositionY;
 }
 
 -(IBAction) start:(id)sender;

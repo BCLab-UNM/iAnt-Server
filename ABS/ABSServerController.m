@@ -223,6 +223,23 @@
             }
             return;
         }
+        
+        else if ([messageExploded count] == 4) {
+            //Convert mm to cm, invert sign of y value
+            dronePositionX = [[messageExploded objectAtIndex:2] doubleValue] / 10;
+            dronePositionY = [[messageExploded objectAtIndex:3] doubleValue] / -10;
+            
+            return;
+        }
+    }
+    
+    //Check for roundel message from drone
+    if ([msgID isEqualToString:@"roundel"]) {
+        //Add pheromone at drone's location with pheromone strength of DBL_MAX so it never fully evaporates
+        [[ABSPheromoneController getInstance] addPheromoneAtX:[NSNumber numberWithDouble:dronePositionX]
+                                                         andY:[NSNumber numberWithDouble:dronePositionY]
+                                                       forTag:0
+                                        withPheromoneStrength:[NSNumber numberWithDouble:FLT_MAX]];
     }
     
     //Otherwise we assume ID is a MAC address
@@ -251,7 +268,7 @@
      * We reply with either a 'new' if a new tag has been found or 'old' otherwise.
      */
     if ([messageExploded count] == 2) {
-        NSNumber* tagId = [messageExploded objectAtIndex:1];
+        NSNumber* tagId = [NSNumber numberWithInt:[[messageExploded objectAtIndex:1] intValue]];
         NSString* reply = ([[tagFound objectForKey:tagId] boolValue]==YES) ? @"old" : @"new";
         [self log:[NSString stringWithFormat:@"[CTR] Received tag query for tag %@.  Replied with %@",tagId,reply] withTag:LOG_TAG_EVENT];
         for(ABSConnection* connection in [server connections]) {
@@ -329,7 +346,7 @@
             for(ABSConnection* connection in [server connections]) {
                 if([connection inputStream] == theStream) {
                     [server send:[NSString stringWithFormat:@"pheromone,%d,%d\n", [[pheromonePosition objectAtIndex:0] intValue], [[pheromonePosition objectAtIndex:1] intValue]] toStream:[connection outputStream]];
-                    break;
+                    break;  
                 }
             }
         }
