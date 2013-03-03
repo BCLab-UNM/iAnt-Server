@@ -21,13 +21,19 @@
 		401C6011158BD5CF00058D4C /* ABSPheromoneController.m in Sources */ = {isa = PBXBuildFile; fileRef = 401C6010158BD5CF00058D4C /* ABSPheromoneController.m */; };
 		401C6014158BD5F900058D4C /* ABSRobotDisplayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 401C6013158BD5F900058D4C /* ABSRobotDisplayView.m */; };
 		401C601A158BD63C00058D4C /* ABSWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 401C6019158BD63C00058D4C /* ABSWriter.m */; };
-		404CA6E915C9FD5400944FD1 /* ABSSimulationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 404CA6E815C9FD5400944FD1 /* ABSSimulationController.m */; };
-		404CA6F115C9FD7D00944FD1 /* ABSSimulation.m in Sources */ = {isa = PBXBuildFile; fileRef = 404CA6EE15C9FD7D00944FD1 /* ABSSimulation.m */; };
-		406D472A162F737A005F62B0 /* ABSSimulationColony.m in Sources */ = {isa = PBXBuildFile; fileRef = 406D4729162F7379005F62B0 /* ABSSimulationColony.m */; };
-		406D47381630EC05005F62B0 /* ABSSimulationAnt.m in Sources */ = {isa = PBXBuildFile; fileRef = 406D47371630EC05005F62B0 /* ABSSimulationAnt.m */; };
-		406D473B16312C30005F62B0 /* ABSSimulationLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 406D473A16312C30005F62B0 /* ABSSimulationLocation.m */; };
 		407D36D115D57160004D29B9 /* ABSToolController.m in Sources */ = {isa = PBXBuildFile; fileRef = 407D36D015D57160004D29B9 /* ABSToolController.m */; };
+		422512DF16E2F6F4005D6230 /* libAntBot-GA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 422512DE16E2F6DD005D6230 /* libAntBot-GA.a */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		422512DD16E2F6DD005D6230 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 422512D916E2F6DC005D6230 /* AntBot-GA.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 40ED65B616DABD31006F8494;
+			remoteInfo = "AntBot-GA";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		4008003015AF51300028A766 /* ABSRobotDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABSRobotDetails.h; sourceTree = "<group>"; };
@@ -59,18 +65,9 @@
 		401C6013158BD5F900058D4C /* ABSRobotDisplayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABSRobotDisplayView.m; sourceTree = "<group>"; };
 		401C6018158BD63C00058D4C /* ABSWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABSWriter.h; sourceTree = "<group>"; };
 		401C6019158BD63C00058D4C /* ABSWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABSWriter.m; sourceTree = "<group>"; };
-		404CA6E715C9FD5400944FD1 /* ABSSimulationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABSSimulationController.h; sourceTree = "<group>"; };
-		404CA6E815C9FD5400944FD1 /* ABSSimulationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABSSimulationController.m; sourceTree = "<group>"; };
-		404CA6EE15C9FD7D00944FD1 /* ABSSimulation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABSSimulation.m; sourceTree = "<group>"; };
-		404CA6F315C9FDAC00944FD1 /* ABSSimulation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ABSSimulation.h; sourceTree = "<group>"; };
-		406D4728162F7379005F62B0 /* ABSSimulationColony.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABSSimulationColony.h; sourceTree = "<group>"; };
-		406D4729162F7379005F62B0 /* ABSSimulationColony.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABSSimulationColony.m; sourceTree = "<group>"; };
-		406D47361630EC04005F62B0 /* ABSSimulationAnt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABSSimulationAnt.h; sourceTree = "<group>"; };
-		406D47371630EC05005F62B0 /* ABSSimulationAnt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABSSimulationAnt.m; sourceTree = "<group>"; };
-		406D473916312C30005F62B0 /* ABSSimulationLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABSSimulationLocation.h; sourceTree = "<group>"; };
-		406D473A16312C30005F62B0 /* ABSSimulationLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABSSimulationLocation.m; sourceTree = "<group>"; };
 		407D36CF15D57160004D29B9 /* ABSToolController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABSToolController.h; sourceTree = "<group>"; };
 		407D36D015D57160004D29B9 /* ABSToolController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABSToolController.m; sourceTree = "<group>"; };
+		422512D916E2F6DC005D6230 /* AntBot-GA.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "AntBot-GA.xcodeproj"; path = "AntBot-GA/AntBot-GA.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				422512DF16E2F6F4005D6230 /* libAntBot-GA.a in Frameworks */,
 				401C5FE5158BD0BC00058D4C /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -88,6 +86,7 @@
 		401C5FD5158BD0BB00058D4C = {
 			isa = PBXGroup;
 			children = (
+				422512D916E2F6DC005D6230 /* AntBot-GA.xcodeproj */,
 				401C5FEA158BD0BC00058D4C /* ABS */,
 				401C5FE3158BD0BB00058D4C /* Frameworks */,
 				401C5FE1158BD0BB00058D4C /* Products */,
@@ -124,7 +123,6 @@
 		401C5FEA158BD0BC00058D4C /* ABS */ = {
 			isa = PBXGroup;
 			children = (
-				404CA6EB15C9FD6800944FD1 /* GA */,
 				401C6007158BD32C00058D4C /* MainMenu.xib */,
 				407D36CF15D57160004D29B9 /* ABSToolController.h */,
 				407D36D015D57160004D29B9 /* ABSToolController.m */,
@@ -163,21 +161,12 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		404CA6EB15C9FD6800944FD1 /* GA */ = {
+		422512DA16E2F6DC005D6230 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				406D47361630EC04005F62B0 /* ABSSimulationAnt.h */,
-				406D47371630EC05005F62B0 /* ABSSimulationAnt.m */,
-				404CA6E715C9FD5400944FD1 /* ABSSimulationController.h */,
-				404CA6E815C9FD5400944FD1 /* ABSSimulationController.m */,
-				404CA6F315C9FDAC00944FD1 /* ABSSimulation.h */,
-				404CA6EE15C9FD7D00944FD1 /* ABSSimulation.m */,
-				406D4728162F7379005F62B0 /* ABSSimulationColony.h */,
-				406D4729162F7379005F62B0 /* ABSSimulationColony.m */,
-				406D473916312C30005F62B0 /* ABSSimulationLocation.h */,
-				406D473A16312C30005F62B0 /* ABSSimulationLocation.m */,
+				422512DE16E2F6DD005D6230 /* libAntBot-GA.a */,
 			);
-			name = GA;
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -218,12 +207,28 @@
 			mainGroup = 401C5FD5158BD0BB00058D4C;
 			productRefGroup = 401C5FE1158BD0BB00058D4C /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 422512DA16E2F6DC005D6230 /* Products */;
+					ProjectRef = 422512D916E2F6DC005D6230 /* AntBot-GA.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				401C5FDF158BD0BB00058D4C /* ABS */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		422512DE16E2F6DD005D6230 /* libAntBot-GA.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libAntBot-GA.a";
+			remoteRef = 422512DD16E2F6DD005D6230 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		401C5FDE158BD0BB00058D4C /* Resources */ = {
@@ -253,12 +258,7 @@
 				401C6014158BD5F900058D4C /* ABSRobotDisplayView.m in Sources */,
 				401C601A158BD63C00058D4C /* ABSWriter.m in Sources */,
 				4008003215AF51300028A766 /* ABSRobotDetails.m in Sources */,
-				404CA6E915C9FD5400944FD1 /* ABSSimulationController.m in Sources */,
-				404CA6F115C9FD7D00944FD1 /* ABSSimulation.m in Sources */,
 				407D36D115D57160004D29B9 /* ABSToolController.m in Sources */,
-				406D472A162F737A005F62B0 /* ABSSimulationColony.m in Sources */,
-				406D47381630EC05005F62B0 /* ABSSimulationAnt.m in Sources */,
-				406D473B16312C30005F62B0 /* ABSSimulationLocation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
