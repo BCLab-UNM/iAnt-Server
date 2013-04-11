@@ -63,7 +63,7 @@
     for(i=0; i<[pheromoneList count]; i++) {
         Pheromone* pheromone = [pheromoneList objectAtIndex:i];
         double delta = currentTime - [[pheromone t] doubleValue];
-        double newN = [[pheromone n] doubleValue] * pow((1 - 0.004753f), (4 * delta));
+        double newN = exponentialDecay([[pheromone n] floatValue], 4 * delta , pheromoneDecayRate);
         
         if(newN>=.001){
             [pheromone setN:[NSNumber numberWithDouble:newN]];
