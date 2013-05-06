@@ -18,7 +18,7 @@
 @synthesize server, robotDisplayView, toolController;
 
 //Internal variables.
-@synthesize workingDirectory, dataDirectory, pendingPheromones, tagFound, settingsPlist, statTagCount;
+@synthesize workingDirectory, dataDirectory, pendingPheromones, tagFound, settingsPlist, statTagCount, evolvedParameters, pheromoneLayingRate;
 
 /*
  * Called when the view loads.  Essentially our initialize function.
@@ -149,6 +149,16 @@
         [tagFound setObject:[NSNumber numberWithBool:NO] forKey:[NSNumber numberWithInt:i]];
     }
     
+    //Set up parameters evolved by GA
+    [self setEvolvedParameters:[NSString stringWithContentsOfFile:[NSHomeDirectory() stringByAppendingString:@"/Desktop/parameters.csv"] encoding:NSUTF8StringEncoding error:nil]];
+    [self setEvolvedParameters:[evolvedParameters stringByReplacingOccurrencesOfString:@"\n" withString:@""]];
+    NSArray* parameters = [evolvedParameters componentsSeparatedByString:@","];
+    if ([parameters count] == 9) {
+        [[PheromoneController getInstance] setPheromoneDecayRate:[[parameters objectAtIndex:0] floatValue]];
+        [self setPheromoneLayingRate:[[parameters objectAtIndex:6] floatValue]];
+        [self setEvolvedParameters:[NSString stringWithFormat:@"%@,%@",[[parameters subarrayWithRange:NSMakeRange(1, 5)] componentsJoinedByString:@","],[[parameters subarrayWithRange:NSMakeRange(7, 2)] componentsJoinedByString:@","]]];
+    }
+    
     //Set up GUI.
     [robotDisplayView setBoundsRadius:[NSNumber numberWithDouble:boundsRadius]];
     [robotDisplayView reset];
@@ -251,11 +261,13 @@
     /*
      * If only MAC address is present, we assume this is a start up message
      * We assign robotName to this connection to allow for subsequent lookups
+     * We transmit the evolvedParameters string in return
      */
     if ([messageExploded count] == 1) {
         for(Connection* connection in [server connections]) {
             if([connection inputStream] == theStream) {
                 [[server namedConnections] setObject:connection forKey:robotName];
+                [server send:[NSString stringWithFormat:@"parameters,%@\n",evolvedParameters] toStream:[connection outputStream]];
                 return;
             }
         }

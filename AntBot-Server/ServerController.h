@@ -67,5 +67,7 @@
 @property NSMutableDictionary* tagFound;
 @property NSMutableDictionary* settingsPlist;
 @property NSNumber* statTagCount;
+@property NSString* evolvedParameters;
+@property float pheromoneLayingRate;
 
 @end
