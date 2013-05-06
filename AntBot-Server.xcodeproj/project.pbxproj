@@ -336,6 +336,7 @@
 		401C5FFF158BD0BC00058D4C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AntBot-Server/AntBot-Server-Prefix.pch";
@@ -344,11 +345,9 @@
 				IBC_NOTICES = YES;
 				IBC_WARNINGS = YES;
 				INFOPLIST_FILE = "AntBot-Server/AntBot-Server-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/AntBot-Server\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "AntBot-Server";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/AntBot-GA\"";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -356,6 +355,7 @@
 		401C6000158BD0BC00058D4C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AntBot-Server/AntBot-Server-Prefix.pch";
@@ -364,11 +364,9 @@
 				IBC_NOTICES = YES;
 				IBC_WARNINGS = YES;
 				INFOPLIST_FILE = "AntBot-Server/AntBot-Server-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/AntBot-Server\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "AntBot-Server";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/AntBot-GA\"";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

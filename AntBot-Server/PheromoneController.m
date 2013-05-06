@@ -1,7 +1,7 @@
 #import "PheromoneController.h"
 
 //Implementation for the Pheromone class
-@implementation Pheromone
+@implementation PhysicalPheromone
 @synthesize i, x, y, n, nMax, t;
 @end
 
@@ -41,7 +41,7 @@
 }
 
 -(void) addPheromoneAtX:(NSNumber*)x andY:(NSNumber*)y forTag:(NSNumber*)tagId withPheromoneStrength:(NSNumber*)n {
-    Pheromone* pheromone = [[Pheromone alloc] init];
+    PhysicalPheromone* pheromone = [[PhysicalPheromone alloc] init];
     [pheromone setI:tagId];
     [pheromone setX:x];
     [pheromone setY:y];
@@ -62,7 +62,7 @@
     double currentTime = [self currentTime]; //seconds since class was created.
     int i;
     for(i=0; i<[pheromoneList count]; i++) {
-        Pheromone* pheromone = [pheromoneList objectAtIndex:i];
+        PhysicalPheromone* pheromone = [pheromoneList objectAtIndex:i];
         double delta = currentTime - [[pheromone t] doubleValue];
         double newN = exponentialDecay([[pheromone n] floatValue], 4 * delta , pheromoneDecayRate);
         
@@ -83,7 +83,7 @@
     double randomNumber = ((double) arc4random() / 0x100000000) * pheromoneSum; //random number [0..pheromoneSum]
     int i;
     for(i=0; i<[pheromoneList count]; i++) {
-        Pheromone* pheromone = [pheromoneList objectAtIndex:i];
+        PhysicalPheromone* pheromone = [pheromoneList objectAtIndex:i];
         if(randomNumber < [[pheromone n] doubleValue]){
             NSNumber* x = [pheromone x];
             NSNumber* y = [pheromone y];

@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface Pheromone : NSObject { //Miniclass used as container for pheromone data
+@interface PhysicalPheromone : NSObject { //Miniclass used as container for pheromone data
     NSNumber* i; //The QR tag index of the pheromone.
     NSNumber* x; //The x coordinate of the pheromone.
     NSNumber* y; //The y coordinate of the pheromone.

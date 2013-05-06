@@ -1,4 +1,11 @@
 #import <Cocoa/Cocoa.h>
+#import "PheromoneController.h"
+#import "Server.h"
+#import "Writer.h"
+#import "RobotDisplayView.h"
+#import "RobotDetails.h"
+#import "Connection.h"
+#import "ToolController.h"
 
 @class Server;
 @class RobotDisplayView;

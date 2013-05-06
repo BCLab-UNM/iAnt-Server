@@ -94,7 +94,7 @@
     [boundsPath stroke];
     
     //Draw the pheromones.
-    for(Pheromone* pheromone in [[PheromoneController getInstance] getAllPheromones]) {
+    for(PhysicalPheromone* pheromone in [[PheromoneController getInstance] getAllPheromones]) {
         NSBezierPath* pheromoneLine = [[NSBezierPath alloc] init];
         [pheromoneLine moveToPoint:NSMakePoint(0,0)];
         double pixelsInMeter;
