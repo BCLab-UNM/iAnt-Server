@@ -7,6 +7,7 @@
 
 //Implementation for the actual PheromoneController
 @implementation PheromoneController
+@synthesize pheromoneDecayRate;
 @synthesize delegate;
 
 +(PheromoneController*) getInstance {

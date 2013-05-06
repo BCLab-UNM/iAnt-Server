@@ -39,6 +39,7 @@
 -(NSArray*) getAllPheromones;
 -(void) clearPheromones;
 
+@property float pheromoneDecayRate;
 @property (nonatomic,retain) NSObject* delegate;
 
 @end
