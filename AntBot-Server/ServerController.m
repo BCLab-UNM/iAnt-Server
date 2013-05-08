@@ -253,13 +253,15 @@
     /*
      * If only MAC address is present, we assume this is a start up message
      * We assign robotName to this connection to allow for subsequent lookups
-     * We transmit the evolvedParameters string in return
+     * We transmit the evolvedParameters string in return (if it exists)
      */
     if ([messageExploded count] == 1) {
         for(Connection* connection in [server connections]) {
             if([connection inputStream] == theStream) {
                 [[server namedConnections] setObject:connection forKey:robotName];
-                [server send:[NSString stringWithFormat:@"parameters,%@\n",evolvedParameters] toStream:[connection outputStream]];
+                if (evolvedParameters != nil) {
+                    [server send:[NSString stringWithFormat:@"parameters,%@\n",evolvedParameters] toStream:[connection outputStream]];
+                }
                 return;
             }
         }
