@@ -1,16 +1,25 @@
 #import "Server.h"
-#import "Connection.h"
 #import <Foundation/Foundation.h>
 #import <CoreFoundation/CoreFoundation.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
 
+
+@implementation Connection
+@synthesize inputStream, outputStream, ip, port;
+@end
+
+
 @implementation Server
 
 @synthesize connections;
 @synthesize namedConnections;
 @synthesize delegate;
+
+-(void) start {
+	[self listenOnPort:2223];
+}
 
 /*
  * Opens a socket for listening on the specified port.
@@ -68,16 +77,16 @@
     rxBuffer = [[NSMutableArray alloc] init];
     namedConnections = [[NSMutableDictionary alloc] init];
     
-    /*netService = [[NSNetService alloc] initWithDomain:@"" type:@"_abs._tcp." name:@"ABS" port:2223];
-     [netService setDelegate:self];
-     [netService publish];*/
+	netService = [[NSNetService alloc] initWithDomain:@"" type:@"_abs._tcp." name:@"ABS" port:2223];
+	[netService setDelegate:self];
+	[netService publish];
     
 	return YES;
 }
 
 
 -(void) netService:(NSNetService *)sender didNotPublish:(NSDictionary *)errorDict {
-    [self log:@"[SRV] Error publishing Bonjour." withTag:LOG_TAG_PROBLEM];
+    [self log:@"[SRV] Error publishing net service." withTag:LOG_TAG_PROBLEM];
 }
 
 
@@ -159,6 +168,14 @@ static void socketAcceptCallBack(CFSocketRef socket, CFSocketCallBackType type, 
     //[self log:[NSString stringWithFormat:@"[SRV] Sending %@",message] withTag:LOG_TAG_MESSAGE];
     NSData* data = [[NSData alloc] initWithData:[message dataUsingEncoding:NSASCIIStringEncoding]];
     [stream write:[data bytes] maxLength:[data length]];
+}
+
+
+/*
+ * Sends a string to a specific MAC address.
+ */
+-(void) send:(NSString*)message toNamedConnection:(NSString*)name {
+	[self send:message toStream:[[[self namedConnections] objectForKey:name] outputStream]];
 }
 
 
@@ -253,21 +270,17 @@ static void socketAcceptCallBack(CFSocketRef socket, CFSocketCallBackType type, 
     }
 }
 
-- (NSString*)getMessage
-{
+-(NSString*) getMessage {
     //If there are at least 2 messages remaining in the buffer
-    if ([rxBuffer count] > 1)
-    {
+    if([rxBuffer count] > 1) {
         //Copy and remove the first message
         NSString *message = [rxBuffer objectAtIndex:0];
         [rxBuffer removeObjectAtIndex:0];
-        
-        //Then return it
         return message;
     }
     
     //If only one message is found in the buffer
-    else if (([rxBuffer count] > 0)
+    else if(([rxBuffer count] > 0)
              //and the final message in the buffer is the empty string
              && ([[rxBuffer lastObject] isEqualToString:@""])) {
         //Then we remove it
