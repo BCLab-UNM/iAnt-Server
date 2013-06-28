@@ -4,19 +4,19 @@
 
 @synthesize stats;
 
--(void) start {
-	dataValues = [[NSMutableArray alloc] initWithObjects:
-				  [NSNumber numberWithInt:0],
-				  [NSNumber numberWithFloat:0.],
-				  [NSNumber numberWithInt:0],
-				  [NSNumber numberWithInt:0],
-				  [NSNumber numberWithInt:0],
-				  [NSNumber numberWithFloat:0.],
-				  [NSNumber numberWithFloat:0],
-				  nil];
+-(void) start:(NSNotification*)notification {
+	keys = [[NSArray alloc] initWithObjects:@"Tag Count", @"Intake Rate", @"Pheromones", @"Pheromones/Tags", @"Elapsed Time", nil];
+	dataValues = [[NSMutableDictionary alloc] initWithObjects:
+				  [NSArray arrayWithObjects:
+				   [NSNumber numberWithInt:0],
+				   [NSNumber numberWithFloat:0.],
+				   [NSNumber numberWithInt:0],
+				   [NSNumber numberWithFloat:0.],
+				   [NSNumber numberWithFloat:0.],
+				   nil] forKeys:keys];
 	
 	startTime = [NSDate distantFuture];
-	timerTemporals = [NSTimer scheduledTimerWithTimeInterval:5.f target:self selector:@selector(updateTemporals:) userInfo:nil repeats:YES];
+	timerTemporals = [NSTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(updateTemporals:) userInfo:nil repeats:YES];
 	
 	[stats reloadData];
 }
@@ -26,8 +26,24 @@
 		startTime = [NSDate date];
 		[timerTemporals fire];
 	}
+}
+
+-(void) stats:(NSNotification*)notification {
+	if(dataValues == nil){return;}
+	NSString* key = [[notification userInfo] objectForKey:@"key"];
+	NSNumber* val = [[notification userInfo] objectForKey:@"val"];
 	
+	[dataValues setObject:val forKey:key];
 	
+	if([key isEqualToString:@"Pheromones"] || [key isEqualToString:@"Tag Count"]) {
+		int pheromones = [[dataValues objectForKey:@"Pheromones"] intValue];
+		int tags = [[dataValues objectForKey:@"Tag Count"] intValue];
+		double pheromonesPerTags = 0.;
+		if(tags > 0){pheromonesPerTags = round(pheromones / tags * 100) / 100;}
+		[dataValues setObject:[NSNumber numberWithDouble:pheromonesPerTags] forKey:@"Pheromones/Tags"];
+	}
+	
+	[stats reloadData];
 }
 
 -(void) updateTemporals:(id)sender {
@@ -35,17 +51,22 @@
 	
 	double currentTime = [startTime timeIntervalSinceNow] * -1;
 	
-	double newIntakeRate = [[dataValues objectAtIndex:0] doubleValue]/(currentTime/60.);
-	[dataValues replaceObjectAtIndex:1 withObject:[NSNumber numberWithDouble:newIntakeRate]];
+	double newIntakeRate = round([[dataValues objectForKey:@"Tag Count"] doubleValue] / (currentTime / 60.) * 100) / 100;
+	[dataValues setObject:[NSNumber numberWithDouble:newIntakeRate] forKey:@"Intake Rate"];
 	
-	double elapsed = floor((currentTime/60.)*100.)/100;
-	[dataValues replaceObjectAtIndex:6 withObject:[NSNumber numberWithDouble:(elapsed)]];
+	int hours = (int)floor(currentTime / 3600);
+	currentTime -= (hours * 3600);
+	int minutes = (int)floor(currentTime / 60);
+	currentTime -= (minutes * 60);
+	int seconds = (int)floor(currentTime) % 60;
+	NSString* elapsed = [NSString stringWithFormat:@"%02d:%02d:%02d", hours, minutes, seconds];
+	[dataValues setObject:elapsed forKey:@"Elapsed Time"];
 	
 	[stats reloadData];
 }
 
 -(NSInteger) numberOfRowsInTableView:(NSTableView *)tableView {
-	return 7;
+	return 5;
 }
 
 -(NSView*) tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
@@ -56,23 +77,12 @@
 		[result setIdentifier:@"CellStatsIdentifier"];
 	}
 	
-	//Hate to use switches here
-	if([[tableColumn identifier] isEqualToString:@"ColumnKey"]) {
-		NSString* label = @"";
-		switch(row) {
-			case 0: label = @"Tag Count"; break;
-			case 1: label = @"Intake Rate"; break;
-			case 2: label = @"Best Fitness"; break;
-			case 3: label = @"Generation"; break;
-			case 4: label = @"Pheromones"; break;
-			case 5: label = @"Pheromones/Tags"; break;
-			case 6: label = @"Elapsed Time"; break;
-		}
-		[result setString:label];
-	}
+	NSString* key = [keys objectAtIndex:row];
+	if([[tableColumn identifier] isEqualToString:@"ColumnKey"]){[result setString:key];}
 	else {
 		if(dataValues == nil){[result setString:@""];}
-		else{[result setString:[[dataValues objectAtIndex:row] stringValue]];}
+		else if([[dataValues objectForKey:key] isKindOfClass:[NSString class]]){[result setString:[dataValues objectForKey:key]];}
+		else{[result setString:[[dataValues objectForKey:key] stringValue]];}
 	}
 	[result setEditable:NO];
 	[result setSelectable:NO];

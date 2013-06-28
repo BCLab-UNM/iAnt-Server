@@ -1,7 +1,8 @@
 #import <Cocoa/Cocoa.h>
 
 @interface StatsViewController : NSViewController <NSToolbarDelegate,NSTableViewDataSource,NSTableViewDelegate> {
-	NSMutableArray* dataValues;
+	NSMutableDictionary* dataValues;
+	NSArray* keys;
 	NSTimer* timerTemporals;
 	NSDate* startTime;
 }

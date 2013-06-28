@@ -17,7 +17,7 @@
 @synthesize namedConnections;
 @synthesize delegate;
 
--(void) start {
+-(void) start:(NSNotification*)notification {
 	[self listenOnPort:2223];
 }
 
@@ -212,7 +212,7 @@ static void socketAcceptCallBack(CFSocketRef socket, CFSocketCallBackType type, 
                 
                 //If no one's around to receive the message, don't bother.
                 if([[self delegate] respondsToSelector:@selector(didReceiveMessage:onStream:)]) {
-                    
+					
                     /*
                      * Sometimes, several lines will be received at once (due to buffering and such).
                      * Instead of dealing with message sizes/delimiters, this is a cheap hack

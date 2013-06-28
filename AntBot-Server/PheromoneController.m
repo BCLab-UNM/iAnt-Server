@@ -18,7 +18,7 @@
 	return instance;
 }
 
--(void) start {
+-(void) start:(NSNotification*)notification {
 	pheromoneList = [[NSMutableArray alloc] init];
 	pendingPheromones = [[NSMutableDictionary alloc] init];
 	tagFound = [[NSMutableDictionary alloc] init];
@@ -64,7 +64,7 @@
 		[server send:[NSString stringWithFormat:@"tag,%@\n", reply] toNamedConnection:[data objectAtIndex:0]];
         return;
     }
-	
+
 	/*
 	 * Perform event logic (tag, home)
 	 */
@@ -78,12 +78,27 @@
 		NSNumber* n = [NSNumber numberWithInt:[[data objectAtIndex:6] intValue]]; //neighboring tag count.
 		
 		[tagFound setObject:[NSNumber numberWithBool:YES] forKey:tagId];
+		tagCount += 1;
 		
 		//Only leave a pheromone if there are other tags nearby.
 		if(randomFloat(1.) < exponentialCDF([n intValue] + 1, 0)) {//pheromoneLayingRate)) {
 			NSArray* pheromoneData = [NSArray arrayWithObjects:x, y, tagId, nil];
 			[pendingPheromones setObject:pheromoneData forKey:robotName];
 		}
+		
+		NSString* message = [NSString stringWithFormat:@"Robot \"%@\" found tag %d", robotName, [tagId intValue]];
+		NSNumber* logTag = [NSNumber numberWithInt:LOG_TAG_EVENT];
+		NSDictionary* data = [NSDictionary dictionaryWithObjects:
+							  [NSArray arrayWithObjects:message, logTag, nil] forKeys:
+							  [NSArray arrayWithObjects:@"message", @"tag", nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"log" object:self userInfo:data];
+		
+		NSString* key = @"Tag Count";
+		NSNumber* val = [NSNumber numberWithInt:tagCount];
+		data = [NSDictionary dictionaryWithObjects:
+							  [NSArray arrayWithObjects:key, val, nil] forKeys:
+							  [NSArray arrayWithObjects:@"key", @"val", nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"stats" object:self userInfo:data];
 	}
 	else if([event isEqualToString:@"home"]) {
 		
@@ -95,6 +110,21 @@
 			NSNumber* tagId = [pheromoneData objectAtIndex:2];
 			[[PheromoneController getInstance] addPheromoneAtX:x andY:y forTag:tagId];
 			[pendingPheromones removeObjectForKey:robotName];
+			
+			NSString* message = [NSString stringWithFormat:@"Created pheromone at (%d, %d).", [x intValue], [y intValue]];
+			NSNumber* logTag = [NSNumber numberWithInt:LOG_TAG_EVENT];
+			NSDictionary* data = [NSDictionary dictionaryWithObjects:
+								  [NSArray arrayWithObjects:message, logTag, nil] forKeys:
+								  [NSArray arrayWithObjects:@"message", @"tag", nil]];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"log" object:self userInfo:data];
+			
+			[self decayPheromones];
+			NSString* key = @"Pheromones";
+			NSNumber* val = [NSNumber numberWithLong:[pheromoneList count]];
+			data = [NSDictionary dictionaryWithObjects:
+					[NSArray arrayWithObjects:key, val, nil] forKeys:
+					[NSArray arrayWithObjects:@"key", @"val", nil]];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"stats" object:self userInfo:data];
 		}
 		else {
 			//Tag had at most 1 neighbor, or no tag was found (rarely happens).
@@ -111,6 +141,13 @@
 		if (pheromonePosition != nil) {
 			[server send:[NSString stringWithFormat:@"pheromone,%d,%d\n", [[pheromonePosition objectAtIndex:0] intValue], [[pheromonePosition objectAtIndex:1] intValue]] toNamedConnection:[data objectAtIndex:0]];
 		}
+		
+		NSString* message = [NSString stringWithFormat:@"Robot \"%@\" returned home.", robotName];
+		NSNumber* logTag = [NSNumber numberWithInt:LOG_TAG_EVENT];
+		NSDictionary* data = [NSDictionary dictionaryWithObjects:
+							  [NSArray arrayWithObjects:message, logTag, nil] forKeys:
+							  [NSArray arrayWithObjects:@"message", @"tag", nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"log" object:self userInfo:data];
 	}
 }
 
@@ -158,6 +195,13 @@
             i -= 1;
         }
     }
+	
+	NSString* key = @"Pheromones";
+	NSNumber* val = [NSNumber numberWithLong:[pheromoneList count]];
+	NSDictionary* data = [NSDictionary dictionaryWithObjects:
+			[NSArray arrayWithObjects:key, val, nil] forKeys:
+			[NSArray arrayWithObjects:@"key", @"val", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"stats" object:self userInfo:data];
 }
 
 -(NSArray*) getPheromone {
