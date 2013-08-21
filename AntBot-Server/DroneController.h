@@ -6,7 +6,4 @@
 
 +(DroneController*) getInstance;
 
--(void) start;
--(void) message:(NSNotification*)notification;
-
 @end

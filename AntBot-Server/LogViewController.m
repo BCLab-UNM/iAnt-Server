@@ -6,32 +6,9 @@
 
 @synthesize console, userLogTextField;
 
--(void) start {
+-(void) start:(id)sender {
 	consoleMessages = [[NSMutableArray alloc] init];
-	consoleTags = 0;
-}
-
--(void) message:(NSNotification*)notification {
-	NSArray* data = [[notification userInfo] objectForKey:@"data"];
-	Settings* settings = [Settings getInstance];
-	NSString* robotName = [[settings robotNames] objectForKey:[data objectAtIndex:0]];
-	if(!robotName){robotName = @"unknownRobot";}
-	
-	NSString* filename = [NSString stringWithFormat:@"%@/%@.csv", [settings dataDirectory], robotName];
-    
-    Writer* writer = [Writer getInstance];
-    
-    if(![writer isOpen:filename]) {
-        if(![writer openFilename:filename]) {
-            [self log:[NSString stringWithFormat:@"[CTR] Error opening %@ for writing.", filename] withTag:LOG_TAG_PROBLEM];
-        }
-    }
-    
-	int logTag = LOG_TAG_MESSAGE;
-	if([data count] >= 5){logTag = LOG_TAG_EVENT;}
-	NSString* message = @""; //Implode data, replace mac with robotName
-    [writer writeString:[NSString stringWithFormat:@"%@\n", message] toFile:filename];
-    [self log:[NSString stringWithFormat:@"[CTR] Received: %@", message] withTag:logTag];
+	consoleTags = 3;
 }
 
 -(IBAction) didSelectConsoleTags:(id)sender {
@@ -61,7 +38,9 @@
 	[console scrollRangeToVisible:NSMakeRange([[console string] length],0)];
 }
 
--(void) log:(NSString*)message withTag:(int)tag {
+-(void) log:(NSNotification*)notification {
+	NSString* message = [[notification userInfo] objectForKey:@"message"];
+	int tag = [[[notification userInfo] objectForKey:@"tag"] intValue];
 	
 	//Add the message to the array of messages.
 	[consoleMessages addObject:[[NSArray alloc] initWithObjects:[NSNumber numberWithInt:tag], message, nil]];
@@ -98,7 +77,12 @@
 	if(![writer isOpen:filename]){[writer openFilename:filename];}
 	
 	[writer writeString:[message stringByAppendingString:@"\n"] toFile:filename];
-	[self log:[NSString stringWithFormat:@"User logged \"%@\".",message] withTag:LOG_TAG_EVENT];
+	
+	message = [NSString stringWithFormat:@"User logged \"%@\"", message];
+	NSDictionary* data = [NSDictionary dictionaryWithObjects:
+						  [NSArray arrayWithObjects:message, [NSNumber numberWithInt:LOG_TAG_EVENT], nil] forKeys:
+						  [NSArray arrayWithObjects:@"message", @"tag", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"log" object:self userInfo:data];
 	
 	[userLogTextField setStringValue:@""];
 }

@@ -32,6 +32,7 @@
 	float pheromoneDecayRate;
 	float pheromoneLayingRate;
 	NSString* evolvedParameters;
+	int tagCount;
 }
 
 +(PheromoneController*) getInstance;

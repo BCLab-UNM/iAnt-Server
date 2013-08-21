@@ -21,14 +21,23 @@
 	
 	//Register all start notifications.
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(start:) name:@"start" object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:server selector:@selector(start) name:@"start" object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:pheromoneController selector:@selector(start) name:@"start" object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:droneController selector:@selector(start) name:@"start" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:server selector:@selector(start:) name:@"start" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:pheromoneController selector:@selector(start:) name:@"start" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:droneController selector:@selector(start:) name:@"start" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:logViewController selector:@selector(start:) name:@"start" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:statsViewController selector:@selector(start:) name:@"start" object:nil];
 	
 	//Register all message notifications.
 	[[NSNotificationCenter defaultCenter] addObserver:pheromoneController selector:@selector(message:) name:@"message" object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:droneController selector:@selector(message:) name:@"message" object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:logViewController selector:@selector(message:) name:@"message" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:robotView selector:@selector(message:) name:@"message" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:statsViewController selector:@selector(message:) name:@"message" object:nil];
+	
+	//LogViewController receives log notifications from several sources.
+	[[NSNotificationCenter defaultCenter] addObserver:logViewController selector:@selector(log:) name:@"log" object:nil];
+	
+	//StatsViewController receives stat notifications from several sources.
+	[[NSNotificationCenter defaultCenter] addObserver:statsViewController selector:@selector(stats:) name:@"stats" object:nil];
 }
 
 
@@ -52,6 +61,12 @@
 
 -(void) didReceiveMessage:(NSString*)message onStream:(NSInputStream*)theStream {
 	NSNumber* newClient = [NSNumber numberWithBool:NO];
+	
+	NSDictionary* data = [NSDictionary dictionaryWithObjects:
+			[NSArray arrayWithObjects:message, [NSNumber numberWithInt:LOG_TAG_MESSAGE], nil] forKeys:
+			[NSArray arrayWithObjects:@"message", @"tag", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"log" object:self userInfo:data];
+	
     NSArray* messageExploded = [message componentsSeparatedByString:@","];
 	if([messageExploded count] == 1) {
 		newClient = [NSNumber numberWithBool:YES];
@@ -65,7 +80,7 @@
 		}
 	}
 	
-	NSDictionary* data = [NSDictionary dictionaryWithObjects:
+	data = [NSDictionary dictionaryWithObjects:
 						  [NSArray arrayWithObjects:messageExploded, newClient, nil] forKeys:
 						  [NSArray arrayWithObjects:@"data", @"newClient", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"message" object:server userInfo:data];

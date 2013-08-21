@@ -10,7 +10,7 @@
 	return instance;
 }
 
--(void) start {
+-(void) start:(NSNotification*)notification {
 	
 }
 

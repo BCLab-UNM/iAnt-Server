@@ -5,7 +5,6 @@
 	 NSMutableArray* consoleMessages;
 }
 
--(void) log:(NSString*)message withTag:(int)tag;
 -(IBAction) didSelectConsoleTags:(id)sender;
 -(IBAction) logUserMessage:(id)sender;
 

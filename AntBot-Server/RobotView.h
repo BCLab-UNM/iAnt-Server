@@ -9,10 +9,7 @@
 }
 
 -(BOOL) isFlipped;
-
 -(void) addRobot:(NSString*)robotName;
--(void) setX:(NSNumber*)x andY:(NSNumber*)y forRobot:(NSString*)robotName;
-
 -(void) redraw;
 
 @end

@@ -2124,7 +2124,7 @@
 																<int key="NSvFlags">2322</int>
 																<string key="NSFrameSize">{440, 172}</string>
 																<reference key="NSSuperview" ref="1070639632"/>
-																<reference key="NSNextKeyView" ref="297702689"/>
+																<reference key="NSNextKeyView" ref="970205020"/>
 																<string key="NSReuseIdentifierKey">_NS:13</string>
 																<object class="NSTextContainer" key="NSTextContainer" id="771344852">
 																	<object class="NSLayoutManager" key="NSLayoutManager">
@@ -2217,7 +2217,7 @@
 														<int key="NSvFlags">256</int>
 														<string key="NSFrame">{{746, 1}, {15, 158}}</string>
 														<reference key="NSSuperview" ref="238749990"/>
-														<reference key="NSNextKeyView" ref="970205020"/>
+														<reference key="NSNextKeyView" ref="1070639632"/>
 														<string key="NSReuseIdentifierKey">_NS:84</string>
 														<bool key="NSEnabled">YES</bool>
 														<reference key="NSTarget" ref="238749990"/>
@@ -2229,7 +2229,7 @@
 														<int key="NSvFlags">-2147483392</int>
 														<string key="NSFrame">{{-100, -100}, {87, 18}}</string>
 														<reference key="NSSuperview" ref="238749990"/>
-														<reference key="NSNextKeyView" ref="1070639632"/>
+														<reference key="NSNextKeyView" ref="297702689"/>
 														<string key="NSReuseIdentifierKey">_NS:33</string>
 														<int key="NSsFlags">1</int>
 														<reference key="NSTarget" ref="238749990"/>
@@ -2351,7 +2351,7 @@
 					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="1017605809"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1280, 800}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1280, 778}}</string>
 				<string key="NSMinSize">{640, 372}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">NO</bool>
@@ -3120,70 +3120,6 @@
 					<int key="connectionID">841</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">boundsRadiusTextField</string>
-						<reference key="source" ref="210834881"/>
-						<reference key="destination" ref="61218200"/>
-					</object>
-					<int key="connectionID">1038</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">environmentTypePopUp</string>
-						<reference key="source" ref="210834881"/>
-						<reference key="destination" ref="310692528"/>
-					</object>
-					<int key="connectionID">1039</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">startButton</string>
-						<reference key="source" ref="210834881"/>
-						<reference key="destination" ref="281877864"/>
-					</object>
-					<int key="connectionID">1040</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">tagCountTextField</string>
-						<reference key="source" ref="210834881"/>
-						<reference key="destination" ref="800656645"/>
-					</object>
-					<int key="connectionID">1041</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">tagDistributionPopUp</string>
-						<reference key="source" ref="210834881"/>
-						<reference key="destination" ref="641796603"/>
-					</object>
-					<int key="connectionID">1042</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">trialTypePopUp</string>
-						<reference key="source" ref="210834881"/>
-						<reference key="destination" ref="222280997"/>
-					</object>
-					<int key="connectionID">1043</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">validRunButton</string>
-						<reference key="source" ref="210834881"/>
-						<reference key="destination" ref="522323668"/>
-					</object>
-					<int key="connectionID">1044</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">workingDirectoryTextField</string>
-						<reference key="source" ref="210834881"/>
-						<reference key="destination" ref="783695632"/>
-					</object>
-					<int key="connectionID">1045</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">logUserMessage:</string>
 						<reference key="source" ref="210834881"/>
@@ -3206,6 +3142,14 @@
 						<reference key="destination" ref="736121208"/>
 					</object>
 					<int key="connectionID">1061</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">console</string>
+						<reference key="source" ref="210834881"/>
+						<reference key="destination" ref="484344575"/>
+					</object>
+					<int key="connectionID">1066</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -5040,7 +4984,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1065</int>
+			<int key="maxID">1066</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">

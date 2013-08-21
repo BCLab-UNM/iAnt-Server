@@ -12,6 +12,8 @@
     if(self) {
 		startTime = [NSDate date];
         drawTimer = nil;
+		
+		robots = [[NSMutableDictionary alloc] init];
         
         [self translateOriginToPoint:NSMakePoint(200, 200)];
         [self setBounds:NSMakeRect(-210, -210, 420, 420)];
@@ -33,15 +35,21 @@
     [self redraw];
 }
 
-
-//TODO change this to be calculated from the message: selector
--(void) setX:(NSNumber*)x andY:(NSNumber*)y forRobot:(NSString *)robotName {
-	double currentTime = [startTime timeIntervalSinceNow] * -1;
-
+-(void) message:(NSNotification*)notification {
+	NSArray* data = [[notification userInfo] objectForKey:@"data"];
+	NSString* robotName = [[[Settings getInstance] robotNames] objectForKey:[data objectAtIndex:0]];
+	if(robotName == nil){robotName = @"unknownRobot";}
+	
+	if([data count] < 4){return;}
+	
+	NSNumber* x = [data objectAtIndex:2];
+	NSNumber* y = [data objectAtIndex:3];
+	NSNumber* currentTime = [NSNumber numberWithDouble:[startTime timeIntervalSinceNow] * -1];
+	
     if([robots objectForKey:robotName] == nil){[self addRobot:robotName];}
     
     double xPrevious = [[[robots objectForKey:robotName] objectAtIndex:0] doubleValue],
-           yPrevious = [[[robots objectForKey:robotName] objectAtIndex:1] doubleValue],
+	yPrevious = [[[robots objectForKey:robotName] objectAtIndex:1] doubleValue],
     dx = [x doubleValue] - xPrevious,
     dy = [y doubleValue] - yPrevious;
     
