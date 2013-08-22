@@ -36,15 +36,6 @@
     for(int i = 0; i < [[Settings getInstance] tagCount]; i += 1) {
         [tagFound setObject:[NSNumber numberWithBool:NO] forKey:[NSNumber numberWithInt:i]];
     }
-	
-	NSString* parametersPath = [NSHomeDirectory() stringByAppendingString:@"/Desktop/parameters.csv"];
-	evolvedParameters = [[NSString stringWithContentsOfFile:parametersPath encoding:NSUTF8StringEncoding error:nil]stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-    NSArray* parameters = [evolvedParameters componentsSeparatedByString:@","];
-    if([parameters count] == 9) {
-        pheromoneDecayRate = [[parameters objectAtIndex:0] floatValue];
-        pheromoneLayingRate = [[parameters objectAtIndex:6] floatValue];
-        evolvedParameters = [NSString stringWithFormat:@"%@,%@", [[parameters subarrayWithRange:NSMakeRange(1, 5)] componentsJoinedByString:@","], [[parameters subarrayWithRange:NSMakeRange(7, 2)] componentsJoinedByString:@","]];
-    }
 }
 
 -(void) message:(NSNotification*)notification {
@@ -183,7 +174,7 @@
     for(i=0; i<[pheromoneList count]; i++) {
         PhysicalPheromone* pheromone = [pheromoneList objectAtIndex:i];
         double delta = currentTime - [[pheromone t] doubleValue];
-        double newN = exponentialDecay([[pheromone n] floatValue], 4 * delta , pheromoneDecayRate);
+        double newN = exponentialDecay([[pheromone n] floatValue], 4 * delta ,[self pheromoneDecayRate]);
         
         if(newN>=.001){
             [pheromone setN:[NSNumber numberWithDouble:newN]];

@@ -29,9 +29,6 @@
     NSDate* startTime;
 	NSMutableDictionary* pendingPheromones;
 	NSMutableDictionary* tagFound;
-	float pheromoneDecayRate;
-	float pheromoneLayingRate;
-	NSString* evolvedParameters;
 	int tagCount;
 }
 
@@ -46,5 +43,7 @@
 -(void) clearPheromones;
 
 @property (nonatomic,retain) NSObject* delegate;
+@property (nonatomic) float pheromoneDecayRate;
+@property (nonatomic) float pheromoneLayingRate;
 
 @end
