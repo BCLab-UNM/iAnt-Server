@@ -115,8 +115,17 @@
             x = [[[robots objectForKey:key] objectAtIndex:0] doubleValue];
             y = [[[robots objectForKey:key] objectAtIndex:1] doubleValue];
             direction=[[[robots objectForKey:key] objectAtIndex:2] doubleValue];
-            color = [[settings robotColors] objectForKey:key];
-
+            
+            //Convert NSString to NSColor
+            NSString* colorString = [[settings robotColors] objectForKey:key];
+            NSArray* colorArray = [colorString componentsSeparatedByString:@","];
+            if ([colorArray count] == 3) {
+                color = [NSColor colorWithCalibratedRed:[[colorArray objectAtIndex:0] floatValue]
+                                                  green:[[colorArray objectAtIndex:1] floatValue]
+                                                   blue:[[colorArray objectAtIndex:2] floatValue]
+                                                  alpha:1.0f];
+            }
+            
             //Convert the robot's current position from cm to px (can we do this in setX:andY: ?).
             double pixelsInMeter;
             if([settings boundsRadius] > 0){pixelsInMeter = 400.0 / ([settings boundsRadius] * 2);}
@@ -129,7 +138,9 @@
             NSRect rect = NSMakeRect(x - 8, y - 8, 16, 16);
             NSBezierPath* path = [NSBezierPath bezierPathWithOvalInRect:rect];
             
-            [color set];
+            if (color) {
+                [color set];
+            }
             [path fill];
             [[NSColor whiteColor] set];
             [path stroke];
