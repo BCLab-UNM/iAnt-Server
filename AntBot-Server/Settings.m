@@ -42,15 +42,12 @@
     [[NSFileManager defaultManager] createDirectoryAtPath:settingsDirectory withIntermediateDirectories:YES attributes:nil error:nil];
     NSString* settingsPath = [settingsDirectory stringByAppendingString:@"/settings.plist"];
     [settingsPlist writeToFile:settingsPath atomically:NO];
-	
-	if(!robotColors) {
-		NSString* path = [NSString stringWithFormat:@"%@/robotColors.plist", workingDirectory];
-		robotColors = [[NSDictionary alloc] initWithContentsOfFile:path];
-	}
-	if(!robotNames) {
-		NSString* path = [NSString stringWithFormat:@"%@/robotNames.plist", workingDirectory];
-		robotNames = [[NSDictionary alloc] initWithContentsOfFile:path];
-	}
+    
+    NSString* path = [NSString stringWithFormat:@"%@/robotColors.plist", workingDirectory];
+    robotColors = [[NSDictionary alloc] initWithContentsOfFile:path];
+    
+    path = [NSString stringWithFormat:@"%@/robotNames.plist", workingDirectory];
+    robotNames = [[NSDictionary alloc] initWithContentsOfFile:path];
 }
 
 -(NSString*) dataDirectory {
