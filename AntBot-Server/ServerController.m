@@ -46,6 +46,25 @@
 	[[NSFileManager defaultManager] createDirectoryAtPath:[settings dataDirectory] withIntermediateDirectories:YES attributes:nil error:nil];
 	NSString* parameterPath = [[settings dataDirectory] stringByAppendingString:@"/trial.plist"];
 	[[settings parameters] writeToFile:parameterPath atomically:NO];
+    
+    NSString* parametersPath = [NSHomeDirectory() stringByAppendingString:@"/Desktop/evolvedParameters.plist"];
+	NSMutableDictionary* parameters = [[NSMutableDictionary alloc] initWithContentsOfFile:parametersPath];
+    if(!parameters) {
+        NSLog(@"Evolved parameters file not found.");
+    }
+    else {
+        [[PheromoneController getInstance] setPheromoneDecayRate:[[parameters objectForKey:@"pheromoneDecayRate"] floatValue]];
+        [[PheromoneController getInstance] setPheromoneLayingRate:[[parameters objectForKey:@"pheromoneLayingRate"] floatValue]];
+    }
+    evolvedParameters = [NSString stringWithFormat:@"parameters,%@,%@,%@,%@,%@,%@,%@,%@\n",
+                         [parameters objectForKey:@"travelGiveUpProbability"],
+                         [parameters objectForKey:@"searchGiveUpProbability"],
+                         [parameters objectForKey:@"uninformedSearchCorrelation"],
+                         [parameters objectForKey:@"informedSearchCorrelation"],
+                         [parameters objectForKey:@"informedGiveUpProbability"],
+                         [parameters objectForKey:@"neighborSearchGiveUpProbability"],
+                         [parameters objectForKey:@"stepSizeVariation"],
+                         [parameters objectForKey:@"siteFidelityRate"]];
 	
     NSRect frame = [serverWindow frame];
     if(frame.size.width < 800) {
@@ -74,6 +93,9 @@
 			for(Connection* connection in [server connections]) {
 				if([connection inputStream] == theStream) {
 					[[server namedConnections] setObject:connection forKey:[messageExploded objectAtIndex:0]];
+                    if (evolvedParameters) {
+                        [server send:evolvedParameters toStream:[connection outputStream]];
+                    }
 					return;
 				}
 			}

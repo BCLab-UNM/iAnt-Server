@@ -9,7 +9,9 @@
 @class RobotViewController;
 @class StatsViewController;
 
-@interface ServerController : NSViewController
+@interface ServerController : NSViewController {
+    NSString* evolvedParameters;
+}
 
 //Interface controls.
 @property IBOutlet NSWindow* serverWindow;
