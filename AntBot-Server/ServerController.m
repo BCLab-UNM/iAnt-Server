@@ -56,15 +56,15 @@
         [[PheromoneController getInstance] setPheromoneDecayRate:[[parameters objectForKey:@"pheromoneDecayRate"] floatValue]];
         [[PheromoneController getInstance] setPheromoneLayingRate:[[parameters objectForKey:@"pheromoneLayingRate"] floatValue]];
     }
-    evolvedParameters = [NSString stringWithFormat:@"parameters,%@,%@,%@,%@,%@,%@,%@,%@\n",
-                         [parameters objectForKey:@"travelGiveUpProbability"],
-                         [parameters objectForKey:@"searchGiveUpProbability"],
-                         [parameters objectForKey:@"uninformedSearchCorrelation"],
-                         [parameters objectForKey:@"informedSearchCorrelation"],
-                         [parameters objectForKey:@"informedGiveUpProbability"],
-                         [parameters objectForKey:@"neighborSearchGiveUpProbability"],
-                         [parameters objectForKey:@"stepSizeVariation"],
-                         [parameters objectForKey:@"siteFidelityRate"]];
+    evolvedParameters = [NSString stringWithFormat:@"parameters,%f,%f,%f,%f,%f,%f,%f,%f\n",
+                         [[parameters objectForKey:@"travelGiveUpProbability"] floatValue],
+                         [[parameters objectForKey:@"searchGiveUpProbability"] floatValue],
+                         [[parameters objectForKey:@"uninformedSearchCorrelation"] floatValue],
+                         [[parameters objectForKey:@"informedSearchCorrelation"] floatValue],
+                         [[parameters objectForKey:@"informedGiveUpProbability"] floatValue],
+                         [[parameters objectForKey:@"neighborSearchGiveUpProbability"] floatValue],
+                         [[parameters objectForKey:@"stepSizeVariation"] floatValue],
+                         [[parameters objectForKey:@"siteFidelityRate"] floatValue]];
 	
     NSRect frame = [serverWindow frame];
     if(frame.size.width < 800) {
