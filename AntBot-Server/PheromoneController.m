@@ -72,7 +72,7 @@
 		tagCount += 1;
 		
 		//Only leave a pheromone if there are other tags nearby.
-		if(randomFloat(1.) < exponentialCDF([n intValue] + 1, 0)) {//pheromoneLayingRate)) {
+		if(randomFloat(1.) < poissonCDF([n intValue], [self pheromoneLayingRate])) {
 			NSArray* pheromoneData = [NSArray arrayWithObjects:x, y, tagId, nil];
 			[pendingPheromones setObject:pheromoneData forKey:robotName];
 		}
@@ -174,7 +174,7 @@
     for(i=0; i<[pheromoneList count]; i++) {
         PhysicalPheromone* pheromone = [pheromoneList objectAtIndex:i];
         double delta = currentTime - [[pheromone t] doubleValue];
-        double newN = exponentialDecay([[pheromone n] floatValue], 4 * delta ,[self pheromoneDecayRate]);
+        double newN = exponentialDecay([[pheromone n] floatValue], 2 * delta ,[self pheromoneDecayRate]);
         
         if(newN>=.001){
             [pheromone setN:[NSNumber numberWithDouble:newN]];
