@@ -1,6 +1,7 @@
 #import "PheromoneController.h"
 #import "Server.h"
 #import "Settings.h"
+#import "Writer.h"
 
 //Implementation for the Pheromone class
 @implementation PhysicalPheromone
@@ -79,17 +80,22 @@
 		
 		NSString* message = [NSString stringWithFormat:@"Robot \"%@\" found tag %d", robotName, [tagId intValue]];
 		NSNumber* logTag = [NSNumber numberWithInt:LOG_TAG_EVENT];
-		NSDictionary* data = [NSDictionary dictionaryWithObjects:
+		NSDictionary* info = [NSDictionary dictionaryWithObjects:
 							  [NSArray arrayWithObjects:message, logTag, nil] forKeys:
 							  [NSArray arrayWithObjects:@"message", @"tag", nil]];
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"log" object:self userInfo:data];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"log" object:self userInfo:info];
 		
 		NSString* key = @"Tag Count";
 		NSNumber* val = [NSNumber numberWithInt:tagCount];
-		data = [NSDictionary dictionaryWithObjects:
+		info = [NSDictionary dictionaryWithObjects:
 							  [NSArray arrayWithObjects:key, val, nil] forKeys:
 							  [NSArray arrayWithObjects:@"key", @"val", nil]];
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"stats" object:self userInfo:data];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"stats" object:self userInfo:info];
+        
+        Writer* writer = [Writer getInstance];
+        NSString* filename = [NSString stringWithFormat:@"%@/%@.csv",[[Settings getInstance] dataDirectory],robotName];
+        if(![writer isOpen:filename]){[writer openFilename:filename];}
+        [writer writeString:[[data componentsJoinedByString:@","] stringByAppendingString:@"\n"] toFile:filename];
 	}
 	else if([event isEqualToString:@"home"]) {
 		
