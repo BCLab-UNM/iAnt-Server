@@ -56,13 +56,11 @@
         [[PheromoneController getInstance] setPheromoneDecayRate:[[parameters objectForKey:@"pheromoneDecayRate"] floatValue]];
         [[PheromoneController getInstance] setPheromoneLayingRate:[[parameters objectForKey:@"pheromoneLayingRate"] floatValue]];
     }
-    evolvedParameters = [NSString stringWithFormat:@"parameters,%f,%f,%f,%f,%f,%f,%f,%f\n",
+    evolvedParameters = [NSString stringWithFormat:@"parameters,%f,%f,%f,%f,%f,%f\n",
                          [[parameters objectForKey:@"travelGiveUpProbability"] floatValue],
                          [[parameters objectForKey:@"searchGiveUpProbability"] floatValue],
                          [[parameters objectForKey:@"uninformedSearchCorrelation"] floatValue],
-                         [[parameters objectForKey:@"informedSearchCorrelation"] floatValue],
-                         [[parameters objectForKey:@"informedGiveUpProbability"] floatValue],
-                         [[parameters objectForKey:@"neighborSearchGiveUpProbability"] floatValue],
+                         [[parameters objectForKey:@"informedSearchCorrelationDecayRate"] floatValue],
                          [[parameters objectForKey:@"stepSizeVariation"] floatValue],
                          [[parameters objectForKey:@"siteFidelityRate"] floatValue]];
 	
