@@ -10,6 +10,7 @@
 
 -(BOOL) isFlipped;
 -(void) addRobot:(NSString*)robotName;
+-(void) message:(NSNotification*)notification;
 -(void) redraw;
 
 @end

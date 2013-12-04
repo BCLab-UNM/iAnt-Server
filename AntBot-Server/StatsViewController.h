@@ -7,6 +7,10 @@
 	NSDate* startTime;
 }
 
+-(void) start:(NSNotification*)notification;
+-(void) message:(NSNotification*)notification;
+-(void) stats:(NSNotification*)notification;
+
 @property IBOutlet NSTableView* stats;
 
 @end

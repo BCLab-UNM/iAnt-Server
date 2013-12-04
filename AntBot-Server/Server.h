@@ -26,6 +26,7 @@
 	NSMutableArray* rxBuffer;
 }
 
+-(void) start:(NSNotification*)notification;
 -(BOOL) listenOnPort:(int)port;
 -(void) send:(NSString*)message toStream:(NSOutputStream*)stream;
 -(void) send:(NSString*)message toNamedConnection:(NSString*)name;

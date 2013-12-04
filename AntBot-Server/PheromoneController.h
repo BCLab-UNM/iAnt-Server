@@ -34,6 +34,8 @@
 
 +(PheromoneController*) getInstance;
 
+-(void) start:(NSNotification*)notification;
+-(void) message:(NSNotification*)notification;
 -(double) currentTime;
 -(void) addPheromoneAtX:(NSNumber*)x andY:(NSNumber*)y forTag:(NSNumber*)tagId;
 -(void) addPheromoneAtX:(NSNumber*)x andY:(NSNumber*)y forTag:(NSNumber*)tagId withPheromoneStrength:(NSNumber*)n;

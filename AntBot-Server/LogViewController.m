@@ -6,7 +6,7 @@
 
 @synthesize console, userLogTextField;
 
--(void) start:(id)sender {
+-(void) start:(NSNotification*)notification {
 	consoleMessages = [[NSMutableArray alloc] init];
 	consoleTags = 3;
 }

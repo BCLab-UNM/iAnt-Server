@@ -3,6 +3,7 @@
 #import "Writer.h"
 #import "RobotView.h"
 #import "StatsViewController.h"
+#import "LogViewController.h"
 
 @class Server;
 @class LogViewController;
