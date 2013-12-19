@@ -9,6 +9,11 @@
 -(void) start:(NSNotification*)notification {
 	consoleMessages = [[NSMutableArray alloc] init];
 	consoleTags = 3;
+    
+    NSScrollView *scrollView = (NSScrollView *)[[console superview] superview];
+    NSRect frame = [scrollView frame];
+    frame.size.height = 150;
+    [[[console superview] superview] setFrame:frame];
 }
 
 -(IBAction) didSelectConsoleTags:(id)sender {

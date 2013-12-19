@@ -66,7 +66,6 @@
 	
     NSRect frame = [serverWindow frame];
     if(frame.size.width < 800) {
-        frame.origin.y -= (250 - 22);
         frame.size.width = 800;
         frame.size.height = 600;
 		[serverWindow setMinSize:NSMakeSize(800, 600)];
