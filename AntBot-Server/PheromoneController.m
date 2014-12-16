@@ -56,7 +56,7 @@
 		[server send:[NSString stringWithFormat:@"tag,%@\n", reply] toNamedConnection:[data objectAtIndex:0]];
         return;
     }
-
+    
 	/*
 	 * Perform event logic (tag, home)
 	 */
@@ -88,8 +88,8 @@
 		NSString* key = @"Tag Count";
 		NSNumber* val = [NSNumber numberWithInt:tagCount];
 		info = [NSDictionary dictionaryWithObjects:
-							  [NSArray arrayWithObjects:key, val, nil] forKeys:
-							  [NSArray arrayWithObjects:@"key", @"val", nil]];
+                [NSArray arrayWithObjects:key, val, nil] forKeys:
+                [NSArray arrayWithObjects:@"key", @"val", nil]];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"stats" object:self userInfo:info];
         
         Writer* writer = [Writer getInstance];
@@ -129,15 +129,12 @@
 		
 		//Next, give the robot a (weighted) random pheromone (it chooses whether or not to use it client-side).
 		NSArray* pheromonePosition = [[PheromoneController getInstance] getPheromone];
-		
-		/*
-		 * Here, we find which client we are receiving from by looping through the list of clients
-		 * and checking for equality between the two inputStreams.
-		 * This is potentially inefficient, but shouldn't be much of a problem for a handful of robots.
-		 */
-		if (pheromonePosition != nil) {
-			[server send:[NSString stringWithFormat:@"pheromone,%d,%d\n", [[pheromonePosition objectAtIndex:0] intValue], [[pheromonePosition objectAtIndex:1] intValue]] toNamedConnection:[data objectAtIndex:0]];
+		if(!pheromonePosition) {
+			pheromonePosition = [[NSArray alloc] initWithObjects:[NSNumber numberWithInt:0], [NSNumber numberWithInt:0], nil];
 		}
+		
+		// Send the pheromone to the robot.
+		[server send:[NSString stringWithFormat:@"pheromone,%d,%d\n", [[pheromonePosition objectAtIndex:0] intValue], [[pheromonePosition objectAtIndex:1] intValue]] toNamedConnection:[data objectAtIndex:0]];
 		
 		NSString* message = [NSString stringWithFormat:@"Robot \"%@\" returned home.", robotName];
 		NSNumber* logTag = [NSNumber numberWithInt:LOG_TAG_EVENT];
@@ -196,8 +193,8 @@
 	NSString* key = @"Pheromones";
 	NSNumber* val = [NSNumber numberWithLong:[pheromoneList count]];
 	NSDictionary* data = [NSDictionary dictionaryWithObjects:
-			[NSArray arrayWithObjects:key, val, nil] forKeys:
-			[NSArray arrayWithObjects:@"key", @"val", nil]];
+                          [NSArray arrayWithObjects:key, val, nil] forKeys:
+                          [NSArray arrayWithObjects:@"key", @"val", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"stats" object:self userInfo:data];
 }
 
