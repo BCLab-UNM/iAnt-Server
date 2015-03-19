@@ -139,9 +139,6 @@
             [server send:[NSString stringWithFormat:@"pheromone\n"] toNamedConnection:[data objectAtIndex:0]];
         }
 		
-		// Send the pheromone to the robot.
-		[server send:[NSString stringWithFormat:@"pheromone,%d,%d\n", [[pheromonePosition objectAtIndex:0] intValue], [[pheromonePosition objectAtIndex:1] intValue]] toNamedConnection:[data objectAtIndex:0]];
-		
 		NSString* message = [NSString stringWithFormat:@"Robot \"%@\" returned home.", robotName];
 		NSNumber* logTag = [NSNumber numberWithInt:LOG_TAG_EVENT];
 		NSDictionary* data = [NSDictionary dictionaryWithObjects:
