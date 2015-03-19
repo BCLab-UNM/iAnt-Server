@@ -53,7 +53,7 @@
         NSString* reply = ([[tagFound objectForKey:tagId] boolValue]==YES) ? @"old" : @"new";
         //[self log:[NSString stringWithFormat:@"[CTR] Received tag query for tag %@.  Replied with %@",tagId,reply] withTag:LOG_TAG_EVENT];
 		
-		[server send:[NSString stringWithFormat:@"tag,%@\n", reply] toNamedConnection:[data objectAtIndex:0]];
+		[server send:[NSString stringWithFormat:@"tag,%@,%@\n", tagId, reply] toNamedConnection:[data objectAtIndex:0]];
         return;
     }
 
@@ -130,14 +130,14 @@
 		//Next, give the robot a (weighted) random pheromone (it chooses whether or not to use it client-side).
 		NSArray* pheromonePosition = [[PheromoneController getInstance] getPheromone];
 		
-		/*
-		 * Here, we find which client we are receiving from by looping through the list of clients
-		 * and checking for equality between the two inputStreams.
-		 * This is potentially inefficient, but shouldn't be much of a problem for a handful of robots.
-		 */
 		if (pheromonePosition != nil) {
+            //Send pheromone position if availble
 			[server send:[NSString stringWithFormat:@"pheromone,%d,%d\n", [[pheromonePosition objectAtIndex:0] intValue], [[pheromonePosition objectAtIndex:1] intValue]] toNamedConnection:[data objectAtIndex:0]];
 		}
+        else {
+            //If no pheromone available, send empty "pheromone" string to cue next foraging iteration
+            [server send:[NSString stringWithFormat:@"pheromone\n"] toNamedConnection:[data objectAtIndex:0]];
+        }
 		
 		NSString* message = [NSString stringWithFormat:@"Robot \"%@\" returned home.", robotName];
 		NSNumber* logTag = [NSNumber numberWithInt:LOG_TAG_EVENT];
