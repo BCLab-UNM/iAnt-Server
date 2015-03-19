@@ -56,7 +56,7 @@
 		[server send:[NSString stringWithFormat:@"tag,%@,%@\n", tagId, reply] toNamedConnection:[data objectAtIndex:0]];
         return;
     }
-
+    
 	/*
 	 * Perform event logic (tag, home)
 	 */
@@ -88,8 +88,8 @@
 		NSString* key = @"Tag Count";
 		NSNumber* val = [NSNumber numberWithInt:tagCount];
 		info = [NSDictionary dictionaryWithObjects:
-							  [NSArray arrayWithObjects:key, val, nil] forKeys:
-							  [NSArray arrayWithObjects:@"key", @"val", nil]];
+                [NSArray arrayWithObjects:key, val, nil] forKeys:
+                [NSArray arrayWithObjects:@"key", @"val", nil]];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"stats" object:self userInfo:info];
         
         Writer* writer = [Writer getInstance];
@@ -138,6 +138,9 @@
             //If no pheromone available, send empty "pheromone" string to cue next foraging iteration
             [server send:[NSString stringWithFormat:@"pheromone\n"] toNamedConnection:[data objectAtIndex:0]];
         }
+		
+		// Send the pheromone to the robot.
+		[server send:[NSString stringWithFormat:@"pheromone,%d,%d\n", [[pheromonePosition objectAtIndex:0] intValue], [[pheromonePosition objectAtIndex:1] intValue]] toNamedConnection:[data objectAtIndex:0]];
 		
 		NSString* message = [NSString stringWithFormat:@"Robot \"%@\" returned home.", robotName];
 		NSNumber* logTag = [NSNumber numberWithInt:LOG_TAG_EVENT];
@@ -196,8 +199,8 @@
 	NSString* key = @"Pheromones";
 	NSNumber* val = [NSNumber numberWithLong:[pheromoneList count]];
 	NSDictionary* data = [NSDictionary dictionaryWithObjects:
-			[NSArray arrayWithObjects:key, val, nil] forKeys:
-			[NSArray arrayWithObjects:@"key", @"val", nil]];
+                          [NSArray arrayWithObjects:key, val, nil] forKeys:
+                          [NSArray arrayWithObjects:@"key", @"val", nil]];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"stats" object:self userInfo:data];
 }
 
