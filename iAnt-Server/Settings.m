@@ -23,7 +23,7 @@
 		if(settingsPlist == nil) {
 			settingsPlist = [[NSMutableDictionary alloc] initWithCapacity:1];
 			
-			NSString* defaultWorkingDirectory = [NSHomeDirectory() stringByAppendingString:@"/Dropbox/AntBot/Data"];
+			NSString* defaultWorkingDirectory = [NSHomeDirectory() stringByAppendingString:@"/Dropbox/iAnt/Data"];
 			[settingsPlist setObject:defaultWorkingDirectory forKey:@"Working Directory"];
 		}
 		

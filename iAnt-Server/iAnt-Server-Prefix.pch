@@ -4,7 +4,7 @@
 
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
-    #import <AntBot-GA/Sim.h>
+    #import <iAnt-Sim/Sim.h>
 #endif
 
 #define LOG_TAG_PROBLEM 0

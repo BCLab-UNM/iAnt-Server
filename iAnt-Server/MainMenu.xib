@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment defaultVersion="1070" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -11,7 +10,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="494" customClass="AppDelegate">
             <connections>
                 <outlet property="serverController" destination="534" id="662"/>
@@ -54,10 +53,10 @@
         </viewController>
         <menu title="AMainMenu" systemMenu="main" id="29">
             <items>
-                <menuItem title="AntBot-Server" id="56">
-                    <menu key="submenu" title="AntBot-Server" systemMenu="apple" id="57">
+                <menuItem title="iAnt-Server" id="56">
+                    <menu key="submenu" title="iAnt-Server" systemMenu="apple" id="57">
                         <items>
-                            <menuItem title="About AntBot-Server" id="58">
+                            <menuItem title="About iAnt-Server" id="58">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
@@ -76,7 +75,7 @@
                             <menuItem isSeparatorItem="YES" id="144">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Hide AntBot-Server" keyEquivalent="h" id="134">
+                            <menuItem title="Hide iAnt-Server" keyEquivalent="h" id="134">
                                 <connections>
                                     <action selector="hide:" target="-1" id="367"/>
                                 </connections>
@@ -95,7 +94,7 @@
                             <menuItem isSeparatorItem="YES" id="149">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Quit AntBot-Server" keyEquivalent="q" id="136">
+                            <menuItem title="Quit iAnt-Server" keyEquivalent="q" id="136">
                                 <connections>
                                     <action selector="terminate:" target="-3" id="449"/>
                                 </connections>
@@ -677,7 +676,7 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Help" systemMenu="help" id="491">
                         <items>
-                            <menuItem title="AntBot-Server Help" keyEquivalent="?" id="492">
+                            <menuItem title="iAnt-Server Help" keyEquivalent="?" id="492">
                                 <connections>
                                     <action selector="showHelp:" target="-1" id="493"/>
                                 </connections>
@@ -687,7 +686,7 @@
                 </menuItem>
             </items>
         </menu>
-        <window title="AntBot-Server" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" animationBehavior="default" id="371">
+        <window title="iAnt-Server" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" animationBehavior="default" id="371">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="0.0" y="428" width="640" height="350"/>
@@ -893,10 +892,10 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" selectionHighlightStyle="none" columnReordering="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" enabled="NO" id="832">
-                                                        <rect key="frame" x="0.0" y="0.0" width="228" height="339"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="228" height="27"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="10"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         <tableViewGridLines key="gridStyleMask" dashed="YES"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
@@ -956,13 +955,13 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textView editable="NO" importsGraphics="NO" richText="NO" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" spellingCorrection="YES" smartInsertDelete="YES" id="813">
-                                                        <rect key="frame" x="0.0" y="0.0" width="288" height="14"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="608" height="14"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <size key="minSize" width="608" height="0.0"/>
+                                                        <size key="minSize" width="608" height="1"/>
                                                         <size key="maxSize" width="1160" height="10000000"/>
                                                         <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <size key="minSize" width="608" height="0.0"/>
+                                                        <size key="minSize" width="608" height="1"/>
                                                         <size key="maxSize" width="1160" height="10000000"/>
                                                     </textView>
                                                 </subviews>
@@ -980,7 +979,7 @@
                                         <segmentedControl verticalHuggingPriority="750" id="926">
                                             <rect key="frame" x="8" y="-67" width="225" height="25"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                            <segmentedCell key="cell" alignment="left" style="automatic" trackingMode="selectAny" id="927">
+                                            <segmentedCell key="cell" borderStyle="border" alignment="left" style="automatic" trackingMode="selectAny" id="927">
                                                 <font key="font" metaFont="system"/>
                                                 <segments>
                                                     <segment label="Problems" selected="YES"/>
