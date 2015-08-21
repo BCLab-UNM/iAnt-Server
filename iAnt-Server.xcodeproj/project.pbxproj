@@ -1,0 +1,417 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		401C5FE5158BD0BC00058D4C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401C5FE4158BD0BC00058D4C /* Cocoa.framework */; };
+		4255C8261B86E2DD00BD43ED /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4255C80B1B86E2DD00BD43ED /* AppDelegate.m */; };
+		4255C8271B86E2DD00BD43ED /* DroneController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4255C80D1B86E2DD00BD43ED /* DroneController.m */; };
+		4255C8281B86E2DD00BD43ED /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4255C80E1B86E2DD00BD43ED /* InfoPlist.strings */; };
+		4255C82A1B86E2DD00BD43ED /* LogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4255C8131B86E2DD00BD43ED /* LogViewController.m */; };
+		4255C82B1B86E2DD00BD43ED /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4255C8141B86E2DD00BD43ED /* main.m */; };
+		4255C82C1B86E2DD00BD43ED /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4255C8151B86E2DD00BD43ED /* MainMenu.xib */; };
+		4255C82D1B86E2DD00BD43ED /* PheromoneController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4255C8171B86E2DD00BD43ED /* PheromoneController.m */; };
+		4255C82E1B86E2DD00BD43ED /* RobotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4255C8191B86E2DD00BD43ED /* RobotView.m */; };
+		4255C82F1B86E2DD00BD43ED /* Server.m in Sources */ = {isa = PBXBuildFile; fileRef = 4255C81B1B86E2DD00BD43ED /* Server.m */; };
+		4255C8301B86E2DD00BD43ED /* ServerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4255C81D1B86E2DD00BD43ED /* ServerController.m */; };
+		4255C8311B86E2DD00BD43ED /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 4255C81F1B86E2DD00BD43ED /* Settings.m */; };
+		4255C8321B86E2DD00BD43ED /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4255C8211B86E2DD00BD43ED /* SettingsViewController.m */; };
+		4255C8331B86E2DD00BD43ED /* StatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4255C8231B86E2DD00BD43ED /* StatsViewController.m */; };
+		4255C8341B86E2DD00BD43ED /* Writer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4255C8251B86E2DD00BD43ED /* Writer.m */; };
+		428BF5691B86E45B0028C98B /* libiAnt-Sim.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 428BF5661B86E3AF0028C98B /* libiAnt-Sim.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		428BF5651B86E3AF0028C98B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 428BF5611B86E3AF0028C98B /* iAnt-Sim.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 40ED65B616DABD31006F8494;
+			remoteInfo = "iAnt-Sim";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		401C5FE0158BD0BB00058D4C /* iAnt-Server.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iAnt-Server.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		401C5FE4158BD0BC00058D4C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		401C5FE7158BD0BC00058D4C /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		401C5FE8158BD0BC00058D4C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		401C5FE9158BD0BC00058D4C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		4255C80A1B86E2DD00BD43ED /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		4255C80B1B86E2DD00BD43ED /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		4255C80C1B86E2DD00BD43ED /* DroneController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DroneController.h; sourceTree = "<group>"; };
+		4255C80D1B86E2DD00BD43ED /* DroneController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DroneController.m; sourceTree = "<group>"; };
+		4255C80F1B86E2DD00BD43ED /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4255C8101B86E2DD00BD43ED /* iAnt-Server-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "iAnt-Server-Info.plist"; sourceTree = "<group>"; };
+		4255C8111B86E2DD00BD43ED /* iAnt-Server-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "iAnt-Server-Prefix.pch"; sourceTree = "<group>"; };
+		4255C8121B86E2DD00BD43ED /* LogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogViewController.h; sourceTree = "<group>"; };
+		4255C8131B86E2DD00BD43ED /* LogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogViewController.m; sourceTree = "<group>"; };
+		4255C8141B86E2DD00BD43ED /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4255C8151B86E2DD00BD43ED /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
+		4255C8161B86E2DD00BD43ED /* PheromoneController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PheromoneController.h; sourceTree = "<group>"; };
+		4255C8171B86E2DD00BD43ED /* PheromoneController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PheromoneController.m; sourceTree = "<group>"; };
+		4255C8181B86E2DD00BD43ED /* RobotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotView.h; sourceTree = "<group>"; };
+		4255C8191B86E2DD00BD43ED /* RobotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotView.m; sourceTree = "<group>"; };
+		4255C81A1B86E2DD00BD43ED /* Server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Server.h; sourceTree = "<group>"; };
+		4255C81B1B86E2DD00BD43ED /* Server.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Server.m; sourceTree = "<group>"; };
+		4255C81C1B86E2DD00BD43ED /* ServerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerController.h; sourceTree = "<group>"; };
+		4255C81D1B86E2DD00BD43ED /* ServerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerController.m; sourceTree = "<group>"; };
+		4255C81E1B86E2DD00BD43ED /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		4255C81F1B86E2DD00BD43ED /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
+		4255C8201B86E2DD00BD43ED /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		4255C8211B86E2DD00BD43ED /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		4255C8221B86E2DD00BD43ED /* StatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatsViewController.h; sourceTree = "<group>"; };
+		4255C8231B86E2DD00BD43ED /* StatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatsViewController.m; sourceTree = "<group>"; };
+		4255C8241B86E2DD00BD43ED /* Writer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Writer.h; sourceTree = "<group>"; };
+		4255C8251B86E2DD00BD43ED /* Writer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Writer.m; sourceTree = "<group>"; };
+		428BF5611B86E3AF0028C98B /* iAnt-Sim.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "iAnt-Sim.xcodeproj"; path = "../../code/iAnt-Server/iAnt-Sim/iAnt-Sim.xcodeproj"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		401C5FDD158BD0BB00058D4C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				428BF5691B86E45B0028C98B /* libiAnt-Sim.a in Frameworks */,
+				401C5FE5158BD0BC00058D4C /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		401C5FD5158BD0BB00058D4C = {
+			isa = PBXGroup;
+			children = (
+				428BF5611B86E3AF0028C98B /* iAnt-Sim.xcodeproj */,
+				4255C8091B86E2DD00BD43ED /* iAnt-Server */,
+				401C5FE3158BD0BB00058D4C /* Frameworks */,
+				401C5FE1158BD0BB00058D4C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		401C5FE1158BD0BB00058D4C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				401C5FE0158BD0BB00058D4C /* iAnt-Server.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		401C5FE3158BD0BB00058D4C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				401C5FE4158BD0BC00058D4C /* Cocoa.framework */,
+				401C5FE6158BD0BC00058D4C /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		401C5FE6158BD0BC00058D4C /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				401C5FE7158BD0BC00058D4C /* AppKit.framework */,
+				401C5FE8158BD0BC00058D4C /* CoreData.framework */,
+				401C5FE9158BD0BC00058D4C /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		4255C8091B86E2DD00BD43ED /* iAnt-Server */ = {
+			isa = PBXGroup;
+			children = (
+				4255C80A1B86E2DD00BD43ED /* AppDelegate.h */,
+				4255C80B1B86E2DD00BD43ED /* AppDelegate.m */,
+				4255C80C1B86E2DD00BD43ED /* DroneController.h */,
+				4255C80D1B86E2DD00BD43ED /* DroneController.m */,
+				4255C8121B86E2DD00BD43ED /* LogViewController.h */,
+				4255C8131B86E2DD00BD43ED /* LogViewController.m */,
+				4255C8161B86E2DD00BD43ED /* PheromoneController.h */,
+				4255C8171B86E2DD00BD43ED /* PheromoneController.m */,
+				4255C8181B86E2DD00BD43ED /* RobotView.h */,
+				4255C8191B86E2DD00BD43ED /* RobotView.m */,
+				4255C81A1B86E2DD00BD43ED /* Server.h */,
+				4255C81B1B86E2DD00BD43ED /* Server.m */,
+				4255C81C1B86E2DD00BD43ED /* ServerController.h */,
+				4255C81D1B86E2DD00BD43ED /* ServerController.m */,
+				4255C81E1B86E2DD00BD43ED /* Settings.h */,
+				4255C81F1B86E2DD00BD43ED /* Settings.m */,
+				4255C8201B86E2DD00BD43ED /* SettingsViewController.h */,
+				4255C8211B86E2DD00BD43ED /* SettingsViewController.m */,
+				4255C8221B86E2DD00BD43ED /* StatsViewController.h */,
+				4255C8231B86E2DD00BD43ED /* StatsViewController.m */,
+				4255C8241B86E2DD00BD43ED /* Writer.h */,
+				4255C8251B86E2DD00BD43ED /* Writer.m */,
+				4255C8151B86E2DD00BD43ED /* MainMenu.xib */,
+				428BF5601B86E3320028C98B /* Supporting Files */,
+			);
+			name = "iAnt-Server";
+			path = "../../code/iAnt-Server/iAnt-Server";
+			sourceTree = "<group>";
+		};
+		428BF5601B86E3320028C98B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4255C80E1B86E2DD00BD43ED /* InfoPlist.strings */,
+				4255C8101B86E2DD00BD43ED /* iAnt-Server-Info.plist */,
+				4255C8111B86E2DD00BD43ED /* iAnt-Server-Prefix.pch */,
+				4255C8141B86E2DD00BD43ED /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		428BF5621B86E3AF0028C98B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				428BF5661B86E3AF0028C98B /* libiAnt-Sim.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		401C5FDF158BD0BB00058D4C /* iAnt-Server */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 401C5FFE158BD0BC00058D4C /* Build configuration list for PBXNativeTarget "iAnt-Server" */;
+			buildPhases = (
+				401C5FDC158BD0BB00058D4C /* Sources */,
+				401C5FDD158BD0BB00058D4C /* Frameworks */,
+				401C5FDE158BD0BB00058D4C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "iAnt-Server";
+			productName = "AntBot-Server";
+			productReference = 401C5FE0158BD0BB00058D4C /* iAnt-Server.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		401C5FD7158BD0BB00058D4C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0640;
+			};
+			buildConfigurationList = 401C5FDA158BD0BB00058D4C /* Build configuration list for PBXProject "iAnt-Server" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 401C5FD5158BD0BB00058D4C;
+			productRefGroup = 401C5FE1158BD0BB00058D4C /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 428BF5621B86E3AF0028C98B /* Products */;
+					ProjectRef = 428BF5611B86E3AF0028C98B /* iAnt-Sim.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				401C5FDF158BD0BB00058D4C /* iAnt-Server */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		428BF5661B86E3AF0028C98B /* libiAnt-Sim.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libiAnt-Sim.a";
+			remoteRef = 428BF5651B86E3AF0028C98B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		401C5FDE158BD0BB00058D4C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4255C8281B86E2DD00BD43ED /* InfoPlist.strings in Resources */,
+				4255C82C1B86E2DD00BD43ED /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		401C5FDC158BD0BB00058D4C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4255C8301B86E2DD00BD43ED /* ServerController.m in Sources */,
+				4255C8271B86E2DD00BD43ED /* DroneController.m in Sources */,
+				4255C8311B86E2DD00BD43ED /* Settings.m in Sources */,
+				4255C8331B86E2DD00BD43ED /* StatsViewController.m in Sources */,
+				4255C8341B86E2DD00BD43ED /* Writer.m in Sources */,
+				4255C82E1B86E2DD00BD43ED /* RobotView.m in Sources */,
+				4255C8261B86E2DD00BD43ED /* AppDelegate.m in Sources */,
+				4255C82B1B86E2DD00BD43ED /* main.m in Sources */,
+				4255C82D1B86E2DD00BD43ED /* PheromoneController.m in Sources */,
+				4255C8321B86E2DD00BD43ED /* SettingsViewController.m in Sources */,
+				4255C82A1B86E2DD00BD43ED /* LogViewController.m in Sources */,
+				4255C82F1B86E2DD00BD43ED /* Server.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		4255C80E1B86E2DD00BD43ED /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4255C80F1B86E2DD00BD43ED /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		401C5FFC158BD0BC00058D4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IBC_NOTICES = YES;
+				IBC_WARNINGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				STRIP_INSTALLED_PRODUCT = YES;
+			};
+			name = Debug;
+		};
+		401C5FFD158BD0BC00058D4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IBC_NOTICES = YES;
+				IBC_WARNINGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+				STRIP_INSTALLED_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		401C5FFF158BD0BC00058D4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iAnt-Server/iAnt-Server-Prefix.pch";
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				IBC_ERRORS = YES;
+				IBC_NOTICES = YES;
+				IBC_WARNINGS = YES;
+				INFOPLIST_FILE = "iAnt-Server/iAnt-Server-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "iAnt-Server";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/iAnt-Sim\"";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		401C6000158BD0BC00058D4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iAnt-Server/iAnt-Server-Prefix.pch";
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				IBC_ERRORS = YES;
+				IBC_NOTICES = YES;
+				IBC_WARNINGS = YES;
+				INFOPLIST_FILE = "iAnt-Server/iAnt-Server-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "iAnt-Server";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/iAnt-Sim\"";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		401C5FDA158BD0BB00058D4C /* Build configuration list for PBXProject "iAnt-Server" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				401C5FFC158BD0BC00058D4C /* Debug */,
+				401C5FFD158BD0BC00058D4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		401C5FFE158BD0BC00058D4C /* Build configuration list for PBXNativeTarget "iAnt-Server" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				401C5FFF158BD0BC00058D4C /* Debug */,
+				401C6000158BD0BC00058D4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 401C5FD7158BD0BB00058D4C /* Project object */;
+}
